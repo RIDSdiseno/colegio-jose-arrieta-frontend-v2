@@ -18,7 +18,7 @@ const heroSlides = [
     subtitle: "Queremos acompañarte en una decisión importante para el futuro de tu hijo/a.",
   },
   {
-    img: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1920&q=80",
+    img: "https://images.unsplash.com/photo-1527689368864-3a821dbccc34?auto=format&fit=crop&w=1920&q=80",
     badge: "Vacantes disponibles",
     title: "Pre-Kínder a",
     highlight: "8° Básico",

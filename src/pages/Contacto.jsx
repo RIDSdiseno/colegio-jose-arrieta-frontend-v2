@@ -6,24 +6,6 @@ import { Helmet } from "react-helmet-async";
 import { postFormularioContacto } from "../api/contacto";
 import Button from "../components/ui/Button";
 import { trackFormularioContacto } from "../lib/tracking";
-import PageHeroCarousel from "../components/ui/PageHeroCarousel";
-
-const heroSlides = [
-  {
-    img: "https://colegiojosearrieta.cl/wp-content/uploads/2020/03/Entrada-768x510.png",
-    badge: "Estamos para ayudarte",
-    title: "Contáctanos",
-    highlight: "hoy",
-    subtitle: "Escríbenos y te responderemos a la brevedad para acompañarte en tu proceso.",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1920&q=80",
-    badge: "Visítanos",
-    title: "Conoce nuestro",
-    highlight: "colegio",
-    subtitle: "Agenda una visita y conoce nuestros espacios, equipo docente y propuesta educativa sin compromiso.",
-  },
-];
 
 const schema = z.object({
   nombre: z.string().min(3, "Ingresa tu nombre."),
@@ -70,7 +52,35 @@ function Contacto() {
         />
       </Helmet>
 
-      <PageHeroCarousel slides={heroSlides} />
+      {/* ── Hero estático ───────────────────────────────────────────── */}
+      <section
+        className="relative overflow-hidden py-20"
+        style={{
+          backgroundImage: "url('https://colegiojosearrieta.cl/wp-content/uploads/2020/03/Entrada-768x510.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="absolute inset-0 bg-primary/70" />
+        <div className="container-main relative z-10 text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-secondary/40 bg-secondary/20 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-secondary backdrop-blur-sm">
+            <span className="h-2 w-2 rounded-full bg-secondary" />
+            Estamos para ayudarte
+          </span>
+          <h1 className="mt-4 font-heading text-4xl font-extrabold text-white sm:text-5xl">
+            Contáctanos{" "}
+            <span className="relative whitespace-nowrap">
+              <span className="relative z-10 text-secondary">hoy</span>
+              <svg className="absolute -bottom-1 left-0 w-full" viewBox="0 0 60 8" fill="none" aria-hidden="true">
+                <path d="M1 5.5C15 1.5 35 7.5 59 3" stroke="#F5A623" strokeWidth="2.5" strokeLinecap="round" />
+              </svg>
+            </span>
+          </h1>
+          <p className="mx-auto mt-4 max-w-xl text-base text-white/80">
+            Escríbenos y te responderemos a la brevedad para acompañarte en tu proceso.
+          </p>
+        </div>
+      </section>
 
       <section className="py-16">
         <div className="container-main grid gap-8 lg:grid-cols-3">

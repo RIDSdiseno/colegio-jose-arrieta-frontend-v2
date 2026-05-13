@@ -16,7 +16,7 @@ const heroSlides = [
     subtitle: "Impulsamos el desarrollo académico, emocional y social en cada estudiante — desde Pre-Kínder hasta 8° básico.",
   },
   {
-    img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1920&q=80",
+    img: "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=1920&q=80",
     badge: "Inglés desde Pre-Kínder",
     title: "Aprender con sentido,",
     highlight: "convivir con valores",

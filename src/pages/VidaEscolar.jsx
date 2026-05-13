@@ -9,14 +9,14 @@ const BASE = "https://colegiojosearrieta.cl/wp-content/uploads";
 
 const heroSlides = [
   {
-    img: "https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1920&q=80",
+    img: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1920&q=80",
     badge: "Comunidad Viva",
     title: "Vida",
     highlight: "Escolar",
     subtitle: "Creemos en una escuela donde aprender también es disfrutar, compartir y crecer juntos.",
   },
   {
-    img: "https://images.unsplash.com/photo-1606761568499-6d2451b23c66?auto=format&fit=crop&w=1920&q=80",
+    img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1920&q=80",
     badge: "Galería y actividades",
     title: "Momentos que",
     highlight: "marcan para siempre",

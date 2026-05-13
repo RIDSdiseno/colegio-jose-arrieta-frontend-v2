@@ -16,7 +16,7 @@ const heroSlides = [
     subtitle: "Todo lo que ocurre en nuestra comunidad: aprendizajes, eventos y logros.",
   },
   {
-    img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1920&q=80",
+    img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1920&q=80",
     badge: "Actualidad 2026",
     title: "Mantente",
     highlight: "informado",

@@ -14,7 +14,7 @@ const heroSlides = [
     subtitle: "Somos un colegio que combina exigencia académica, cercanía familiar y bienestar integral — desde 1973.",
   },
   {
-    img: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1920&q=80",
+    img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1920&q=80",
     badge: "+50 años de trayectoria",
     title: "Una comunidad con",
     highlight: "historia y valores",
@@ -35,14 +35,14 @@ const pilares = [
     icon: Zap,
     titulo: "Vanguardia",
     texto: "Innovamos constantemente para potenciar y mejorar el aprendizaje de nuestros estudiantes.",
-    img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1200&q=80",
+    img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80",
   },
   {
     id: 3,
     icon: Heart,
     titulo: "Vida Saludable",
     texto: "Fomentamos la actividad física, la alimentación sana y los buenos hábitos en nuestra comunidad.",
-    img: "https://images.unsplash.com/photo-1574279606130-09958dc756f7?auto=format&fit=crop&w=1200&q=80",
+    img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1200&q=80",
   },
 ];
 
@@ -157,7 +157,7 @@ function PorQueElegirnos() {
               className="overflow-hidden rounded-2xl shadow-soft"
             >
               <img
-                src="https://img.youtube.com/vi/diIKhu_OQTY/maxresdefault.jpg"
+                src="https://img.youtube.com/vi/zXujbnT4RvU/maxresdefault.jpg"
                 alt="Infraestructura Colegio José Arrieta"
                 className="h-72 w-full object-cover lg:h-96"
               />
