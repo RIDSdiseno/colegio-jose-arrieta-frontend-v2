@@ -4,7 +4,6 @@ import ValoresSection from "../components/sections/ValoresSection";
 import BeneficiosSection from "../components/sections/BeneficiosSection";
 import NewsSection from "../components/sections/NewsSection";
 import TestimonialsSection from "../components/sections/TestimonialsSection";
-import LogrosSection from "../components/sections/LogrosSection";
 import MapContactSection from "../components/sections/MapContactSection";
 import FloatingButtons from "../components/ui/FloatingButtons";
 
@@ -24,7 +23,6 @@ function Home() {
       <ValoresSection />
       <BeneficiosSection />
       <NewsSection />
-      <LogrosSection />
       <TestimonialsSection />
       <MapContactSection />
 <FloatingButtons />

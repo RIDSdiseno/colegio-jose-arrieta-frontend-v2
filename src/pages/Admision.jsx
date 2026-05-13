@@ -11,7 +11,7 @@ import PageHeroCarousel from "../components/ui/PageHeroCarousel";
 
 const heroSlides = [
   {
-    img: "https://colegiojosearrieta.cl/wp-content/uploads/2025/09/DSC_0320-Grande.jpg",
+    img: "https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1920&q=80",
     badge: "Admisión 2026 — Inscripciones abiertas",
     title: "Postula al Colegio",
     highlight: "José Arrieta",

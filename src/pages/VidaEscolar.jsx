@@ -16,7 +16,7 @@ const heroSlides = [
     subtitle: "Creemos en una escuela donde aprender también es disfrutar, compartir y crecer juntos.",
   },
   {
-    img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1920&q=80",
+    img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1920&q=80",
     badge: "Galería y actividades",
     title: "Momentos que",
     highlight: "marcan para siempre",

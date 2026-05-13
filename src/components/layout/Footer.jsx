@@ -27,6 +27,11 @@ const admisionLinks = [
     href: "http://colegioarrieta.ddns.net:83/",
     external: true,
   },
+  {
+    label: "Trabaja con nosotros",
+    href: "https://colegiojosearrieta.cl/trabaja-con-nosotros/",
+    external: true,
+  },
 ];
 
 const platforms = [

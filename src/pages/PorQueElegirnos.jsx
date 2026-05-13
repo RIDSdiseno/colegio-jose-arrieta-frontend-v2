@@ -7,7 +7,7 @@ import PageHeroCarousel from "../components/ui/PageHeroCarousel";
 
 const heroSlides = [
   {
-    img: "https://colegiojosearrieta.cl/wp-content/uploads/2025/09/DSC_0370-Grande.jpg",
+    img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1920&q=80",
     badge: "Comunidad Educativa",
     title: "¿Por qué",
     highlight: "elegirnos?",
@@ -35,7 +35,7 @@ const pilares = [
     icon: Zap,
     titulo: "Vanguardia",
     texto: "Innovamos constantemente para potenciar y mejorar el aprendizaje de nuestros estudiantes.",
-    img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80",
+    img: "https://images.unsplash.com/photo-1497486751825-1233686d5d80?auto=format&fit=crop&w=1200&q=80",
   },
   {
     id: 3,

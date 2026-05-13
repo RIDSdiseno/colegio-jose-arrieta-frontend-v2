@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, MapPin, Search, Youtube, Instagram, ExternalLink } from "lucide-react";
+import { Menu, X, MapPin, Search, Youtube, Instagram, Facebook, ExternalLink } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import useScrollNavbar from "../../hooks/useScrollNavbar";
 import Button from "../ui/Button";
@@ -71,13 +71,22 @@ function Topbar() {
             <Youtube className="h-3.5 w-3.5" />
           </a>
           <a
-            href="https://www.instagram.com/colegiojosearrieta/"
+            href="https://www.instagram.com/colegioarrieta/"
             target="_blank"
             rel="noreferrer"
             aria-label="Instagram"
             className="transition hover:text-white"
           >
             <Instagram className="h-3.5 w-3.5" />
+          </a>
+          <a
+            href="https://www.facebook.com/colegiojosearrieta"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Facebook"
+            className="transition hover:text-white"
+          >
+            <Facebook className="h-3.5 w-3.5" />
           </a>
           <div className="h-3.5 w-px bg-white/20" />
           <a
