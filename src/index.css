@@ -1,0 +1,61 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #4b4bcc;
+  --color-secondary: #f5a623;
+  --color-accent: #4abfbf;
+  --color-bg: #f2f4fb;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, sans-serif;
+  background: radial-gradient(circle at top left, #ffffff 0%, #f2f6fb 55%, #e6eff9 100%);
+  color: #12253d;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Montserrat", system-ui, sans-serif;
+}
+
+.container-main {
+  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+.page-hero {
+  @apply relative overflow-hidden bg-primary py-20 text-white sm:py-24;
+}
+
+.page-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(245, 166, 35, 0.33), rgba(75, 75, 204, 0.88));
+  z-index: 0;
+}
+
+.page-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Ocultar UI de YouTube en video de fondo ── */
+#yt-hero-player {
+  pointer-events: none;
+}
+#yt-hero-player iframe {
+  pointer-events: none;
+}

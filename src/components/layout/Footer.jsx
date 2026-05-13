@@ -1,0 +1,180 @@
+import { Facebook, Instagram, Youtube, MapPin, Phone, Mail, Clock, ExternalLink } from "lucide-react";
+import { Link } from "react-router-dom";
+
+const navLinks = [
+  { label: "Inicio", to: "/" },
+  { label: "¿Por qué elegirnos?", to: "/por-que-elegirnos" },
+  { label: "Proyecto Educativo", to: "/proyecto-educativo" },
+  { label: "Vida Escolar", to: "/vida-escolar" },
+  { label: "Noticias", to: "/noticias" },
+];
+
+const admisionLinks = [
+  { label: "Admisión 2026", to: "/admision" },
+  { label: "Contacto", to: "/contacto" },
+  {
+    label: "Inscripción MINEDUC",
+    href: "https://registropublicodigital.mineduc.gob.cl/rpd-app-registro-apoderado/login",
+    external: true,
+  },
+  {
+    label: "Calificaciones en línea",
+    href: "https://colegiojosearrieta.alexiaeducl.com",
+    external: true,
+  },
+  {
+    label: "Biblioteca en línea",
+    href: "http://colegioarrieta.ddns.net:83/",
+    external: true,
+  },
+];
+
+const platforms = [
+  {
+    name: "Alexia",
+    href: "https://colegiojosearrieta.alexiaeducl.com",
+    img: "https://www.alexiaeducl.com/img/logo-alexia.png",
+  },
+  {
+    name: "MINEDUC",
+    href: "https://registropublicodigital.mineduc.gob.cl",
+    img: "https://www.mineduc.cl/wp-content/uploads/sites/19/2014/08/mineduc.png",
+  },
+];
+
+function Footer() {
+  return (
+    <footer className="mt-16 bg-primary text-white">
+      <div className="container-main grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-4">
+
+        {/* Col 1 — Logo + descripción + redes */}
+        <section>
+          <div className="flex items-center gap-3">
+            <img
+              src="https://colegiojosearrieta.cl/wp-content/uploads/2023/05/favicon-colegiojosearrieta.png"
+              alt="Escudo Colegio José Arrieta"
+              className="h-12 w-12 rounded-full bg-white p-1"
+            />
+            <h3 className="font-heading text-lg font-bold leading-tight">
+              Colegio<br />José Arrieta
+            </h3>
+          </div>
+          <p className="mt-4 text-sm leading-relaxed text-white/70">
+            Educación integral en La Reina, con foco en excelencia académica,
+            formación valórica y desarrollo socioemocional desde 1973.
+          </p>
+          <div className="mt-5 flex items-center gap-3">
+            {[
+              { href: "https://www.instagram.com/colegioarrieta/", icon: Instagram, label: "Instagram" },
+              { href: "http://facebook.com/colegiojosearrieta", icon: Facebook, label: "Facebook" },
+              { href: "https://www.youtube.com/channel/UCVtQzc0st6Hs0y1s1qPA5Ew", icon: Youtube, label: "YouTube" },
+            ].map(({ href, icon: Icon, label }) => (
+              <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}
+                className="rounded-full bg-white/10 p-2 transition hover:bg-secondary hover:text-primary">
+                <Icon className="h-4 w-4" />
+              </a>
+            ))}
+          </div>
+
+          {/* Plataformas */}
+          <div className="mt-6">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-white/50">Plataformas</p>
+            <div className="flex flex-wrap gap-2">
+              {platforms.map((p) => (
+                <a key={p.name} href={p.href} target="_blank" rel="noreferrer"
+                  className="flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-xs font-medium text-white/80 transition hover:bg-white/20">
+                  {p.name}
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Col 2 — Navegación */}
+        <section>
+          <h3 className="mb-4 font-heading text-sm font-bold uppercase tracking-wider text-white/50">
+            El Colegio
+          </h3>
+          <ul className="space-y-2.5 text-sm">
+            {navLinks.map((item) => (
+              <li key={item.to}>
+                <Link to={item.to} className="text-white/75 transition hover:text-secondary">
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* Col 3 — Admisión y accesos */}
+        <section>
+          <h3 className="mb-4 font-heading text-sm font-bold uppercase tracking-wider text-white/50">
+            Admisión y Accesos
+          </h3>
+          <ul className="space-y-2.5 text-sm">
+            {admisionLinks.map((item) =>
+              item.external ? (
+                <li key={item.label}>
+                  <a href={item.href} target="_blank" rel="noreferrer"
+                    className="inline-flex items-center gap-1 text-white/75 transition hover:text-secondary">
+                    {item.label}
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </li>
+              ) : (
+                <li key={item.label}>
+                  <Link to={item.to} className="text-white/75 transition hover:text-secondary">
+                    {item.label}
+                  </Link>
+                </li>
+              )
+            )}
+          </ul>
+        </section>
+
+        {/* Col 4 — Contacto */}
+        <section>
+          <h3 className="mb-4 font-heading text-sm font-bold uppercase tracking-wider text-white/50">
+            Contacto
+          </h3>
+          <ul className="space-y-3 text-sm text-white/75">
+            <li className="flex gap-2">
+              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-secondary" />
+              <span>Av. José Arrieta 6870, La Reina</span>
+            </li>
+            <li className="flex gap-2">
+              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-secondary" />
+              <span>Januario Espinoza 7131, La Reina</span>
+            </li>
+            <li className="flex gap-2">
+              <Phone className="mt-0.5 h-4 w-4 shrink-0 text-secondary" />
+              <span>+56 2 2279 1863 / +56 2 2278 4685</span>
+            </li>
+            <li className="flex gap-2">
+              <Mail className="mt-0.5 h-4 w-4 shrink-0 text-secondary" />
+              <a href="mailto:colegio@colegiojosearrieta.cl"
+                className="transition hover:text-secondary">
+                colegio@colegiojosearrieta.cl
+              </a>
+            </li>
+            <li className="flex gap-2">
+              <Clock className="mt-0.5 h-4 w-4 shrink-0 text-secondary" />
+              <span>Lun–Vie 08:20–12:30 y 14:00–18:00</span>
+            </li>
+          </ul>
+        </section>
+      </div>
+
+      {/* Barra inferior */}
+      <div className="border-t border-white/10 py-5">
+        <div className="container-main flex flex-col items-center justify-between gap-3 text-xs text-white/40 sm:flex-row">
+          <span>© {new Date().getFullYear()} Colegio José Arrieta. Todos los derechos reservados.</span>
+          <span>Diseño web por <span className="text-white/60">RIDS Diseño</span></span>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+export default Footer;
