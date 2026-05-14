@@ -222,7 +222,7 @@ function ProyectoEducativo() {
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {talleres.map((taller, i) => {
               const Icon = tallerIcons[taller.id] || BookOpen;
               return (
@@ -232,14 +232,26 @@ function ProyectoEducativo() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.06 }}
-                  className="flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-soft"
+                  className="group relative overflow-hidden rounded-2xl shadow-soft"
+                  style={{ minHeight: "220px" }}
                 >
-                  <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary/15">
-                    <Icon className="h-5 w-5 text-secondary" />
-                  </div>
-                  <div>
-                    <h3 className="font-heading text-sm font-bold text-slate-800">{taller.nombre}</h3>
-                    <p className="mt-1 text-sm leading-relaxed text-slate-500">{taller.descripcion}</p>
+                  {/* Imagen de fondo */}
+                  <img
+                    src={taller.img}
+                    alt={taller.nombre}
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                  />
+                  {/* Overlay degradado */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" />
+
+                  {/* Contenido */}
+                  <div className="absolute inset-0 flex flex-col justify-end p-5">
+                    <div className="mb-2 inline-flex w-fit rounded-lg bg-secondary/20 p-2 backdrop-blur-sm">
+                      <Icon className="h-4 w-4 text-secondary" />
+                    </div>
+                    <h3 className="font-heading text-base font-bold text-white">{taller.nombre}</h3>
+                    <p className="mt-1 text-xs leading-relaxed text-white/70">{taller.descripcion}</p>
                   </div>
                 </motion.article>
               );
