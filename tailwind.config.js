@@ -4,10 +4,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#4B4BCC",
-        primaryHover: "#3A3AB8",
-        secondary: "#F5A623",
-        secondaryHover: "#D9911A",
+        primary: "#5151FA",
+        primaryHover: "#3E3EE0",
+        secondary: "#F7B20B",
+        secondaryHover: "#D99A08",
         accent: "#4ABFBF",
         accentStrong: "#35A0A0",
         bgsoft: "#F2F4FB",

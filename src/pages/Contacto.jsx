@@ -72,7 +72,7 @@ function Contacto() {
             <span className="relative whitespace-nowrap">
               <span className="relative z-10 text-secondary">hoy</span>
               <svg className="absolute -bottom-1 left-0 w-full" viewBox="0 0 60 8" fill="none" aria-hidden="true">
-                <path d="M1 5.5C15 1.5 35 7.5 59 3" stroke="#F5A623" strokeWidth="2.5" strokeLinecap="round" />
+                <path d="M1 5.5C15 1.5 35 7.5 59 3" stroke="#F7B20B" strokeWidth="2.5" strokeLinecap="round" />
               </svg>
             </span>
           </h1>

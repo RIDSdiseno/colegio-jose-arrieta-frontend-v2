@@ -73,7 +73,7 @@ export default function PageHeroCarousel({ slides, height = "52vh", autoplayMs =
                 <span className="relative whitespace-nowrap">
                   <span className="relative z-10 text-secondary">{slide.highlight}</span>
                   <svg className="absolute -bottom-1 left-0 w-full" viewBox="0 0 200 8" fill="none" aria-hidden="true">
-                    <path d="M1 5.5C50 1.5 100 7.5 199 3" stroke="#F5A623" strokeWidth="2.5" strokeLinecap="round" />
+                    <path d="M1 5.5C50 1.5 100 7.5 199 3" stroke="#F7B20B" strokeWidth="2.5" strokeLinecap="round" />
                   </svg>
                 </span>
               )}
