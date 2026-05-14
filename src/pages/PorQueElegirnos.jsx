@@ -1,26 +1,8 @@
-import { Users, Zap, Heart, Building2, Wifi, FlaskConical, Dumbbell, BookOpen, ArrowRight, GraduationCap, CalendarCheck, MapPin, MessageCircle } from "lucide-react";
+import { Users, Zap, Heart, Building2, Wifi, FlaskConical, Dumbbell, BookOpen, GraduationCap, CalendarCheck, MapPin, TrendingUp, Award, BookMarked, Star } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
-import SectionTitle from "../components/ui/SectionTitle";
-import PageHeroCarousel from "../components/ui/PageHeroCarousel";
-
-const heroSlides = [
-  {
-    img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1920&q=80",
-    badge: "Comunidad Educativa",
-    title: "¿Por qué",
-    highlight: "elegirnos?",
-    subtitle: "Somos un colegio que combina exigencia académica, cercanía familiar y bienestar integral — desde 1973.",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1920&q=80",
-    badge: "+50 años de trayectoria",
-    title: "Una comunidad con",
-    highlight: "historia y valores",
-    subtitle: "Inglés desde Pre-Kínder, método Singapur, talleres y más de 50 años formando personas en La Reina.",
-  },
-];
+import PageHero from "../components/ui/PageHero";
+import CTASection from "../components/sections/CTASection";
 
 const pilares = [
   {
@@ -61,6 +43,33 @@ const espacios = [
   { icon: Building2,    titulo: "Infraestructura Segura", texto: "Recintos certificados con acceso controlado y cámaras." },
 ];
 
+const logros = [
+  {
+    icon: TrendingUp,
+    valor: "+95%",
+    label: "Tasa de aprobación",
+    desc: "Porcentaje de alumnos que avanzan al siguiente nivel cada año.",
+  },
+  {
+    icon: Award,
+    valor: "Alto",
+    label: "Categoría MINEDUC",
+    desc: "Clasificación de desempeño obtenida en la evaluación del Sistema de Calidad.",
+  },
+  {
+    icon: BookMarked,
+    valor: "+270",
+    label: "Puntaje SIMCE Lectura",
+    desc: "Resultado promedio en Comprensión Lectora — por encima del promedio nacional.",
+  },
+  {
+    icon: Star,
+    valor: "+260",
+    label: "Puntaje SIMCE Matemática",
+    desc: "Resultado promedio en Matemática — reflejo del trabajo pedagógico sostenido.",
+  },
+];
+
 const hitos = [
   { year: "1973",  texto: "Fundación del Colegio Particular José Arrieta por la Sra. Marta y dos profesoras pioneras." },
   { year: "1973",  texto: "Reconocimiento oficial del Ministerio de Educación — Decreto N° 11621, el 26 de abril." },
@@ -81,19 +90,28 @@ function PorQueElegirnos() {
         <meta name="keywords" content="colegio educación integral La Reina, colegio con inglés prekinder Santiago, colegio valores La Reina, colegio subvencionado recomendado Santiago" />
       </Helmet>
 
-      <PageHeroCarousel slides={heroSlides} />
+      <PageHero
+        imgs={[
+          "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?auto=format&fit=crop&w=1920&q=80",
+          "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1920&q=80",
+        ]}
+        badge="Comunidad Educativa"
+        title="¿Por qué"
+        highlight="elegirnos?"
+        subtitle="Somos un colegio que combina exigencia académica, cercanía familiar y bienestar integral — desde 1973."
+      />
 
       {/* ── Stats bar ────────────────────────────────────────────────── */}
-      <section className="bg-white shadow-md">
+      <section className="border-y border-slate-100 bg-white">
         <div className="container-main">
           <div className="grid grid-cols-2 divide-x divide-slate-100 lg:grid-cols-4">
             {stats.map(({ icon: Icon, value, label }) => (
-              <div key={label} className="flex items-center gap-4 px-6 py-5">
+              <div key={label} className="flex items-center gap-3 px-3 py-5 sm:gap-4 sm:px-6 sm:py-6">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10">
                   <Icon className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-slate-800">{value}</p>
+                  <p className="font-heading text-xl font-black text-secondary">{value}</p>
                   <p className="text-xs text-slate-400">{label}</p>
                 </div>
               </div>
@@ -105,39 +123,51 @@ function PorQueElegirnos() {
       {/* ── Pilares ──────────────────────────────────────────────────── */}
       <section className="py-20">
         <div className="container-main">
-          <SectionTitle
-            title="Nuestros 3 pilares institucionales"
-            subtitle="Los pilares que sostienen el proyecto educativo del Colegio José Arrieta."
-          />
-          <div className="grid gap-6 md:grid-cols-3">
-            {pilares.map((pilar) => {
+          <div className="mb-12 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-secondary">Lo que nos define</span>
+              <h2 className="mt-2 font-heading text-4xl font-black text-slate-900 sm:text-5xl">
+                3 pilares<br /><span className="text-primary">institucionales.</span>
+              </h2>
+            </div>
+            <p className="max-w-xs text-sm leading-relaxed text-slate-500">
+              Los pilares que sostienen el proyecto educativo del Colegio José Arrieta desde 1973.
+            </p>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            {pilares.map((pilar, i) => {
               const Icon = pilar.icon;
               return (
                 <motion.article
                   key={pilar.id}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 24 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.2 }}
-                  className="group overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-soft"
+                  transition={{ delay: i * 0.1 }}
+                  className="group relative min-h-[420px] overflow-hidden rounded-3xl"
                 >
-                  {/* Imagen con overlay */}
-                  <div className="relative h-56 overflow-hidden">
-                    <img
-                      src={pilar.img}
-                      alt={pilar.titulo}
-                      className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/30 to-transparent" />
-                    <div className="absolute bottom-4 left-4 flex items-center gap-2.5">
-                      <div className="inline-flex rounded-lg bg-secondary p-2 text-primary">
-                        <Icon className="h-4 w-4" />
-                      </div>
-                      <h2 className="font-heading text-xl font-bold text-white">{pilar.titulo}</h2>
-                    </div>
+                  {/* Imagen full-card */}
+                  <img
+                    src={pilar.img}
+                    alt={pilar.titulo}
+                    className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                  />
+                  {/* Overlay degradado */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10" />
+
+                  {/* Número decorativo */}
+                  <div className="absolute right-5 top-5 font-heading text-7xl font-black leading-none text-white/10 select-none">
+                    0{pilar.id}
                   </div>
-                  {/* Texto */}
-                  <div className="p-5">
-                    <p className="text-sm leading-relaxed text-slate-600">{pilar.texto}</p>
+
+                  {/* Contenido */}
+                  <div className="absolute inset-0 flex flex-col justify-end p-7">
+                    <div className="mb-3 inline-flex w-fit rounded-xl bg-secondary p-2.5">
+                      <Icon className="h-5 w-5 text-primary" />
+                    </div>
+                    <h2 className="font-heading text-2xl font-black text-white">{pilar.titulo}</h2>
+                    <p className="mt-2 text-sm leading-relaxed text-white/75">{pilar.texto}</p>
                   </div>
                 </motion.article>
               );
@@ -147,7 +177,7 @@ function PorQueElegirnos() {
       </section>
 
       {/* ── Infraestructura ──────────────────────────────────────────── */}
-      <section className="bg-bgsoft py-20">
+      <section className="bg-slate-950 py-20">
         <div className="container-main">
           <div className="grid items-center gap-10 lg:grid-cols-2">
             <motion.div
@@ -169,23 +199,23 @@ function PorQueElegirnos() {
               viewport={{ once: true }}
             >
               <span className="text-xs font-bold uppercase tracking-widest text-secondary">Infraestructura</span>
-              <h2 className="mt-2 font-heading text-3xl font-bold text-primary sm:text-4xl">
+              <h2 className="mt-2 font-heading text-3xl font-bold text-white sm:text-4xl">
                 Espacios pensados<br />para aprender
               </h2>
-              <p className="mt-3 text-sm leading-relaxed text-slate-500">
+              <p className="mt-3 text-sm leading-relaxed text-white/60">
                 Nuestras instalaciones están diseñadas para ofrecer un ambiente seguro, moderno y estimulante para todos.
               </p>
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
                 {espacios.map((e) => {
                   const Icon = e.icon;
                   return (
-                    <div key={e.titulo} className="flex items-start gap-3 rounded-xl bg-white p-3.5 shadow-sm">
-                      <div className="mt-0.5 shrink-0 inline-flex rounded-lg bg-primary/10 p-2">
-                        <Icon className="h-4 w-4 text-primary" />
+                    <div key={e.titulo} className="flex items-start gap-3 rounded-xl bg-white/10 border border-white/10 p-3.5">
+                      <div className="mt-0.5 shrink-0 inline-flex rounded-lg bg-secondary/15 p-2">
+                        <Icon className="h-4 w-4 text-secondary" />
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-slate-800">{e.titulo}</p>
-                        <p className="mt-0.5 text-xs leading-relaxed text-slate-500">{e.texto}</p>
+                        <p className="text-sm font-semibold text-white">{e.titulo}</p>
+                        <p className="mt-0.5 text-xs leading-relaxed text-white/50">{e.texto}</p>
                       </div>
                     </div>
                   );
@@ -196,8 +226,52 @@ function PorQueElegirnos() {
         </div>
       </section>
 
+      {/* ── Resultados Académicos ────────────────────────────────────── */}
+      <section className="bg-bgsoft py-20">
+        <div className="container-main">
+          <div className="mb-12 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-secondary">Resultados académicos</span>
+              <h2 className="mt-2 font-heading text-4xl font-black text-slate-900 sm:text-5xl">
+                Excelencia que<br /><span className="text-primary">se mide.</span>
+              </h2>
+            </div>
+            <p className="max-w-xs text-sm leading-relaxed text-slate-500">
+              Nuestros resultados reflejan el compromiso diario de alumnos, familias y docentes.
+            </p>
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {logros.map((logro, i) => {
+              const Icon = logro.icon;
+              return (
+                <motion.div
+                  key={logro.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ delay: i * 0.1 }}
+                  className="group rounded-2xl border border-slate-100 bg-white p-6 transition hover:border-primary/20 hover:shadow-soft"
+                >
+                  <div className="mb-4 inline-flex rounded-xl bg-primary/10 p-2.5">
+                    <Icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <p className="font-heading text-4xl font-black text-secondary">{logro.valor}</p>
+                  <p className="mt-1 font-heading text-sm font-bold text-slate-800">{logro.label}</p>
+                  <p className="mt-2 text-xs leading-relaxed text-slate-500">{logro.desc}</p>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          <p className="mt-6 text-center text-xs text-slate-400">
+            * Datos basados en evaluaciones SIMCE y registros internos del establecimiento. Se actualizan anualmente.
+          </p>
+        </div>
+      </section>
+
       {/* ── Historia / Timeline ──────────────────────────────────────── */}
-      <section className="py-20">
+      <section className="bg-white py-20">
         <div className="container-main">
           <div className="grid items-start gap-10 lg:grid-cols-2">
             {/* Timeline */}
@@ -206,9 +280,9 @@ function PorQueElegirnos() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <span className="text-xs font-bold uppercase tracking-widest text-secondary">Desde 1973</span>
-              <h2 className="mt-2 font-heading text-3xl font-bold text-primary sm:text-4xl">
-                Más de 50 años<br />formando personas
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-secondary">Desde 1973</span>
+              <h2 className="mt-2 font-heading text-4xl font-black text-slate-900 sm:text-5xl">
+                Más de 50 años<br /><span className="text-primary">formando personas.</span>
               </h2>
               <p className="mt-4 text-sm leading-relaxed text-slate-600">
                 El Colegio José Arrieta imparte enseñanza Pre-Escolar y Educación Básica 1° a 8° año, con más
@@ -217,15 +291,14 @@ function PorQueElegirnos() {
 
               <div className="mt-8 space-y-0">
                 {hitos.map((h, i) => (
-                  <div key={i} className="flex gap-4">
+                  <div key={`${h.year}-${i}`} className="flex gap-4">
                     <div className="flex flex-col items-center">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
-                        {h.year === "Hoy" ? "🎓" : h.year.slice(-2)}
+                      <div className={`flex h-9 min-w-[2.25rem] shrink-0 items-center justify-center rounded-full px-2 text-xs font-black ${h.year === "Hoy" ? "bg-secondary text-primary" : "bg-primary text-white"}`}>
+                        {h.year}
                       </div>
                       {i < hitos.length - 1 && <div className="mt-1 w-0.5 flex-1 bg-slate-200" />}
                     </div>
                     <div className="pb-6">
-                      <p className="text-xs font-bold uppercase tracking-wide text-secondary">{h.year}</p>
                       <p className="mt-0.5 text-sm leading-relaxed text-slate-600">{h.texto}</p>
                     </div>
                   </div>
@@ -272,49 +345,11 @@ function PorQueElegirnos() {
         </div>
       </section>
 
-      {/* ── CTA final ────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-primary py-20">
-        {/* Círculos decorativos */}
-        <div className="absolute -left-20 -top-20 h-72 w-72 rounded-full bg-white/5" />
-        <div className="absolute -bottom-16 -right-16 h-56 w-56 rounded-full bg-secondary/10" />
-
-        <div className="container-main relative z-10 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <span className="inline-flex items-center gap-2 rounded-full bg-secondary/20 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-secondary">
-              <span className="h-2 w-2 animate-ping rounded-full bg-secondary" />
-              Admisión 2026 abierta
-            </span>
-            <h2 className="mt-4 font-heading text-3xl font-extrabold text-white sm:text-4xl">
-              ¿Listo para ser parte<br />de nuestra comunidad?
-            </h2>
-            <p className="mx-auto mt-4 max-w-lg text-base text-white/70">
-              Agenda una visita al colegio, conoce nuestros espacios y resuelve todas tus dudas sin compromiso.
-            </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-4">
-              <Link
-                to="/admision"
-                className="inline-flex items-center gap-2 rounded-full bg-secondary px-8 py-4 text-sm font-bold text-primary shadow-lg transition hover:bg-secondaryHover"
-              >
-                Postula 2026
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <a
-                href="https://wa.me/56988936631?text=Hola%2C%20me%20interesa%20información%20sobre%20la%20admisión%202026"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border-2 border-white/30 bg-white/10 px-8 py-4 text-sm font-bold text-white transition hover:border-white/60 hover:bg-white/20"
-              >
-                <MessageCircle className="h-4 w-4" />
-                Escribir por WhatsApp
-              </a>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      <CTASection
+        title="¿Listo para ser parte"
+        highlight="de nuestra comunidad?"
+        subtitle="Agenda una visita al colegio, conoce nuestros espacios y resuelve todas tus dudas sin compromiso."
+      />
     </>
   );
 }

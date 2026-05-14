@@ -3,31 +3,13 @@ import { Helmet } from "react-helmet-async";
 import { getBoletines } from "../api/boletines";
 import {
   TrendingUp, BookOpen, Globe, Heart, Users, Lightbulb,
-  Handshake, Brain, ArrowRight, MessageCircle,
+  Handshake, Brain,
   Music, Dumbbell, Bot, Palette, Languages,
-  FileText, Download, ShieldCheck, ScrollText, ExternalLink,
+  FileText, Download, ShieldCheck, ScrollText,
 } from "lucide-react";
-import PageHeroCarousel from "../components/ui/PageHeroCarousel";
-
-const heroSlides = [
-  {
-    img: "https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=1920&q=80",
-    badge: "Formación Integral",
-    title: "Proyecto",
-    highlight: "Educativo",
-    subtitle: "Impulsamos el desarrollo académico, emocional y social en cada estudiante — desde Pre-Kínder hasta 8° básico.",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=1920&q=80",
-    badge: "Inglés desde Pre-Kínder",
-    title: "Aprender con sentido,",
-    highlight: "convivir con valores",
-    subtitle: "Método Singapur, Programa Richmond de inglés y talleres extraprogramáticos para un desarrollo integral.",
-  },
-];
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
-import SectionTitle from "../components/ui/SectionTitle";
+import PageHero from "../components/ui/PageHero";
+import CTASection from "../components/sections/CTASection";
 import talleres from "../data/talleres";
 
 const tallerIcons = {
@@ -115,32 +97,41 @@ function ProyectoEducativo() {
         />
       </Helmet>
 
-      <PageHeroCarousel slides={heroSlides} />
+      <PageHero
+        imgs={[
+          "https://images.unsplash.com/photo-1607453998774-d533f65dac99?auto=format&fit=crop&w=1920&q=80",
+          "https://images.unsplash.com/photo-1555431189-0fabf2667795?auto=format&fit=crop&w=1920&q=80",
+        ]}
+        badge="Formación Integral"
+        title="Proyecto"
+        highlight="Educativo"
+        subtitle="Impulsamos el desarrollo académico, emocional y social en cada estudiante — desde Pre-Kínder hasta 8° básico."
+      />
 
       {/* ── Ejes estratégicos ────────────────────────────────────────── */}
       <section className="py-20">
         <div className="container-main">
-          <div className="grid items-center gap-10 lg:grid-cols-2">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <span className="text-xs font-bold uppercase tracking-widest text-secondary">Nuestro enfoque</span>
-              <h2 className="mt-2 font-heading text-3xl font-bold text-primary sm:text-4xl">
-                Aprender con sentido,<br />convivir con valores
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-secondary">Nuestro enfoque</span>
+              <h2 className="mt-2 font-heading text-4xl font-black text-slate-900 sm:text-5xl">
+                Aprender con sentido,<br /><span className="text-primary">convivir con valores.</span>
               </h2>
               <p className="mt-4 text-sm leading-relaxed text-slate-500">
                 Nuestro proyecto integra excelencia académica, ciudadanía responsable y trabajo colaborativo en cada nivel.
               </p>
               <div className="mt-6 rounded-2xl border border-primary/20 bg-primary/5 p-5">
-                <p className="text-sm font-semibold text-primary">Horario escolar</p>
-                <p className="mt-1 text-lg font-bold text-primary">08:20 – 12:30 y 14:00 – 18:00 hrs</p>
-                <p className="text-xs text-slate-500">Lunes a Viernes · Pre-Kínder a 8° Básico</p>
+                <p className="text-xs font-bold uppercase tracking-[0.15em] text-primary/60">Horario escolar</p>
+                <p className="mt-1 font-heading text-2xl font-black text-primary">08:20 – 12:30 · 14:00 – 18:00</p>
+                <p className="mt-0.5 text-xs text-slate-500">Lunes a Viernes · Pre-Kínder a 8° Básico</p>
               </div>
             </motion.div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-3 sm:grid-cols-2">
               {ejes.map((eje, i) => {
                 const Icon = eje.icon;
                 return (
@@ -152,10 +143,10 @@ function ProyectoEducativo() {
                     transition={{ delay: i * 0.08 }}
                     className="rounded-2xl border border-slate-100 bg-white p-5 shadow-soft"
                   >
-                    <div className="mb-3 inline-flex rounded-xl bg-primary/10 p-3">
+                    <div className="mb-3 inline-flex rounded-xl bg-primary/10 p-2.5">
                       <Icon className="h-5 w-5 text-primary" />
                     </div>
-                    <h3 className="font-semibold text-slate-800">{eje.titulo}</h3>
+                    <h3 className="font-heading text-sm font-bold text-slate-800">{eje.titulo}</h3>
                     <p className="mt-1 text-sm leading-relaxed text-slate-500">{eje.texto}</p>
                   </motion.article>
                 );
@@ -168,14 +159,16 @@ function ProyectoEducativo() {
       {/* ── Metas académicas ─────────────────────────────────────────── */}
       <section className="bg-primary py-20">
         <div className="container-main">
-          <div className="mb-10 text-center">
-            <span className="text-xs font-bold uppercase tracking-widest text-secondary">
-              Metas Académicas 2025–2026
-            </span>
-            <h2 className="mt-2 font-heading text-3xl font-bold text-white sm:text-4xl">
-              Comprometidos con resultados reales
-            </h2>
-            <p className="mt-3 text-sm text-white/70">
+          <div className="mb-12 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-secondary">
+                Metas Académicas 2025–2026
+              </span>
+              <h2 className="mt-2 font-heading text-4xl font-black text-white sm:text-5xl">
+                Comprometidos con<br /><span className="text-secondary">resultados reales.</span>
+              </h2>
+            </div>
+            <p className="max-w-xs text-sm leading-relaxed text-white/60">
               Metas institucionales concretas, medibles y orientadas al éxito de cada alumno.
             </p>
           </div>
@@ -206,29 +199,31 @@ function ProyectoEducativo() {
       </section>
 
       {/* ── Talleres ─────────────────────────────────────────────────── */}
-      <section className="bg-bgsoft py-20">
+      <section className="bg-slate-50 py-20">
         <div className="container-main">
-          {/* Banner imagen */}
-          <div className="mb-10 overflow-hidden rounded-2xl shadow-soft">
+          {/* Header editorial */}
+          <div className="mb-10 overflow-hidden rounded-3xl">
             <div className="relative h-52 sm:h-64">
               <img
                 src="https://colegiojosearrieta.cl/wp-content/uploads/2025/09/DSC_0369-Grande.jpg"
                 alt="Talleres extraprogramáticos Colegio José Arrieta"
                 className="h-full w-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/85 to-primary/30" />
-              <div className="absolute inset-0 flex flex-col justify-center px-8">
-                <span className="text-xs font-bold uppercase tracking-widest text-secondary">Vida complementaria</span>
-                <h2 className="mt-1 font-heading text-3xl font-bold text-white sm:text-4xl">Talleres destacados</h2>
-                <p className="mt-2 max-w-md text-sm text-white/80">
+              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
+              <div className="absolute inset-0 flex flex-col justify-center px-8 sm:px-12">
+                <span className="text-xs font-bold uppercase tracking-[0.2em] text-secondary">Vida complementaria</span>
+                <h2 className="mt-2 font-heading text-4xl font-black text-white sm:text-5xl">
+                  Talleres<br /><span className="text-secondary">destacados.</span>
+                </h2>
+                <p className="mt-3 max-w-md text-sm text-white/75">
                   Espacios que potencian talentos y habilidades para el futuro de cada alumno.
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {talleres.map((taller) => {
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {talleres.map((taller, i) => {
               const Icon = tallerIcons[taller.id] || BookOpen;
               return (
                 <motion.article
@@ -236,13 +231,14 @@ function ProyectoEducativo() {
                   initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
+                  transition={{ delay: i * 0.06 }}
                   className="flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-soft"
                 >
                   <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary/15">
                     <Icon className="h-5 w-5 text-secondary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-slate-800">{taller.nombre}</h3>
+                    <h3 className="font-heading text-sm font-bold text-slate-800">{taller.nombre}</h3>
                     <p className="mt-1 text-sm leading-relaxed text-slate-500">{taller.descripcion}</p>
                   </div>
                 </motion.article>
@@ -255,11 +251,15 @@ function ProyectoEducativo() {
       {/* ── Reglamentos y Documentos ─────────────────────────────────── */}
       <section className="py-20">
         <div className="container-main">
-          <SectionTitle
-            eyebrow="Transparencia"
-            title="Reglamentos y documentos"
-            subtitle="Accede a todos los reglamentos, protocolos y planes institucionales vigentes."
-          />
+          <div className="mb-10">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-secondary">Transparencia</span>
+            <h2 className="mt-2 font-heading text-4xl font-black text-slate-900 sm:text-5xl">
+              Reglamentos y<br /><span className="text-primary">documentos.</span>
+            </h2>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-slate-500">
+              Accede a todos los reglamentos, protocolos y planes institucionales vigentes.
+            </p>
+          </div>
 
           {/* Documentos principales */}
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-10">
@@ -334,13 +334,14 @@ function ProyectoEducativo() {
       </section>
 
       {/* ── Boletines ────────────────────────────────────────────────── */}
-      <section className="bg-bgsoft py-16">
+      <section className="bg-slate-50 py-16">
         <div className="container-main">
-          <SectionTitle
-            eyebrow="Comunicaciones"
-            title="Boletines del Colegio"
-            subtitle="Comunicaciones mensuales para la comunidad del Colegio José Arrieta."
-          />
+          <div className="mb-10">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-secondary">Comunicaciones</span>
+            <h2 className="mt-2 font-heading text-4xl font-black text-slate-900 sm:text-5xl">
+              Boletines del<br /><span className="text-primary">Colegio.</span>
+            </h2>
+          </div>
           {loadingBoletines ? (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {Array.from({ length: 3 }).map((_, i) => (
@@ -362,16 +363,8 @@ function ProyectoEducativo() {
               </div>
               <div>
                 <p className="font-heading text-lg font-semibold text-slate-800">Boletines del Colegio</p>
-                <p className="mt-1 text-sm text-slate-500">Accede a todos los boletines publicados en el sitio oficial.</p>
+                <p className="mt-1 text-sm text-slate-500">Los boletines estarán disponibles próximamente.</p>
               </div>
-              <a
-                href="https://colegiojosearrieta.cl/documentos/boletines/"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-white transition hover:bg-primaryHover"
-              >
-                Ver boletines <ExternalLink className="h-4 w-4" />
-              </a>
             </div>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -381,6 +374,7 @@ function ProyectoEducativo() {
                   href={b.link}
                   target="_blank"
                   rel="noreferrer"
+                  {...(b.isPdf ? { download: true } : {})}
                   initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -392,68 +386,24 @@ function ProyectoEducativo() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="truncate text-sm font-semibold text-slate-800">{b.titulo}</p>
-                    <p className="mt-0.5 text-xs text-slate-400">{b.fecha}</p>
+                    <p className="mt-0.5 text-xs text-slate-400">
+                      {b.fecha}
+                      {b.isPdf && <span className="ml-2 rounded bg-secondary/15 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-secondary">PDF</span>}
+                    </p>
                   </div>
                   <Download className="h-4 w-4 shrink-0 text-slate-300 transition group-hover:text-secondary" />
                 </motion.a>
               ))}
             </div>
           )}
-          <div className="mt-6 text-center">
-            <a
-              href="https://colegiojosearrieta.cl/documentos/boletines/"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
-            >
-              Ver todos los boletines <Download className="h-3.5 w-3.5" />
-            </a>
-          </div>
         </div>
       </section>
 
-      {/* ── CTA final ────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-primary py-20">
-        <div className="absolute -left-20 -top-20 h-72 w-72 rounded-full bg-white/5" />
-        <div className="absolute -bottom-16 -right-16 h-56 w-56 rounded-full bg-secondary/10" />
-
-        <div className="container-main relative z-10 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <span className="inline-flex items-center gap-2 rounded-full bg-secondary/20 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-secondary">
-              <span className="h-2 w-2 animate-ping rounded-full bg-secondary" />
-              Admisión 2026 abierta
-            </span>
-            <h2 className="mt-4 font-heading text-3xl font-extrabold text-white sm:text-4xl">
-              ¿Quieres ser parte de este<br />proyecto educativo?
-            </h2>
-            <p className="mx-auto mt-4 max-w-lg text-base text-white/70">
-              Postula en línea o agenda una visita para conocer el colegio en persona.
-            </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-4">
-              <Link
-                to="/admision"
-                className="inline-flex items-center gap-2 rounded-full bg-secondary px-8 py-4 text-sm font-bold text-primary shadow-lg transition hover:bg-secondaryHover"
-              >
-                Postula 2026
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <a
-                href="https://wa.me/56988936631?text=Hola%2C%20me%20interesa%20información%20sobre%20la%20admisión%202026"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border-2 border-white/30 bg-white/10 px-8 py-4 text-sm font-bold text-white transition hover:border-white/60 hover:bg-white/20"
-              >
-                <MessageCircle className="h-4 w-4" />
-                Escribir por WhatsApp
-              </a>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      <CTASection
+        title="¿Quieres ser parte de este"
+        highlight="proyecto educativo?"
+        subtitle="Postula en línea o agenda una visita para conocer el colegio en persona."
+      />
     </>
   );
 }

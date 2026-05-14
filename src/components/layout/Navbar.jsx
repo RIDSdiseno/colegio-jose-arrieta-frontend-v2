@@ -9,7 +9,6 @@ const navItems = [
   { label: "Inicio", to: "/" },
   { label: "¿Por qué elegirnos?", to: "/por-que-elegirnos" },
   { label: "Proyecto Educativo", to: "/proyecto-educativo" },
-  { label: "Admisión 2026", to: "/admision" },
   { label: "Vida Escolar", to: "/vida-escolar" },
   { label: "Noticias", to: "/noticias" },
   { label: "Contacto", to: "/contacto" },
@@ -24,7 +23,7 @@ function Topbar() {
   function handleSearch(e) {
     e.preventDefault();
     if (query.trim()) {
-      navigate(`/noticias?q=${encodeURIComponent(query.trim())}`);
+      navigate(`/buscar?q=${encodeURIComponent(query.trim())}`);
       setQuery("");
     }
   }
@@ -39,56 +38,44 @@ function Topbar() {
           <span>Av. José Arrieta 6870, La Reina</span>
         </div>
 
-        {/* Centro — buscador */}
-        <form onSubmit={handleSearch} className="flex items-center">
-          <div className="flex items-center rounded-full overflow-hidden border border-white/25 bg-white/15 px-3 py-1 gap-2 w-56">
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="¿Qué estás buscando?"
-              className="bg-transparent text-xs text-white placeholder-white/60 outline-none w-full"
-            />
-            <button
-              type="submit"
-              className="shrink-0 text-white/70 hover:text-white transition"
-              aria-label="Buscar"
-            >
-              <Search className="h-3.5 w-3.5" />
-            </button>
-          </div>
-        </form>
-
-        {/* Derecha — redes + portal */}
+        {/* Derecha — buscador + redes + portal */}
         <div className="flex items-center gap-3 shrink-0">
-          <a
-            href="https://www.youtube.com/@colegioarrieta"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="YouTube"
-            className="transition hover:text-white"
-          >
+          {/* Buscador */}
+          <form onSubmit={handleSearch} className="flex items-center">
+            <div className="flex items-center rounded-full border border-white/25 bg-white/15 px-3 py-1 gap-2 w-44">
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Buscar en el sitio..."
+                className="bg-transparent text-xs text-white placeholder-white/60 outline-none w-full"
+              />
+              <button
+                type="submit"
+                className="shrink-0 text-white/70 hover:text-white transition"
+                aria-label="Buscar"
+              >
+                <Search className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          </form>
+
+          <div className="h-3.5 w-px bg-white/20" />
+
+          {/* Redes */}
+          <a href="https://www.youtube.com/@colegioarrieta" target="_blank" rel="noreferrer" aria-label="YouTube" className="transition hover:text-white">
             <Youtube className="h-3.5 w-3.5" />
           </a>
-          <a
-            href="https://www.instagram.com/colegioarrieta/"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Instagram"
-            className="transition hover:text-white"
-          >
+          <a href="https://www.instagram.com/colegioarrieta/" target="_blank" rel="noreferrer" aria-label="Instagram" className="transition hover:text-white">
             <Instagram className="h-3.5 w-3.5" />
           </a>
-          <a
-            href="https://www.facebook.com/colegiojosearrieta"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Facebook"
-            className="transition hover:text-white"
-          >
+          <a href="https://www.facebook.com/colegiojosearrieta" target="_blank" rel="noreferrer" aria-label="Facebook" className="transition hover:text-white">
             <Facebook className="h-3.5 w-3.5" />
           </a>
+
           <div className="h-3.5 w-px bg-white/20" />
+
+          {/* Portal */}
           <a
             href="https://colegiojosearrieta.alexiaeducl.com"
             target="_blank"
@@ -120,7 +107,7 @@ function Navbar() {
         <Topbar />
 
         {/* Navbar principal */}
-        <header className="bg-primary shadow-md">
+        <header className={`transition-all duration-300 ${scrolled ? "bg-white shadow-md" : "bg-primary shadow-md"}`}>
           <nav className="container-main flex h-20 items-center justify-between">
             {/* Logo */}
             <Link to="/" className="flex items-center">
@@ -139,8 +126,8 @@ function Navbar() {
                   to={item.to}
                   className={({ isActive }) =>
                     isActive
-                      ? "whitespace-nowrap rounded-lg px-2.5 py-1.5 text-xs font-semibold text-secondary"
-                      : "whitespace-nowrap rounded-lg px-2.5 py-1.5 text-xs font-medium text-white/90 transition hover:text-white"
+                      ? `whitespace-nowrap rounded-lg px-2.5 py-1.5 text-xs font-semibold text-secondary`
+                      : `whitespace-nowrap rounded-lg px-2.5 py-1.5 text-xs font-medium transition ${scrolled ? "text-slate-700 hover:text-primary" : "text-white/90 hover:text-white"}`
                   }
                 >
                   {item.label}
@@ -160,7 +147,7 @@ function Navbar() {
               type="button"
               aria-label="Abrir menu"
               onClick={() => setOpen((prev) => !prev)}
-              className="grid h-10 w-10 place-content-center rounded-lg border border-white/30 bg-white/10 text-white transition hover:bg-white/20 lg:hidden"
+              className={`grid h-11 w-11 place-content-center rounded-lg border transition lg:hidden ${scrolled ? "border-slate-200 text-slate-700 hover:bg-slate-50" : "border-white/30 bg-white/10 text-white hover:bg-white/20"}`}
             >
               {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>

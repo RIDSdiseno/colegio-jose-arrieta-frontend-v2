@@ -75,7 +75,7 @@ function Footer() {
               { href: "https://www.youtube.com/channel/UCVtQzc0st6Hs0y1s1qPA5Ew", icon: Youtube, label: "YouTube" },
             ].map(({ href, icon: Icon, label }) => (
               <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}
-                className="rounded-full bg-white/10 p-2 transition hover:bg-secondary hover:text-primary">
+                className="rounded-full bg-white/10 p-3 transition hover:bg-secondary hover:text-primary">
                 <Icon className="h-4 w-4" />
               </a>
             ))}

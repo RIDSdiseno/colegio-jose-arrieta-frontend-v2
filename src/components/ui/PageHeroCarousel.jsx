@@ -46,7 +46,7 @@ export default function PageHeroCarousel({ slides, height = "52vh", autoplayMs =
       </AnimatePresence>
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/92 via-primary/70 to-primary/20" />
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/70 to-primary/20" />
 
       {/* Contenido */}
       <div className="container-main relative z-10 py-24">

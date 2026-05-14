@@ -11,19 +11,27 @@ const variants = {
     "border border-primary/30 bg-white text-primary hover:border-primary hover:bg-primary/5 focus-visible:ring-primary",
 };
 
-function Button({ children, variant = "primary", className = "", to, ...props }) {
+function Button({ children, variant = "primary", className = "", to, type, disabled, ...props }) {
   const classes = `${baseClass} ${variants[variant] || variants.primary} ${className}`;
 
   if (to) {
+    // Link accepts event handlers and aria-* but not button-only attrs (type, disabled)
     return (
-      <Link to={to} className={classes}>
+      <Link to={to} className={classes} {...props}>
         {children}
       </Link>
     );
   }
 
   return (
-    <motion.button whileTap={{ scale: 0.98 }} whileHover={{ y: -1 }} className={classes} {...props}>
+    <motion.button
+      type={type || "button"}
+      disabled={disabled}
+      whileTap={{ scale: 0.98 }}
+      whileHover={{ y: -1 }}
+      className={classes}
+      {...props}
+    >
       {children}
     </motion.button>
   );

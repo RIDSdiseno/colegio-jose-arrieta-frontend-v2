@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { CalendarDays, ExternalLink } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 import DOMPurify from "dompurify";
 import { getNoticiaPorSlug } from "../api/noticias";
 import Badge from "../components/ui/Badge";
@@ -86,20 +86,14 @@ function NoticiaDetalle() {
           ) : null}
 
           <div
-            className="prose prose-slate mt-8 max-w-none"
+            className="wp-content mt-8 overflow-x-hidden"
             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(noticia.contenido) }}
           />
 
           <div className="mt-10 border-t border-slate-200 pt-8">
-            <a
-              href={noticia.link}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition hover:bg-primaryHover"
-            >
-              Ver noticia completa en el sitio oficial
-              <ExternalLink className="h-4 w-4" />
-            </a>
+            <Button to="/noticias" variant="outline">
+              ← Volver a noticias
+            </Button>
           </div>
         </div>
       </section>

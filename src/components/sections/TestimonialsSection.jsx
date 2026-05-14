@@ -1,73 +1,134 @@
-import { Star } from "lucide-react";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import testimonials from "../../data/testimonials";
-import SectionTitle from "../ui/SectionTitle";
 
 function Stars({ count = 5 }) {
   return (
     <div className="flex gap-0.5">
       {Array.from({ length: 5 }).map((_, i) => (
-        <Star
-          key={i}
-          className={`h-4 w-4 ${i < count ? "fill-amber-400 text-amber-400" : "text-slate-200"}`}
-        />
+        <Star key={i} className={`h-3.5 w-3.5 ${i < count ? "fill-secondary text-secondary" : "text-slate-200"}`} />
       ))}
     </div>
   );
 }
 
 function TestimonialsSection() {
+  const [active, setActive] = useState(0);
+  const total = testimonials.length;
+
+  const prev = () => setActive((c) => (c - 1 + total) % total);
+  const next = () => setActive((c) => (c + 1) % total);
+
+  const t = testimonials[active];
+
   return (
-    <section className="bg-slate-50 py-16">
+    <section className="overflow-hidden bg-white py-24">
       <div className="container-main">
-        <SectionTitle
-          eyebrow="Lo que dice nuestra comunidad"
-          title="Familias que confían en nosotros"
-          subtitle="Reseñas reales de apoderados y alumnos del Colegio José Arrieta."
-        />
+        <div className="grid items-center gap-16 lg:grid-cols-2">
 
-        <div className="grid gap-5 md:grid-cols-3">
-          {testimonials.map((t, index) => (
-            <motion.article
-              key={t.nombre}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ delay: index * 0.09 }}
-              className="flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-soft"
-            >
-              <Stars count={t.estrellas} />
-              <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-slate-700">
-                "{t.texto}"
-              </blockquote>
-              <div className="mt-5 flex items-center gap-3 border-t border-slate-100 pt-4">
-                <div
-                  style={{ backgroundColor: t.color }}
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
-                >
-                  {t.initials}
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-primary">{t.nombre}</p>
-                  <p className="text-xs text-slate-400">{t.cargo}</p>
-                </div>
+          {/* Izquierda — texto */}
+          <div>
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-secondary">
+              Nuestra comunidad
+            </span>
+            <h2 className="mt-3 font-heading text-4xl font-black leading-tight text-slate-900 sm:text-5xl">
+              Lo que dicen las<br />
+              <span className="text-primary">familias</span>.
+            </h2>
+            <p className="mt-4 text-base leading-relaxed text-slate-500">
+              Más de 50 años construyendo confianza con las familias de La Reina.
+            </p>
+
+            {/* Rating global */}
+            <div className="mt-8 inline-flex items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50 px-5 py-3">
+              <div className="flex gap-0.5">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className={`h-4 w-4 ${i < 4 ? "fill-secondary text-secondary" : "fill-secondary/30 text-secondary/30"}`} />
+                ))}
               </div>
-            </motion.article>
-          ))}
-        </div>
+              <span className="text-sm font-semibold text-slate-700">4.1 / 5</span>
+              <span className="text-xs text-slate-400">· 70 reseñas en MiCole.net</span>
+            </div>
 
-        <div className="mt-8 flex items-center justify-center gap-2">
-          <div className="flex gap-0.5">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Star
-                key={i}
-                className={`h-4 w-4 ${i < 4 ? "fill-amber-400 text-amber-400" : "fill-amber-200 text-amber-200"}`}
-              />
-            ))}
+            {/* Controles */}
+            <div className="mt-8 flex items-center gap-3">
+              <button
+                type="button"
+                onClick={prev}
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 text-slate-400 transition hover:border-primary hover:text-primary"
+                aria-label="Anterior"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <span className="text-sm text-slate-400">
+                {active + 1} <span className="mx-1 text-slate-200">/</span> {total}
+              </span>
+              <button
+                type="button"
+                onClick={next}
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 text-slate-400 transition hover:border-primary hover:text-primary"
+                aria-label="Siguiente"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
           </div>
-          <p className="text-sm text-slate-600">
-            <span className="font-bold text-slate-800">4.1 / 5</span> · 70 valoraciones verificadas en MiCole.net
-          </p>
+
+          {/* Derecha — card del testimonio activo */}
+          <div className="relative">
+            {/* Decoración */}
+            <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-secondary/10 blur-2xl" />
+            <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-primary/10 blur-2xl" />
+
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={active}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+                className="relative rounded-3xl border border-slate-100 bg-white p-5 sm:p-8 shadow-soft"
+              >
+                {/* Comilla decorativa */}
+                <div className="mb-5 inline-flex rounded-xl bg-primary/10 p-2.5">
+                  <Quote className="h-5 w-5 text-primary" />
+                </div>
+
+                <Stars count={t.estrellas} />
+
+                <blockquote className="mt-4 text-lg font-medium leading-relaxed text-slate-700">
+                  "{t.texto}"
+                </blockquote>
+
+                <div className="mt-6 flex items-center gap-4 border-t border-slate-100 pt-5">
+                  <div
+                    style={{ backgroundColor: t.color }}
+                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-base font-black text-white shadow-sm"
+                  >
+                    {t.initials}
+                  </div>
+                  <div>
+                    <p className="font-heading text-sm font-bold text-slate-900">{t.nombre}</p>
+                    <p className="text-xs text-slate-400">{t.cargo}</p>
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Dots */}
+            <div className="mt-5 flex justify-center gap-1.5">
+              {testimonials.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setActive(i)}
+                  aria-label={`Testimonio ${i + 1}`}
+                  className={`h-1.5 rounded-full transition-all ${i === active ? "w-6 bg-primary" : "w-1.5 bg-slate-200"}`}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>

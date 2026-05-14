@@ -13,6 +13,7 @@ import VidaEscolar from "./pages/VidaEscolar";
 import Noticias from "./pages/Noticias";
 import NoticiaDetalle from "./pages/NoticiaDetalle";
 import Contacto from "./pages/Contacto";
+import Buscar from "./pages/Buscar";
 
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminNoticias from "./pages/admin/AdminNoticias";
@@ -37,6 +38,7 @@ function App() {
           <Route path="/vida-escolar" element={<VidaEscolar />} />
           <Route path="/noticias" element={<Noticias />} />
           <Route path="/noticias/:slug" element={<NoticiaDetalle />} />
+          <Route path="/buscar" element={<Buscar />} />
           <Route path="/contacto" element={<Contacto />} />
 
           {/* SEO landing pages — no aparecen en el menú */}

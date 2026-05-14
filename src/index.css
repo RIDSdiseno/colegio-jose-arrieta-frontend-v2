@@ -52,6 +52,178 @@ h6 {
   z-index: 1;
 }
 
+/* ── Contenido HTML de WordPress (NoticiaDetalle) ── */
+.wp-content {
+  color: #334155;
+  line-height: 1.75;
+  font-size: 1rem;
+}
+.wp-content h1,
+.wp-content h2,
+.wp-content h3,
+.wp-content h4,
+.wp-content h5,
+.wp-content h6 {
+  font-family: "Montserrat", system-ui, sans-serif;
+  font-weight: 700;
+  color: #12253d;
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+.wp-content h2 { font-size: 1.5rem; }
+.wp-content h3 { font-size: 1.25rem; }
+.wp-content h4 { font-size: 1.1rem; }
+.wp-content p  { margin-top: 0; margin-bottom: 1.25rem; }
+.wp-content a  { color: #5151fa; text-decoration: underline; }
+.wp-content a:hover { color: #3a3abb; }
+.wp-content ul,
+.wp-content ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.wp-content ul { list-style-type: disc; }
+.wp-content ol { list-style-type: decimal; }
+.wp-content li { margin-bottom: 0.4rem; }
+.wp-content blockquote {
+  border-left: 4px solid #5151fa;
+  padding: 0.75rem 1.25rem;
+  margin: 1.5rem 0;
+  background: #f2f4fb;
+  border-radius: 0 0.5rem 0.5rem 0;
+  color: #475569;
+  font-style: italic;
+}
+/* Imágenes: centradas y con tamaño máximo razonable */
+.wp-content img {
+  display: block;
+  max-width: 100%;
+  max-height: 420px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 0.75rem;
+  margin: 1.25rem auto;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+/* Imágenes pequeñas/iconos que WP inserta en línea — no aplicar sombra ni bloque */
+.wp-content img[width] {
+  max-width: min(100%, calc(1px * var(--img-w, 9999)));
+}
+.wp-content figure {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+.wp-content figcaption {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 0.5rem;
+}
+/* Bloques Gutenberg de columnas → grilla */
+.wp-content .wp-block-columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.wp-content .wp-block-column {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+/* Galería */
+.wp-content .wp-block-gallery,
+.wp-content .wp-block-image.alignleft,
+.wp-content .wp-block-image.alignright,
+.wp-content figure.wp-block-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+.wp-content .wp-block-gallery img {
+  width: auto;
+  max-height: 200px;
+  object-fit: cover;
+  flex: 1 1 160px;
+  margin: 0;
+}
+/* Imagen alineada izquierda/derecha */
+.wp-content .alignleft  { float: left;  margin: 0 1.25rem 1rem 0; }
+.wp-content .alignright { float: right; margin: 0 0 1rem 1.25rem; }
+.wp-content .aligncenter { text-align: center; }
+.wp-content::after { content: ""; display: table; clear: both; }
+.wp-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+.wp-content th,
+.wp-content td {
+  border: 1px solid #e2e8f0;
+  padding: 0.6rem 0.9rem;
+  text-align: left;
+}
+.wp-content th {
+  background: #f1f5f9;
+  font-weight: 600;
+  color: #12253d;
+}
+.wp-content hr {
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  margin: 2rem 0;
+}
+.wp-content pre,
+.wp-content code {
+  font-family: ui-monospace, monospace;
+  background: #f1f5f9;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+}
+.wp-content pre  { padding: 1rem 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+.wp-content code { padding: 0.15rem 0.4rem; }
+/* WP-specific blocks */
+.wp-content .wp-block-image { margin: 1.5rem auto; text-align: center; }
+.wp-content .wp-block-embed { margin: 1.5rem 0; }
+.wp-content .wp-block-embed__wrapper iframe {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 0.75rem;
+  border: none;
+}
+/* Separador decorativo de WP */
+.wp-content .wp-block-separator {
+  border: none;
+  border-top: 2px solid #e2e8f0;
+  margin: 2rem auto;
+  max-width: 6rem;
+}
+/* Quote block */
+.wp-content .wp-block-quote {
+  border-left: 4px solid #5151fa;
+  padding: 0.75rem 1.25rem;
+  margin: 1.5rem 0;
+  background: #f2f4fb;
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+.wp-content .wp-block-quote p { color: #475569; font-style: italic; margin-bottom: 0; }
+/* Botones de WP */
+.wp-content .wp-block-button__link {
+  display: inline-block;
+  background: #5151fa;
+  color: #fff !important;
+  text-decoration: none !important;
+  padding: 0.6rem 1.4rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+.wp-content .wp-block-button__link:hover { background: #3a3abb; }
+
 /* ── Ocultar UI de YouTube en video de fondo ── */
 #yt-hero-player {
   pointer-events: none;

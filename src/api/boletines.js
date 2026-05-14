@@ -31,11 +31,20 @@ export async function getBoletines({ limit = 6 } = {}) {
     timeout: 10000,
   });
 
-  return res.data.map((post) => ({
-    id: post.id,
-    titulo: stripHtml(post.title?.rendered),
-    fecha: formatDate(post.date, { year: "numeric", month: "long" }),
-    link: post.link,
-    imagen: post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || null,
-  }));
+  return res.data.map((post) => {
+    // Intentar extraer URL del PDF desde el contenido del post (primer enlace .pdf)
+    const contenido = post.content?.rendered || "";
+    const pdfMatch = contenido.match(/href="([^"]+\.pdf)"/i);
+    const pdfUrl = pdfMatch?.[1] || null;
+
+    return {
+      id: post.id,
+      titulo: stripHtml(post.title?.rendered),
+      fecha: formatDate(post.date, { year: "numeric", month: "long" }),
+      // Preferir link directo al PDF; si no hay, ir a la página del post en WP
+      link: pdfUrl || post.link,
+      isPdf: !!pdfUrl,
+      imagen: post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || null,
+    };
+  });
 }

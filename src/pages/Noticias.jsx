@@ -1,28 +1,12 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useSearchParams } from "react-router-dom";
-import { CalendarDays, ExternalLink, Search, X } from "lucide-react";
+import { CalendarDays, Search, X } from "lucide-react";
+import { Link } from "react-router-dom";
 import { getNoticias } from "../api/noticias";
 import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
-import PageHeroCarousel from "../components/ui/PageHeroCarousel";
-
-const heroSlides = [
-  {
-    img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1920&q=80",
-    badge: "Comunidad en acción",
-    title: "Noticias del",
-    highlight: "Colegio",
-    subtitle: "Todo lo que ocurre en nuestra comunidad: aprendizajes, eventos y logros.",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1920&q=80",
-    badge: "Actualidad 2026",
-    title: "Mantente",
-    highlight: "informado",
-    subtitle: "Noticias, actividades y novedades del Colegio José Arrieta en La Reina.",
-  },
-];
+import PageHero from "../components/ui/PageHero";
 
 function SkeletonCard() {
   return (
@@ -89,7 +73,13 @@ function Noticias() {
         <meta name="description" content="Revisa noticias, actividades y novedades del Colegio José Arrieta en La Reina." />
       </Helmet>
 
-      <PageHeroCarousel slides={heroSlides} />
+      <PageHero
+        img="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1920&q=80"
+        badge="Comunidad en acción"
+        title="Noticias del"
+        highlight="Colegio"
+        subtitle="Todo lo que ocurre en nuestra comunidad: aprendizajes, eventos y logros."
+      />
 
       <section className="py-16">
         <div className="container-main">
@@ -116,22 +106,16 @@ function Noticias() {
             </Button>
           </form>
 
-          {/* Resultado de búsqueda */}
-          {queryParam && !loading && (
+          {/* Resultado de búsqueda — solo cuando hay resultados */}
+          {queryParam && !loading && items.length > 0 && (
             <p className="mb-6 text-sm text-slate-500">
-              {items.length > 0
-                ? <>Resultados para <span className="font-semibold text-primary">"{queryParam}"</span> — {items.length} {items.length === 1 ? "noticia encontrada" : "noticias encontradas"}</>
-                : <>No se encontraron noticias para <span className="font-semibold text-primary">"{queryParam}"</span></>
-              }
+              Resultados para <span className="font-semibold text-primary">"{queryParam}"</span> — {items.length} {items.length === 1 ? "noticia encontrada" : "noticias encontradas"}
             </p>
           )}
 
           {error && (
             <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 p-5 text-center text-red-700">
-              {error}{" "}
-              <a href="https://colegiojosearrieta.cl" target="_blank" rel="noreferrer" className="font-semibold underline">
-                Ver noticias en el sitio oficial →
-              </a>
+              {error}
             </div>
           )}
 
@@ -143,12 +127,14 @@ function Noticias() {
                     key={item.id}
                     className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-soft transition hover:-translate-y-1"
                   >
-                    <img
-                      src={item.imagen || "https://images.unsplash.com/photo-1497486751825-1233686d5d80?auto=format&fit=crop&w=1200&q=80"}
-                      alt={item.titulo}
-                      loading="lazy"
-                      className="h-48 w-full object-cover"
-                    />
+                    <Link to={`/noticias/${item.slug}`}>
+                      <img
+                        src={item.imagen || "https://images.unsplash.com/photo-1497486751825-1233686d5d80?auto=format&fit=crop&w=1200&q=80"}
+                        alt={item.titulo}
+                        loading="lazy"
+                        className="h-48 w-full object-cover transition hover:opacity-90"
+                      />
+                    </Link>
                     <div className="p-5">
                       <div className="mb-3 flex items-center justify-between">
                         <Badge>{item.categoria}</Badge>
@@ -158,24 +144,36 @@ function Noticias() {
                         </span>
                       </div>
                       <h2 className="line-clamp-2 font-heading text-xl font-semibold text-primary">
-                        {item.titulo}
+                        <Link to={`/noticias/${item.slug}`} className="hover:underline">
+                          {item.titulo}
+                        </Link>
                       </h2>
                       <p className="mt-2 line-clamp-3 text-sm text-slate-600">{item.extracto}</p>
-                      <a
-                        href={item.link}
-                        target="_blank"
-                        rel="noreferrer"
+                      <Link
+                        to={`/noticias/${item.slug}`}
                         className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
                       >
-                        Leer noticia <ExternalLink className="h-3.5 w-3.5" />
-                      </a>
+                        Leer noticia →
+                      </Link>
                     </div>
                   </article>
                 ))}
           </div>
 
-          {!loading && !error && items.length === 0 && !queryParam && (
-            <p className="mt-6 text-center text-slate-600">No hay noticias publicadas aún.</p>
+          {!loading && !error && items.length === 0 && (
+            <div className="flex flex-col items-center gap-3 py-20 text-center">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
+                <Search className="h-7 w-7 text-primary/50" />
+              </div>
+              <p className="font-heading text-lg font-semibold text-slate-700">
+                {queryParam ? `Sin resultados para "${queryParam}"` : "Próximamente"}
+              </p>
+              <p className="max-w-xs text-sm text-slate-400">
+                {queryParam
+                  ? "Intenta con otras palabras clave."
+                  : "Aquí aparecerán las noticias y novedades del colegio."}
+              </p>
+            </div>
           )}
 
           {!loading && page < totalPages && (

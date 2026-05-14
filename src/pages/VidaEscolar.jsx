@@ -3,26 +3,9 @@ import { Music, Trophy, Palette, BookMarked, HandHeart, ChevronLeft, ChevronRigh
 import { motion, AnimatePresence } from "framer-motion";
 import { Helmet } from "react-helmet-async";
 import SectionTitle from "../components/ui/SectionTitle";
-import PageHeroCarousel from "../components/ui/PageHeroCarousel";
+import PageHero from "../components/ui/PageHero";
 
 const BASE = "https://colegiojosearrieta.cl/wp-content/uploads";
-
-const heroSlides = [
-  {
-    img: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1920&q=80",
-    badge: "Comunidad Viva",
-    title: "Vida",
-    highlight: "Escolar",
-    subtitle: "Creemos en una escuela donde aprender también es disfrutar, compartir y crecer juntos.",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1920&q=80",
-    badge: "Galería y actividades",
-    title: "Momentos que",
-    highlight: "marcan para siempre",
-    subtitle: "Graduaciones, celebraciones, deportes y talleres que construyen identidad y pertenencia.",
-  },
-];
 
 const experiencias = [
   {
@@ -341,26 +324,43 @@ function VidaEscolar() {
         />
       </Helmet>
 
-      <PageHeroCarousel slides={heroSlides} />
+      <PageHero
+        imgs={[
+          "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&w=1920&q=80",
+          "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1920&q=80",
+        ]}
+        badge="Comunidad Viva"
+        title="Vida"
+        highlight="Escolar"
+        subtitle="Creemos en una escuela donde aprender también es disfrutar, compartir y crecer juntos."
+      />
 
       {/* Experiencias */}
-      <section className="py-16">
+      <section className="bg-slate-950 py-20">
         <div className="container-main">
-          <SectionTitle
-            title="Experiencias que dejan huella"
-            subtitle="La vida escolar del Colegio José Arrieta integra cultura, deporte, convivencia y aprendizaje activo."
-          />
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mb-10">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-secondary">Actividades</span>
+            <h2 className="mt-2 font-heading text-4xl font-black text-white sm:text-5xl">
+              Experiencias que<br /><span className="text-secondary">dejan huella.</span>
+            </h2>
+          </div>
+          <div className="grid gap-px bg-white/5 md:grid-cols-2 lg:grid-cols-3 rounded-3xl overflow-hidden">
             {experiencias.map((item) => {
               const Icon = item.icon;
               return (
-                <article key={item.id} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft">
-                  <div className="mb-4 inline-flex rounded-xl bg-secondary/20 p-3 text-secondary">
-                    <Icon className="h-5 w-5" />
+                <motion.article
+                  key={item.id}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="bg-slate-950 p-8 hover:bg-white/5 transition"
+                >
+                  <div className="mb-4 inline-flex rounded-xl bg-secondary/15 p-3">
+                    <Icon className="h-5 w-5 text-secondary" />
                   </div>
-                  <h2 className="font-heading text-xl font-semibold text-primary">{item.titulo}</h2>
-                  <p className="mt-2 text-slate-600">{item.texto}</p>
-                </article>
+                  <h2 className="font-heading text-xl font-bold text-white">{item.titulo}</h2>
+                  <p className="mt-2 text-sm leading-relaxed text-white/60">{item.texto}</p>
+                </motion.article>
               );
             })}
           </div>
@@ -368,25 +368,30 @@ function VidaEscolar() {
       </section>
 
       {/* Galería real */}
-      <section className="bg-white py-16">
+      <section className="py-20">
         <div className="container-main">
-          <SectionTitle
-            eyebrow="Galería"
-            title="Momentos de nuestra comunidad"
-            subtitle="Álbumes fotográficos de las actividades del Colegio José Arrieta. Haz clic para ver cada galería."
-          />
+          <div className="mb-10">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-secondary">Galería</span>
+            <h2 className="mt-2 font-heading text-4xl font-black text-slate-900 sm:text-5xl">
+              Momentos de nuestra<br /><span className="text-primary">comunidad.</span>
+            </h2>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-slate-500">
+              Álbumes fotográficos de las actividades del Colegio José Arrieta. Haz clic para ver cada galería.
+            </p>
+          </div>
           <Galeria />
         </div>
       </section>
 
       {/* Videos reales */}
-      <section className="bg-slate-50 py-16">
+      <section className="bg-slate-950 py-20">
         <div className="container-main">
-          <SectionTitle
-            eyebrow="Videos"
-            title="Conoce nuestro colegio en video"
-            subtitle="Videos institucionales del Colegio José Arrieta. Haz clic para reproducir."
-          />
+          <div className="mb-10">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-secondary">Videos</span>
+            <h2 className="mt-2 font-heading text-4xl font-black text-white sm:text-5xl">
+              Conoce el colegio<br /><span className="text-secondary">en video.</span>
+            </h2>
+          </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {videos.map((v) => (
               <VideoCard key={v.id} video={v} />

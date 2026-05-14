@@ -1,138 +1,143 @@
 import { motion } from "framer-motion";
-import { CalendarCheck, GraduationCap, Users, Clock, ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const stats = [
-  { icon: GraduationCap, label: "+50 años",      sub: "formando personas" },
-  { icon: Users,         label: "+800 alumnos",  sub: "comunidad activa" },
-  { icon: Clock,         label: "Pre-Kínder a 8°", sub: "básico completo" },
-  { icon: CalendarCheck, label: "Admisión 2026", sub: "inscripciones abiertas" },
+const STATS = [
+  { value: "+50",        label: "años de trayectoria" },
+  { value: "+800",       label: "alumnos activos" },
+  { value: "2 sedes",    label: "en La Reina" },
+  { value: "Pre-K–8°",   label: "básico completo" },
 ];
 
-export default function HeroSection() {
+function HeroSection() {
   return (
-    <section className="relative overflow-hidden" style={{ minHeight: "90vh" }}>
+    <section className="relative flex flex-col" style={{ minHeight: "100svh" }}>
 
-      {/* ── Video de fondo ──────────────────────────────────────────── */}
-      <div
-        className="absolute inset-0 overflow-hidden"
-        aria-hidden="true"
-      >
+      {/* ── Video ───────────────────────────────────────────────────────── */}
+      <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
         <video
           className="absolute"
           style={{
-            top: "50%",
-            left: "50%",
-            width: "177.78vh",
-            minWidth: "100%",
-            height: "56.25vw",
-            minHeight: "100%",
-            transform: "translate(-50%, -50%)",
+            top: "50%", left: "50%",
+            width: "177.78vh", minWidth: "100%",
+            height: "56.25vw", minHeight: "100%",
+            transform: "translate(-50%,-50%)",
             objectFit: "cover",
           }}
           src="/hero.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
+          autoPlay muted loop playsInline
         />
       </div>
 
-      {/* ── Overlays ────────────────────────────────────────────────── */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/70 via-primary/50 to-primary/80" />
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/50 via-transparent to-transparent" />
+      {/* ── Overlays ────────────────────────────────────────────────────── */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black/75 via-primary/60 to-black/50" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-      {/* ── Contenido ───────────────────────────────────────────────── */}
-      <div className="container-main relative z-10 flex h-full flex-col items-center justify-center py-28 text-center lg:py-36">
+      {/* ── Contenido principal ─────────────────────────────────────────── */}
+      <div className="container-main relative z-10 flex flex-1 flex-col items-start justify-center px-4 py-32 lg:py-40">
 
+        {/* Badge */}
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="mb-6 inline-flex items-center gap-2 rounded-full border border-secondary/40 bg-secondary/20 px-4 py-1.5 backdrop-blur-sm"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-8 inline-flex items-center gap-2.5 rounded-full border border-secondary/50 bg-secondary/15 px-5 py-2 backdrop-blur-sm"
         >
-          <span className="h-2 w-2 animate-ping rounded-full bg-secondary" />
-          <span className="text-xs font-bold uppercase tracking-widest text-secondary">
-            Admisión 2026 — Inscripciones abiertas
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-secondary opacity-75" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-secondary" />
+          </span>
+          <span className="text-xs font-bold uppercase tracking-[0.15em] text-secondary">
+            Admisión 2026 · Inscripciones abiertas
           </span>
         </motion.div>
 
+        {/* Título */}
         <motion.h1
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="font-heading text-3xl font-extrabold leading-[1.15] text-white sm:text-4xl lg:text-5xl xl:text-6xl"
+          transition={{ duration: 0.7, delay: 0.1 }}
+          className="max-w-4xl font-heading text-4xl font-black leading-[1.1] text-white sm:text-5xl lg:text-6xl xl:text-7xl"
         >
-          Formamos alumnos{" "}
-          <span className="relative whitespace-nowrap">
-            <span className="relative z-10 text-secondary">felices</span>
+          Donde cada alumno{" "}
+          <span className="relative inline-block">
+            <span className="relative z-10 text-secondary">descubre</span>
             <svg className="absolute -bottom-1 left-0 w-full" viewBox="0 0 200 8" fill="none" aria-hidden="true">
-              <path d="M1 5.5C50 1.5 100 7.5 199 3" stroke="#F7B20B" strokeWidth="2.5" strokeLinecap="round" />
+              <path d="M1 5.5C50 1.5 100 7.5 199 3" stroke="#F7B20B" strokeWidth="3" strokeLinecap="round" />
             </svg>
-          </span>
-          ,<br />seguros y preparados para el futuro.
+          </span>{" "}
+          su mejor versión.
         </motion.h1>
 
+        {/* Subtítulo */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.25 }}
-          className="mt-6 max-w-2xl text-base leading-relaxed text-white/80 lg:text-lg"
+          transition={{ duration: 0.6, delay: 0.25 }}
+          className="mt-6 max-w-xl text-lg leading-relaxed text-white/75"
         >
           Más de 50 años formando personas con valores, excelencia académica
-          y desarrollo integral en La Reina, Santiago.
+          e inglés desde Pre-Kínder en La Reina, Santiago.
         </motion.p>
 
+        {/* CTAs */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.38 }}
-          className="mt-10 flex flex-wrap justify-center gap-4"
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="mt-10 flex flex-wrap gap-4"
         >
           <Link
             to="/admision"
-            className="inline-flex items-center gap-2 rounded-full bg-secondary px-8 py-4 text-sm font-bold text-primary shadow-lg transition hover:bg-secondaryHover hover:shadow-xl"
+            className="group inline-flex items-center gap-2 rounded-full bg-secondary px-8 py-4 text-sm font-bold text-primary shadow-xl shadow-secondary/30 transition hover:bg-secondaryHover hover:shadow-secondary/50"
           >
-            Postula Aquí 2026
-            <ArrowRight className="h-4 w-4" />
+            Postula 2026
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
           <Link
-            to="/contacto"
-            className="inline-flex items-center gap-2 rounded-full border-2 border-white/30 bg-white/10 px-8 py-4 text-sm font-bold text-white backdrop-blur-sm transition hover:border-white/60 hover:bg-white/20"
+            to="/por-que-elegirnos"
+            className="inline-flex items-center gap-2 rounded-full border-2 border-white/25 bg-white/10 px-8 py-4 text-sm font-bold text-white backdrop-blur-sm transition hover:border-white/50 hover:bg-white/20"
           >
-            Agenda una Visita
+            Conoce el colegio
           </Link>
         </motion.div>
       </div>
 
-      {/* ── Stats bar ───────────────────────────────────────────────── */}
+      {/* ── Stats strip ─────────────────────────────────────────────────── */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.55 }}
-        className="absolute bottom-0 left-0 right-0 z-10"
+        transition={{ duration: 0.6, delay: 0.6 }}
+        className="relative z-10 bg-white/10 backdrop-blur-md border-t border-white/15"
       >
-        <div className="container-main">
-          <div className="grid grid-cols-2 overflow-hidden rounded-t-2xl bg-white shadow-2xl lg:grid-cols-4">
-            {stats.map(({ icon: Icon, label, sub }, i) => (
-              <div
-                key={label}
-                className={`flex items-center gap-4 px-6 py-5 ${
-                  i < stats.length - 1 ? "border-r border-slate-100" : ""
-                }`}
-              >
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10">
-                  <Icon className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-slate-800">{label}</p>
-                  <p className="text-xs text-slate-400">{sub}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+        <div className="container-main grid grid-cols-2 divide-x divide-white/15 lg:grid-cols-4">
+          {STATS.map(({ value, label }) => (
+            <div key={label} className="flex flex-col items-center py-5 px-4 text-center">
+              <span className="font-heading text-2xl font-black text-secondary">{value}</span>
+              <span className="mt-0.5 text-xs text-white/60">{label}</span>
+            </div>
+          ))}
         </div>
       </motion.div>
+
+      {/* ── Scroll indicator ────────────────────────────────────────────── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2 }}
+        className="absolute bottom-24 right-8 z-10 hidden lg:flex flex-col items-center gap-2"
+      >
+        <span className="text-[10px] uppercase tracking-widest text-white/40 [writing-mode:vertical-rl]">Scroll</span>
+        <motion.div
+          animate={{ y: [0, 6, 0] }}
+          transition={{ repeat: Infinity, duration: 1.5 }}
+        >
+          <ChevronDown className="h-4 w-4 text-white/40" />
+        </motion.div>
+      </motion.div>
+
     </section>
   );
 }
+
+export default HeroSection;

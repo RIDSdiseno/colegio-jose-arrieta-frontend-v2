@@ -68,7 +68,7 @@ export default function FotoMosaico() {
               src={fotos[0].src}
               alt={fotos[0].alt}
               className="h-full w-full object-cover transition duration-500 hover:scale-105"
-              style={{ minHeight: "280px" }}
+              className="min-h-[200px] sm:min-h-[280px]"
             />
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
               <p className="text-sm font-semibold text-white">{fotos[0].caption}</p>

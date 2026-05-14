@@ -1,51 +1,63 @@
-import axios from "axios";
 import { supabase } from "../lib/supabase";
-import { stripHtml, formatDate } from "../lib/utils";
-
-const WP_BASE = "https://colegiojosearrieta.cl/wp-json/wp/v2";
-
-function mapPost(post) {
-  const media = post._embedded?.["wp:featuredmedia"]?.[0];
-  const terms = post._embedded?.["wp:term"];
-  const categoria = terms?.[0]?.[0]?.name || "General";
-  return {
-    id: post.id,
-    slug: post.slug,
-    link: post.link,
-    titulo: stripHtml(post.title?.rendered),
-    extracto: stripHtml(post.excerpt?.rendered),
-    contenido: post.content?.rendered || "",
-    imagen: media?.source_url || null,
-    categoria,
-    fecha: formatDate(post.date),
-  };
-}
-
-// ── API pública (WordPress) ────────────────────────────────────────────────────
-
-export async function getNoticias({ limit = 6, page = 1, search = "" } = {}) {
-  const params = { per_page: limit, page, _embed: 1, status: "publish" };
-  if (search.trim()) params.search = search.trim();
-  const response = await axios.get(`${WP_BASE}/posts`, { params, timeout: 10000 });
-  const totalPages = Number(response.headers?.["x-wp-totalpages"] || 1);
-  return { data: response.data.map(mapPost), page, totalPages };
-}
-
-export async function getNoticiaPorSlug(slug) {
-  const response = await axios.get(`${WP_BASE}/posts`, {
-    params: { slug, _embed: 1 },
-    timeout: 10000,
-  });
-  if (!response.data.length) throw new Error("Noticia no encontrada.");
-  return mapPost(response.data[0]);
-}
-
-// ── API admin (Supabase — requiere .env.local configurado) ────────────────────
+import { formatDate } from "../lib/utils";
 
 function requireSupabase() {
   if (!supabase) throw new Error("Supabase no está configurado. Agrega VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY en .env.local");
   return supabase;
 }
+
+function mapRow(row) {
+  return {
+    id: row.id,
+    slug: row.slug,
+    titulo: row.titulo,
+    extracto: row.extracto || "",
+    contenido: row.contenido || "",
+    imagen: row.imagen || null,
+    categoria: row.categoria || "General",
+    fecha: formatDate(row.fecha),
+  };
+}
+
+// ── API pública (Supabase) ─────────────────────────────────────────────────────
+
+export async function getNoticias({ limit = 6, page = 1, search = "" } = {}) {
+  if (!supabase) return { data: [], page, totalPages: 1 };
+
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  let query = supabase
+    .from("noticias")
+    .select("*", { count: "exact" })
+    .order("fecha", { ascending: false })
+    .range(from, to);
+
+  if (search.trim()) {
+    query = query.ilike("titulo", `%${search.trim()}%`);
+  }
+
+  const { data, error, count } = await query;
+  if (error) throw new Error(error.message);
+
+  const totalPages = Math.max(1, Math.ceil((count || 0) / limit));
+  return { data: (data || []).map(mapRow), page, totalPages };
+}
+
+export async function getNoticiaPorSlug(slug) {
+  if (!supabase) throw new Error("Noticia no encontrada.");
+
+  const { data, error } = await supabase
+    .from("noticias")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+
+  if (error || !data) throw new Error("Noticia no encontrada.");
+  return mapRow(data);
+}
+
+// ── API admin (Supabase) ───────────────────────────────────────────────────────
 
 export async function crearNoticia(payload) {
   const sb = requireSupabase();

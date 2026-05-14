@@ -7,24 +7,7 @@ import {
   ZoomIn, X, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import PageHeroCarousel from "../components/ui/PageHeroCarousel";
-
-const heroSlides = [
-  {
-    img: "https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1920&q=80",
-    badge: "Admisión 2026 — Inscripciones abiertas",
-    title: "Postula al Colegio",
-    highlight: "José Arrieta",
-    subtitle: "Queremos acompañarte en una decisión importante para el futuro de tu hijo/a.",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1527689368864-3a821dbccc34?auto=format&fit=crop&w=1920&q=80",
-    badge: "Vacantes disponibles",
-    title: "Pre-Kínder a",
-    highlight: "8° Básico",
-    subtitle: "Inscripción oficial a través del sistema MINEDUC. Matrícula sin costo.",
-  },
-];
+import PageHero from "../components/ui/PageHero";
 
 // ── Imágenes del uniforme (coloca los archivos en /public/) ───────────────────
 const uniformeImages = [
@@ -57,6 +40,7 @@ function Lightbox({ images, startIndex, onClose }) {
       {/* Cerrar */}
       <button
         onClick={onClose}
+        aria-label="Cerrar imagen"
         className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/25 transition"
       >
         <X className="h-5 w-5" />
@@ -215,7 +199,13 @@ function Admision() {
         <meta name="keywords" content="admisión 2026 La Reina, postular colegio La Reina, vacantes colegio subvencionado Santiago, inscripción MINEDUC 2026" />
       </Helmet>
 
-      <PageHeroCarousel slides={heroSlides} />
+      <PageHero
+        img="https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1920&q=80"
+        badge="Admisión 2026 · Inscripciones abiertas"
+        title="Postula al Colegio"
+        highlight="José Arrieta"
+        subtitle="Queremos acompañarte en una decisión importante para el futuro de tu hijo/a."
+      />
 
       {/* ── ¿Por qué elegirnos? + Vacantes ──────────────────────────── */}
       <section className="py-20">
@@ -290,7 +280,7 @@ function Admision() {
             title="Tu camino en 5 pasos"
             subtitle="La inscripción oficial se realiza a través del sistema MINEDUC."
           />
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
             {pasos.map((paso, i) => {
               const Icon = paso.icon;
               return (
@@ -342,19 +332,19 @@ function Admision() {
               reajustados anualmente según normativa MINEDUC.
             </p>
             <div className="space-y-3">
-              <div className="flex items-center justify-between rounded-xl bg-primary/5 border border-primary/10 px-4 py-3 text-sm">
+              <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-primary/5 border border-primary/10 px-4 py-3 text-sm">
                 <span className="font-medium text-slate-700">Pre-Kínder a 8° Básico</span>
                 <span className="text-lg font-extrabold text-primary">$36.465</span>
               </div>
-              <div className="flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3 text-sm">
+              <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-slate-50 px-4 py-3 text-sm">
                 <span className="font-medium text-slate-700">Centro de Padres — alumno nuevo</span>
                 <span className="font-semibold text-slate-700">$15.000</span>
               </div>
-              <div className="flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3 text-sm">
+              <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-slate-50 px-4 py-3 text-sm">
                 <span className="font-medium text-slate-700">Centro de Padres — alumno antiguo</span>
                 <span className="font-semibold text-slate-700">$10.000</span>
               </div>
-              <div className="flex items-center justify-between rounded-xl bg-emerald-50 px-4 py-3 text-sm">
+              <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-emerald-50 px-4 py-3 text-sm">
                 <span className="font-medium text-slate-700">Matrícula</span>
                 <span className="font-bold text-emerald-600">Sin costo</span>
               </div>
@@ -385,11 +375,12 @@ function Admision() {
             </p>
 
             {/* Miniaturas — click abre lightbox */}
-            <div className="mb-5 grid grid-cols-3 gap-2">
+            <div className="mb-5 grid grid-cols-2 gap-2 sm:grid-cols-3">
               {uniformeImages.map((img, i) => (
                 <button
                   key={i}
                   onClick={() => setLightbox(i)}
+                  aria-label={`Ver ${img.label}`}
                   className="group relative overflow-hidden rounded-xl border border-slate-200 bg-slate-50"
                 >
                   <img
