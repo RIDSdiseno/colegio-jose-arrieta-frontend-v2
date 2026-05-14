@@ -171,6 +171,31 @@ function Footer() {
         </section>
       </div>
 
+      {/* Badges de acreditación */}
+      <div className="border-t border-white/10 py-6">
+        <div className="container-main flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
+          <p className="text-xs font-semibold uppercase tracking-wider text-white/40">Respaldado por</p>
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:justify-end">
+            {[
+              { label: "MINEDUC", href: "https://www.mineduc.cl" },
+              { label: "SEP", href: "https://www.mineduc.cl/subvenciones/" },
+              { label: "JUNAEB", href: "https://www.junaeb.cl" },
+              { label: "IEA", href: "https://www.agenciaeducacion.cl" },
+            ].map(({ label, href }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-xs font-bold text-white/50 transition hover:border-white/30 hover:text-white/80"
+              >
+                {label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Barra inferior */}
       <div className="border-t border-white/10 py-5">
         <div className="container-main flex flex-col items-center justify-between gap-3 text-xs text-white/40 sm:flex-row">

@@ -1,6 +1,8 @@
 import { Helmet } from "react-helmet-async";
 import HeroSection from "../components/sections/HeroSection";
 import ValoresSection from "../components/sections/ValoresSection";
+import StatsSection from "../components/sections/StatsSection";
+import DivisionesSection from "../components/sections/DivisionesSection";
 import BeneficiosSection from "../components/sections/BeneficiosSection";
 import NewsSection from "../components/sections/NewsSection";
 import TestimonialsSection from "../components/sections/TestimonialsSection";
@@ -21,6 +23,8 @@ function Home() {
 
       <HeroSection />
       <ValoresSection />
+      <StatsSection />
+      <DivisionesSection />
       <BeneficiosSection />
       <NewsSection />
       <TestimonialsSection />
