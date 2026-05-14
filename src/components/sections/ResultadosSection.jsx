@@ -1,19 +1,24 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import SectionTitle from "../ui/SectionTitle";
 import logros from "../../data/logros";
 
 function ResultadosSection() {
   return (
     <section className="bg-white py-20">
       <div className="container-main">
-        <SectionTitle
-          eyebrow="Resultados académicos"
-          title="Excelencia que se mide"
-          subtitle="Nuestros números reflejan el compromiso diario de alumnos, familias y docentes."
-        />
+        <div className="mb-12 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+          <div>
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-secondary">Resultados académicos</span>
+            <h2 className="mt-2 font-heading text-4xl font-black text-slate-900 sm:text-5xl">
+              Excelencia que<br /><span className="text-primary">se mide.</span>
+            </h2>
+          </div>
+          <p className="max-w-xs text-sm leading-relaxed text-slate-500">
+            Nuestros resultados reflejan el compromiso diario de alumnos, familias y docentes.
+          </p>
+        </div>
 
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {logros.map((logro, i) => {
             const Icon = logro.icon;
             return (
