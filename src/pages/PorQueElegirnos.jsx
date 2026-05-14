@@ -1,4 +1,5 @@
-import { Users, Zap, Heart, Building2, Wifi, FlaskConical, Dumbbell, BookOpen, GraduationCap, CalendarCheck, MapPin, TrendingUp, Award, BookMarked, Star } from "lucide-react";
+import { Users, Zap, Heart, Building2, Wifi, FlaskConical, Dumbbell, BookOpen, GraduationCap, CalendarCheck, MapPin } from "lucide-react";
+import logros from "../data/logros";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import PageHero from "../components/ui/PageHero";
@@ -43,32 +44,6 @@ const espacios = [
   { icon: Building2,    titulo: "Infraestructura Segura", texto: "Recintos certificados con acceso controlado y cámaras." },
 ];
 
-const logros = [
-  {
-    icon: TrendingUp,
-    valor: "+95%",
-    label: "Tasa de aprobación",
-    desc: "Porcentaje de alumnos que avanzan al siguiente nivel cada año.",
-  },
-  {
-    icon: Award,
-    valor: "Alto",
-    label: "Categoría MINEDUC",
-    desc: "Clasificación de desempeño obtenida en la evaluación del Sistema de Calidad.",
-  },
-  {
-    icon: BookMarked,
-    valor: "+270",
-    label: "Puntaje SIMCE Lectura",
-    desc: "Resultado promedio en Comprensión Lectora — por encima del promedio nacional.",
-  },
-  {
-    icon: Star,
-    valor: "+260",
-    label: "Puntaje SIMCE Matemática",
-    desc: "Resultado promedio en Matemática — reflejo del trabajo pedagógico sostenido.",
-  },
-];
 
 const hitos = [
   { year: "1973",  texto: "Fundación del Colegio Particular José Arrieta por la Sra. Marta y dos profesoras pioneras." },

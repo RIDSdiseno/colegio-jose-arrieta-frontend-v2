@@ -7,6 +7,7 @@ import BeneficiosSection from "../components/sections/BeneficiosSection";
 import NewsSection from "../components/sections/NewsSection";
 import TestimonialsSection from "../components/sections/TestimonialsSection";
 import MapContactSection from "../components/sections/MapContactSection";
+import ResultadosSection from "../components/sections/ResultadosSection";
 
 
 function Home() {
@@ -24,6 +25,7 @@ function Home() {
       <HeroSection />
       <ValoresSection />
       <StatsSection />
+      <ResultadosSection />
       <DivisionesSection />
       <BeneficiosSection />
       <NewsSection />
