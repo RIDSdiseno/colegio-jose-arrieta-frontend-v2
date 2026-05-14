@@ -51,6 +51,11 @@ function AdminNoticiaForm() {
 
   useEffect(() => {
     if (!isEditing) return;
+    if (!supabase) {
+      setError("Supabase no está configurado. Agrega las variables de entorno.");
+      setLoading(false);
+      return;
+    }
     supabase
       .from("noticias")
       .select("*")

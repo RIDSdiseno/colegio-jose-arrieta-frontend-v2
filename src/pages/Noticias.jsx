@@ -146,6 +146,7 @@ function Noticias() {
                     <img
                       src={item.imagen || "https://images.unsplash.com/photo-1497486751825-1233686d5d80?auto=format&fit=crop&w=1200&q=80"}
                       alt={item.titulo}
+                      loading="lazy"
                       className="h-48 w-full object-cover"
                     />
                     <div className="p-5">

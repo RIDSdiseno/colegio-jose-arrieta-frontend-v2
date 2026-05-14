@@ -1,17 +1,7 @@
 import axios from "axios";
+import { stripHtml, formatDate } from "../lib/utils";
 
 const WP_BASE = "https://colegiojosearrieta.cl/wp-json/wp/v2";
-
-function stripHtml(html = "") {
-  return html.replace(/<[^>]*>/g, "").trim();
-}
-
-function formatDate(isoDate) {
-  return new Date(isoDate).toLocaleDateString("es-CL", {
-    year: "numeric",
-    month: "long",
-  });
-}
 
 let cachedCategoryId = null;
 
@@ -44,7 +34,7 @@ export async function getBoletines({ limit = 6 } = {}) {
   return res.data.map((post) => ({
     id: post.id,
     titulo: stripHtml(post.title?.rendered),
-    fecha: formatDate(post.date),
+    fecha: formatDate(post.date, { year: "numeric", month: "long" }),
     link: post.link,
     imagen: post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || null,
   }));

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { CalendarDays, ExternalLink } from "lucide-react";
+import DOMPurify from "dompurify";
 import { getNoticiaPorSlug } from "../api/noticias";
 import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
@@ -86,7 +87,7 @@ function NoticiaDetalle() {
 
           <div
             className="prose prose-slate mt-8 max-w-none"
-            dangerouslySetInnerHTML={{ __html: noticia.contenido }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(noticia.contenido) }}
           />
 
           <div className="mt-10 border-t border-slate-200 pt-8">

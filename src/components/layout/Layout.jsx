@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import WhatsAppButton from "../ui/WhatsAppButton";
+import FloatingButtons from "../ui/FloatingButtons";
 
 function Layout() {
   const location = useLocation();
@@ -19,6 +20,7 @@ function Layout() {
       </main>
       <Footer />
       <WhatsAppButton />
+      <FloatingButtons />
     </div>
   );
 }

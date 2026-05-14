@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Plus, Pencil, Trash2, CalendarDays, AlertTriangle } from "lucide-react";
-import { getNoticias, eliminarNoticia } from "../../api/noticias";
+import { eliminarNoticia } from "../../api/noticias";
+import { supabase } from "../../lib/supabase";
 
 function AdminNoticias() {
   const [items, setItems] = useState([]);
@@ -14,8 +15,14 @@ function AdminNoticias() {
     setLoading(true);
     setError("");
     try {
-      const res = await getNoticias({ limit: 50, page: 1 });
-      setItems(res.data);
+      if (!supabase) throw new Error("Supabase no está configurado.");
+      const { data, error: err } = await supabase
+        .from("noticias")
+        .select("id, titulo, categoria, fecha, imagen")
+        .order("fecha", { ascending: false })
+        .limit(50);
+      if (err) throw new Error(err.message);
+      setItems(data || []);
     } catch (err) {
       setError(err.message);
     } finally {

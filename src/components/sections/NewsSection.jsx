@@ -44,6 +44,7 @@ function NewsCard({ item }) {
       <img
         src={item.imagen || FALLBACK_IMG}
         alt={item.titulo}
+        loading="lazy"
         className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10" />

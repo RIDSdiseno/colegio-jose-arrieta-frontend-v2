@@ -1,21 +1,8 @@
 import axios from "axios";
 import { supabase } from "../lib/supabase";
+import { stripHtml, formatDate } from "../lib/utils";
 
 const WP_BASE = "https://colegiojosearrieta.cl/wp-json/wp/v2";
-
-// ── Helpers WordPress ──────────────────────────────────────────────────────────
-
-function stripHtml(html = "") {
-  return html.replace(/<[^>]*>/g, "").trim();
-}
-
-function formatDate(isoDate) {
-  return new Date(isoDate).toLocaleDateString("es-CL", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
 
 function mapPost(post) {
   const media = post._embedded?.["wp:featuredmedia"]?.[0];

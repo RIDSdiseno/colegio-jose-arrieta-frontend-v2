@@ -7,7 +7,7 @@ import BeneficiosSection from "../components/sections/BeneficiosSection";
 import NewsSection from "../components/sections/NewsSection";
 import TestimonialsSection from "../components/sections/TestimonialsSection";
 import MapContactSection from "../components/sections/MapContactSection";
-import FloatingButtons from "../components/ui/FloatingButtons";
+
 
 function Home() {
   return (
@@ -29,8 +29,7 @@ function Home() {
       <NewsSection />
       <TestimonialsSection />
       <MapContactSection />
-<FloatingButtons />
-    </>
+</>
   );
 }
 

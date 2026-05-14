@@ -183,6 +183,7 @@ function Galeria() {
               <img
                 src={album.portada}
                 alt={album.titulo}
+                loading="lazy"
                 className="h-48 w-full object-cover transition duration-300 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-black/30 opacity-0 transition group-hover:opacity-100" />
