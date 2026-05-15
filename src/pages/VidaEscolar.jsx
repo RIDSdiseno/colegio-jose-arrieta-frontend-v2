@@ -326,8 +326,8 @@ function VidaEscolar() {
 
       <PageHero
         imgs={[
-          "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&w=1920&q=80",
-          "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1920&q=80",
+          "/images/vida-escolar.jpg",
+          "/images/alumnos.jpg",
         ]}
         badge="Comunidad Viva"
         title="Vida"
