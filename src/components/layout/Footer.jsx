@@ -200,7 +200,6 @@ function Footer() {
       <div className="border-t border-white/10 py-5">
         <div className="container-main flex flex-col items-center justify-between gap-3 text-xs text-white/40 sm:flex-row">
           <span>© {new Date().getFullYear()} Colegio José Arrieta. Todos los derechos reservados.</span>
-          <span>Diseño web por <span className="text-white/60">RIDS Diseño</span></span>
         </div>
       </div>
     </footer>

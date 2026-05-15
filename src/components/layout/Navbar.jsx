@@ -100,10 +100,19 @@ function Navbar() {
     setOpen(false);
   }, [location.pathname]);
 
+  // Bloquear scroll del body cuando el menú móvil está abierto
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [open]);
+
+  // Si el menú está abierto, el navbar siempre es visible
+  const navVisible = open || visible;
+
   return (
     <>
       {/* Topbar */}
-      <div className={`sticky top-0 z-50 transition-all duration-300 ${visible ? "translate-y-0" : "-translate-y-full"}`}>
+      <div className={`sticky top-0 z-50 transition-all duration-300 ${navVisible ? "translate-y-0" : "-translate-y-full"}`}>
         <Topbar />
 
         {/* Navbar principal */}
