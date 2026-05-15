@@ -18,7 +18,7 @@ const pilares = [
     icon: Zap,
     titulo: "Vanguardia",
     texto: "Innovamos constantemente para potenciar y mejorar el aprendizaje de nuestros estudiantes.",
-    img: "https://images.unsplash.com/photo-1497486751825-1233686d5d80?auto=format&fit=crop&w=1200&q=80",
+    img: "/images/vanguardia.jpg",
   },
   {
     id: 3,
