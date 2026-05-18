@@ -51,28 +51,6 @@ function TestimonialsSection() {
               <span className="text-xs text-slate-400">· 70 reseñas en MiCole.net</span>
             </div>
 
-            {/* Controles */}
-            <div className="mt-8 flex items-center gap-3">
-              <button
-                type="button"
-                onClick={prev}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 text-slate-400 transition hover:border-primary hover:text-primary"
-                aria-label="Anterior"
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </button>
-              <span className="text-sm text-slate-400">
-                {active + 1} <span className="mx-1 text-slate-200">/</span> {total}
-              </span>
-              <button
-                type="button"
-                onClick={next}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 text-slate-400 transition hover:border-primary hover:text-primary"
-                aria-label="Siguiente"
-              >
-                <ChevronRight className="h-5 w-5" />
-              </button>
-            </div>
           </div>
 
           {/* Derecha — card del testimonio activo */}
@@ -116,17 +94,37 @@ function TestimonialsSection() {
               </motion.div>
             </AnimatePresence>
 
-            {/* Dots */}
-            <div className="mt-5 flex justify-center gap-1.5">
-              {testimonials.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => setActive(i)}
-                  aria-label={`Testimonio ${i + 1}`}
-                  className={`h-1.5 rounded-full transition-all ${i === active ? "w-6 bg-primary" : "w-1.5 bg-slate-200"}`}
-                />
-              ))}
+            {/* Controles + Dots */}
+            <div className="mt-5 flex items-center justify-center gap-4">
+              <button
+                type="button"
+                onClick={prev}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-slate-400 transition hover:border-primary hover:text-primary"
+                aria-label="Anterior"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+
+              <div className="flex gap-1.5">
+                {testimonials.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setActive(i)}
+                    aria-label={`Testimonio ${i + 1}`}
+                    className={`h-1.5 rounded-full transition-all ${i === active ? "w-6 bg-primary" : "w-1.5 bg-slate-200"}`}
+                  />
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={next}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-slate-400 transition hover:border-primary hover:text-primary"
+                aria-label="Siguiente"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
             </div>
           </div>
         </div>
