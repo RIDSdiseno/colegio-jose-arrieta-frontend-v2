@@ -94,7 +94,7 @@ function Contacto() {
       </Helmet>
 
       <PageHero
-        img="https://colegiojosearrieta.cl/wp-content/uploads/2020/03/Entrada-768x510.png"
+        img="/images/contacto-hero.png"
         badge="Estamos para ayudarte"
         title="Contáctanos"
         highlight="hoy"

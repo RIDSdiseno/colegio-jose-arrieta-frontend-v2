@@ -13,6 +13,11 @@ const admisionLinks = [
   { label: "Admisión 2026", to: "/admision" },
   { label: "Contacto", to: "/contacto" },
   {
+    label: "Postula 2026",
+    href: "https://colegiojosearrieta.alexiaeducl.com/ACWeb/Paginas/Publicas/FormularioMatriculacion.aspx?token=N6NoDSk6C3bTpBN0gua7Ag==&Ejercicio=2026#no-back-button",
+    external: true,
+  },
+  {
     label: "Inscripción MINEDUC",
     href: "https://registropublicodigital.mineduc.gob.cl/rpd-app-registro-apoderado/login",
     external: true,
@@ -26,19 +31,6 @@ const admisionLinks = [
     label: "Biblioteca en línea",
     href: "http://colegioarrieta.ddns.net:83/",
     external: true,
-  },
-];
-
-const platforms = [
-  {
-    name: "Alexia",
-    href: "https://colegiojosearrieta.alexiaeducl.com",
-    img: "https://www.alexiaeducl.com/img/logo-alexia.png",
-  },
-  {
-    name: "MINEDUC",
-    href: "https://registropublicodigital.mineduc.gob.cl",
-    img: "https://www.mineduc.cl/wp-content/uploads/sites/19/2014/08/mineduc.png",
   },
 ];
 
@@ -74,20 +66,6 @@ function Footer() {
                 <Icon className="h-4 w-4" />
               </a>
             ))}
-          </div>
-
-          {/* Plataformas */}
-          <div className="mt-6">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-white/50">Plataformas</p>
-            <div className="flex flex-wrap gap-2">
-              {platforms.map((p) => (
-                <a key={p.name} href={p.href} target="_blank" rel="noreferrer"
-                  className="flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-xs font-medium text-white/80 transition hover:bg-white/20">
-                  {p.name}
-                  <ExternalLink className="h-3 w-3" />
-                </a>
-              ))}
-            </div>
           </div>
         </section>
 
@@ -173,9 +151,8 @@ function Footer() {
           <div className="flex flex-wrap items-center justify-center gap-4 sm:justify-end">
             {[
               { label: "MINEDUC", href: "https://www.mineduc.cl" },
-              { label: "SEP", href: "https://www.mineduc.cl/subvenciones/" },
+              { label: "SEP", href: "https://sep.mineduc.cl" },
               { label: "JUNAEB", href: "https://www.junaeb.cl" },
-              { label: "IEA", href: "https://www.agenciaeducacion.cl" },
             ].map(({ label, href }) => (
               <a
                 key={label}
