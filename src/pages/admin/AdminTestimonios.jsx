@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Plus, Pencil, Trash2, Star, AlertTriangle } from "lucide-react";
-import { supabase } from "../../lib/supabase";
+import { getTestimoniosAdmin, eliminarTestimonio } from "../../api/testimonios";
 
 function AdminTestimonios() {
   const [items, setItems] = useState([]);
@@ -14,12 +14,7 @@ function AdminTestimonios() {
     setLoading(true);
     setError("");
     try {
-      if (!supabase) throw new Error("Supabase no está configurado.");
-      const { data, error: err } = await supabase
-        .from("testimonios")
-        .select("id, nombre, cargo, estrellas, activo")
-        .order("created_at", { ascending: false });
-      if (err) throw new Error(err.message);
+      const data = await getTestimoniosAdmin();
       setItems(data || []);
     } catch (err) {
       setError(err.message);
@@ -33,9 +28,7 @@ function AdminTestimonios() {
   const handleEliminar = async (id) => {
     setDeleting(true);
     try {
-      if (!supabase) throw new Error("Supabase no está configurado.");
-      const { error: err } = await supabase.from("testimonios").delete().eq("id", id);
-      if (err) throw new Error(err.message);
+      await eliminarTestimonio(id);
       setItems((prev) => prev.filter((t) => t.id !== id));
     } catch (err) {
       setError(err.message);

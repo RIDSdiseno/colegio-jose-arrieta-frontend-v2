@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, ImagePlus, Loader2 } from "lucide-react";
-import { supabase } from "../../lib/supabase";
 import {
   crearNoticia,
   actualizarNoticia,
   subirImagen,
+  getNoticiaById,
 } from "../../api/noticias";
 
 const CATEGORIAS = [
@@ -39,7 +39,7 @@ function slugify(str) {
 
 function AdminNoticiaForm() {
   const { id } = useParams();
-  const isEditing = Boolean(id);
+  const isEditing = Boolean(id) && id !== "nueva";
   const navigate = useNavigate();
 
   const [form, setForm] = useState(EMPTY);
@@ -51,34 +51,22 @@ function AdminNoticiaForm() {
 
   useEffect(() => {
     if (!isEditing) return;
-    if (!supabase) {
-      setError("Supabase no está configurado. Agrega las variables de entorno.");
-      setLoading(false);
-      return;
-    }
-    supabase
-      .from("noticias")
-      .select("*")
-      .eq("id", id)
-      .single()
-      .then(({ data, error: err }) => {
-        if (err || !data) {
-          setError("No se encontró la noticia.");
-        } else {
-          setForm({
-            titulo: data.titulo || "",
-            slug: data.slug || "",
-            extracto: data.extracto || "",
-            contenido: data.contenido || "",
-            categoria: data.categoria || "General",
-            imagen: data.imagen || "",
-            fecha: data.fecha
-              ? data.fecha.split("T")[0]
-              : new Date().toISOString().split("T")[0],
-          });
-        }
-        setLoading(false);
-      });
+    getNoticiaById(id)
+      .then((data) => {
+        setForm({
+          titulo: data.titulo || "",
+          slug: data.slug || "",
+          extracto: data.extracto || "",
+          contenido: data.contenido || "",
+          categoria: data.categoria || "General",
+          imagen: data.imagen || "",
+          fecha: data.fecha
+            ? data.fecha.split("T")[0]
+            : new Date().toISOString().split("T")[0],
+        });
+      })
+      .catch(() => setError("No se encontró la noticia."))
+      .finally(() => setLoading(false));
   }, [id, isEditing]);
 
   const handleChange = (e) => {

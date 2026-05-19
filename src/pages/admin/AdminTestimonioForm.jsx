@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Loader2, Star } from "lucide-react";
-import { supabase } from "../../lib/supabase";
+import { crearTestimonio, actualizarTestimonio, getTestimoniosAdmin } from "../../api/testimonios";
 
 const COLORES = [
   "#1e3a5f", "#2563eb", "#16a34a", "#dc2626",
@@ -29,31 +29,24 @@ function AdminTestimonioForm() {
 
   useEffect(() => {
     if (!isEditing) return;
-    if (!supabase) {
-      setError("Supabase no está configurado.");
-      setLoading(false);
-      return;
-    }
-    supabase
-      .from("testimonios")
-      .select("*")
-      .eq("id", id)
-      .single()
-      .then(({ data, error: err }) => {
-        if (err || !data) {
+    getTestimoniosAdmin()
+      .then((data) => {
+        const t = data.find((x) => x.id === id);
+        if (!t) {
           setError("No se encontró el testimonio.");
         } else {
           setForm({
-            nombre: data.nombre || "",
-            cargo: data.cargo || "",
-            texto: data.texto || "",
-            estrellas: data.estrellas ?? 5,
-            color: data.color || "#1e3a5f",
-            activo: data.activo ?? true,
+            nombre: t.nombre || "",
+            cargo: t.cargo || "",
+            texto: t.texto || "",
+            estrellas: t.estrellas ?? 5,
+            color: t.color || "#1e3a5f",
+            activo: t.activo ?? true,
           });
         }
-        setLoading(false);
-      });
+      })
+      .catch(() => setError("Error al cargar el testimonio."))
+      .finally(() => setLoading(false));
   }, [id, isEditing]);
 
   const handleChange = (e) => {
@@ -66,14 +59,11 @@ function AdminTestimonioForm() {
     setError("");
     setSaving(true);
     try {
-      if (!supabase) throw new Error("Supabase no está configurado.");
       const payload = { ...form, estrellas: Number(form.estrellas) };
       if (isEditing) {
-        const { error: err } = await supabase.from("testimonios").update(payload).eq("id", id);
-        if (err) throw new Error(err.message);
+        await actualizarTestimonio(id, payload);
       } else {
-        const { error: err } = await supabase.from("testimonios").insert([payload]);
-        if (err) throw new Error(err.message);
+        await crearTestimonio(payload);
       }
       navigate("/admin/testimonios");
     } catch (err) {

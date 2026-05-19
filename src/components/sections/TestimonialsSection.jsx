@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { supabase } from "../../lib/supabase";
+import { getTestimonios } from "../../api/testimonios";
 import staticTestimonials from "../../data/testimonials";
 
 function Stars({ count = 5 }) {
@@ -19,13 +19,8 @@ function TestimonialsSection() {
   const [testimonials, setTestimonials] = useState(staticTestimonials);
 
   useEffect(() => {
-    if (!supabase) return;
-    supabase
-      .from("testimonios")
-      .select("*")
-      .eq("activo", true)
-      .order("created_at", { ascending: false })
-      .then(({ data }) => {
+    getTestimonios()
+      .then((data) => {
         if (data && data.length > 0) {
           setTestimonials(
             data.map((r) => ({
@@ -39,6 +34,9 @@ function TestimonialsSection() {
           );
           setActive(0);
         }
+      })
+      .catch(() => {
+        // Fallback a datos estáticos si el backend no responde
       });
   }, []);
 
