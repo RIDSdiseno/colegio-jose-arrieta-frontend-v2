@@ -1,9 +1,10 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { LogOut, Newspaper, LayoutDashboard } from "lucide-react";
+import { LogOut, Newspaper, LayoutDashboard, Star } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
 const navItems = [
   { to: "/admin/noticias", label: "Noticias", icon: Newspaper },
+  { to: "/admin/testimonios", label: "Testimonios", icon: Star },
 ];
 
 function AdminLayout() {

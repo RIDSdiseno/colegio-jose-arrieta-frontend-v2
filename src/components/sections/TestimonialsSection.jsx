@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import testimonials from "../../data/testimonials";
+import { supabase } from "../../lib/supabase";
 
 function Stars({ count = 5 }) {
   return (
@@ -15,12 +15,39 @@ function Stars({ count = 5 }) {
 
 function TestimonialsSection() {
   const [active, setActive] = useState(0);
-  const total = testimonials.length;
+  const [testimonials, setTestimonials] = useState([]);
 
+  useEffect(() => {
+    if (!supabase) return;
+    supabase
+      .from("testimonios")
+      .select("*")
+      .eq("activo", true)
+      .order("created_at", { ascending: false })
+      .then(({ data }) => {
+        if (data && data.length > 0) {
+          setTestimonials(
+            data.map((r) => ({
+              initials: r.nombre.split(" ").slice(0, 2).map((w) => w[0]?.toUpperCase() || "").join(""),
+              color: r.color || "#1e3a5f",
+              nombre: r.nombre,
+              cargo: r.cargo || "",
+              texto: r.texto,
+              estrellas: r.estrellas ?? 5,
+            }))
+          );
+          setActive(0);
+        }
+      });
+  }, []);
+
+  const total = testimonials.length;
   const prev = () => setActive((c) => (c - 1 + total) % total);
   const next = () => setActive((c) => (c + 1) % total);
 
-  const t = testimonials[active];
+  const t = testimonials[Math.min(active, testimonials.length - 1)];
+
+  if (!t) return null;
 
   return (
     <section className="overflow-hidden bg-white py-24">

@@ -83,8 +83,8 @@ export async function subirImagen(file) {
   const sb = requireSupabase();
   const ext = file.name.split(".").pop();
   const nombre = `${Date.now()}.${ext}`;
-  const { error } = await sb.storage.from("noticias-imagenes").upload(nombre, file, { upsert: false });
+  const { error } = await sb.storage.from("noticias").upload(nombre, file, { upsert: false });
   if (error) throw new Error(error.message);
-  const { data } = sb.storage.from("noticias-imagenes").getPublicUrl(nombre);
+  const { data } = sb.storage.from("noticias").getPublicUrl(nombre);
   return data.publicUrl;
 }

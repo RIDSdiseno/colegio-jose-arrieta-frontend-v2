@@ -18,6 +18,8 @@ import Buscar from "./pages/Buscar";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminNoticias from "./pages/admin/AdminNoticias";
 import AdminNoticiaForm from "./pages/admin/AdminNoticiaForm";
+import AdminTestimonios from "./pages/admin/AdminTestimonios";
+import AdminTestimonioForm from "./pages/admin/AdminTestimonioForm";
 
 import ColegioLaReina from "./pages/seo/ColegioLaReina";
 import ColegioSubvencionado from "./pages/seo/ColegioSubvencionado";
@@ -61,6 +63,9 @@ function App() {
           <Route path="/admin/noticias" element={<AdminNoticias />} />
           <Route path="/admin/noticias/nueva" element={<AdminNoticiaForm />} />
           <Route path="/admin/noticias/:id" element={<AdminNoticiaForm />} />
+          <Route path="/admin/testimonios" element={<AdminTestimonios />} />
+          <Route path="/admin/testimonios/nuevo" element={<AdminTestimonioForm />} />
+          <Route path="/admin/testimonios/:id" element={<AdminTestimonioForm />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
