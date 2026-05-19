@@ -1,4 +1,5 @@
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
+// Eliminar /api del final si alguien lo pone por error en la variable de entorno
+const BASE_URL = (import.meta.env.VITE_API_URL || "http://localhost:4000").replace(/\/api\/?$/, "");
 const ADMIN_SECRET = import.meta.env.VITE_ADMIN_SECRET;
 
 async function apiFetch(path, options = {}) {
