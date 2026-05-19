@@ -19,7 +19,7 @@ const EMPTY = {
 
 function AdminTestimonioForm() {
   const { id } = useParams();
-  const isEditing = Boolean(id);
+  const isEditing = Boolean(id) && id !== "nuevo";
   const navigate = useNavigate();
 
   const [form, setForm] = useState(EMPTY);
@@ -29,6 +29,11 @@ function AdminTestimonioForm() {
 
   useEffect(() => {
     if (!isEditing) return;
+    if (!supabase) {
+      setError("Supabase no está configurado.");
+      setLoading(false);
+      return;
+    }
     supabase
       .from("testimonios")
       .select("*")
@@ -61,6 +66,7 @@ function AdminTestimonioForm() {
     setError("");
     setSaving(true);
     try {
+      if (!supabase) throw new Error("Supabase no está configurado.");
       const payload = { ...form, estrellas: Number(form.estrellas) };
       if (isEditing) {
         const { error: err } = await supabase.from("testimonios").update(payload).eq("id", id);

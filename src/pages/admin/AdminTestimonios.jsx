@@ -33,6 +33,7 @@ function AdminTestimonios() {
   const handleEliminar = async (id) => {
     setDeleting(true);
     try {
+      if (!supabase) throw new Error("Supabase no está configurado.");
       const { error: err } = await supabase.from("testimonios").delete().eq("id", id);
       if (err) throw new Error(err.message);
       setItems((prev) => prev.filter((t) => t.id !== id));

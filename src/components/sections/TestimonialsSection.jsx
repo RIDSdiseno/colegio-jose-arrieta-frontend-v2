@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "../../lib/supabase";
+import staticTestimonials from "../../data/testimonials";
 
 function Stars({ count = 5 }) {
   return (
@@ -15,7 +16,7 @@ function Stars({ count = 5 }) {
 
 function TestimonialsSection() {
   const [active, setActive] = useState(0);
-  const [testimonials, setTestimonials] = useState([]);
+  const [testimonials, setTestimonials] = useState(staticTestimonials);
 
   useEffect(() => {
     if (!supabase) return;
