@@ -103,14 +103,10 @@ function TestimonialsSection() {
 
                 <Stars count={t.estrellas} />
 
-                <blockquote className="mt-4 text-lg font-medium leading-relaxed text-slate-700">
-                  "{t.texto}"
-                </blockquote>
-
-                <div className="mt-6 flex items-center gap-4 border-t border-slate-100 pt-5">
+                <div className="mt-4 flex items-center gap-3">
                   <div
                     style={{ backgroundColor: t.color }}
-                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-base font-black text-white shadow-sm"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-black text-white shadow-sm"
                   >
                     {t.initials}
                   </div>
@@ -119,6 +115,10 @@ function TestimonialsSection() {
                     <p className="text-xs text-slate-400">{t.cargo}</p>
                   </div>
                 </div>
+
+                <blockquote className="mt-4 text-lg font-medium leading-relaxed text-slate-700">
+                  "{t.texto}"
+                </blockquote>
               </motion.div>
             </AnimatePresence>
 
