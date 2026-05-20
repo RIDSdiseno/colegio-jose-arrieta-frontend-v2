@@ -65,16 +65,20 @@ function AdminAlbumFotos() {
     if (!files.length) return;
     setUploadingImg(true);
     setError("");
+    let failed = 0;
     try {
       for (const file of files) {
-        const url = await subirImagenAlbum(file);
-        await agregarFoto(id, { url });
+        try {
+          const url = await subirImagenAlbum(file);
+          await agregarFoto(id, { url });
+        } catch {
+          failed++;
+        }
       }
-      cargar();
-    } catch (err) {
-      setError("Error al subir: " + err.message);
+      if (failed > 0) setError(`${files.length - failed} foto(s) subidas. ${failed} fallaron.`);
     } finally {
       setUploadingImg(false);
+      cargar();
     }
   };
 
