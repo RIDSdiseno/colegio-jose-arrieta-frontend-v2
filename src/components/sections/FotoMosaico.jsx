@@ -1,7 +1,9 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { getGaleria } from "../../api/galeria";
 
-const fotos = [
+const fotosEstaticas = [
   {
     url: "https://colegiojosearrieta.cl/wp-content/uploads/2025/09/nota23_int25b-768x431.jpg",
     caption: "Fiestas Patrias 2025",
@@ -29,6 +31,17 @@ const fotos = [
 ];
 
 export default function FotoMosaico() {
+  const [fotos, setFotos] = useState(fotosEstaticas);
+
+  useEffect(() => {
+    getGaleria()
+      .then((data) => {
+        if (data && data.length > 0) setFotos(data);
+      })
+      .catch(() => {
+        // Fallback a fotos estáticas si el backend no responde
+      });
+  }, []);
 
   return (
     <section className="bg-slate-50 py-16">

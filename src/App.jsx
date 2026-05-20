@@ -20,6 +20,8 @@ import AdminNoticias from "./pages/admin/AdminNoticias";
 import AdminNoticiaForm from "./pages/admin/AdminNoticiaForm";
 import AdminTestimonios from "./pages/admin/AdminTestimonios";
 import AdminTestimonioForm from "./pages/admin/AdminTestimonioForm";
+import AdminGaleria from "./pages/admin/AdminGaleria";
+import AdminGaleriaForm from "./pages/admin/AdminGaleriaForm";
 
 import ColegioLaReina from "./pages/seo/ColegioLaReina";
 import ColegioSubvencionado from "./pages/seo/ColegioSubvencionado";
@@ -66,6 +68,9 @@ function App() {
           <Route path="/admin/testimonios" element={<AdminTestimonios />} />
           <Route path="/admin/testimonios/nuevo" element={<AdminTestimonioForm />} />
           <Route path="/admin/testimonios/:id" element={<AdminTestimonioForm />} />
+          <Route path="/admin/galeria" element={<AdminGaleria />} />
+          <Route path="/admin/galeria/nueva" element={<AdminGaleriaForm />} />
+          <Route path="/admin/galeria/:id" element={<AdminGaleriaForm />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
