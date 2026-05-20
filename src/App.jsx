@@ -22,6 +22,9 @@ import AdminTestimonios from "./pages/admin/AdminTestimonios";
 import AdminTestimonioForm from "./pages/admin/AdminTestimonioForm";
 import AdminGaleria from "./pages/admin/AdminGaleria";
 import AdminGaleriaForm from "./pages/admin/AdminGaleriaForm";
+import AdminAlbums from "./pages/admin/AdminAlbums";
+import AdminAlbumForm from "./pages/admin/AdminAlbumForm";
+import AdminAlbumFotos from "./pages/admin/AdminAlbumFotos";
 
 import ColegioLaReina from "./pages/seo/ColegioLaReina";
 import ColegioSubvencionado from "./pages/seo/ColegioSubvencionado";
@@ -71,6 +74,10 @@ function App() {
           <Route path="/admin/galeria" element={<AdminGaleria />} />
           <Route path="/admin/galeria/nueva" element={<AdminGaleriaForm />} />
           <Route path="/admin/galeria/:id" element={<AdminGaleriaForm />} />
+          <Route path="/admin/albums" element={<AdminAlbums />} />
+          <Route path="/admin/albums/nuevo" element={<AdminAlbumForm />} />
+          <Route path="/admin/albums/:id" element={<AdminAlbumForm />} />
+          <Route path="/admin/albums/:id/fotos" element={<AdminAlbumFotos />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Music, Trophy, Palette, BookMarked, HandHeart, ChevronLeft, ChevronRight, Play, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Helmet } from "react-helmet-async";
-import SectionTitle from "../components/ui/SectionTitle";
 import PageHero from "../components/ui/PageHero";
+import { getAlbums, getAlbumFotos } from "../api/albums";
 
 const BASE = "https://colegiojosearrieta.cl/wp-content/uploads";
 
@@ -139,36 +139,70 @@ const videos = [
 ];
 
 function Galeria() {
+  const [albums, setAlbums] = useState(galeriaAlbumes);
   const [albumActivo, setAlbumActivo] = useState(null);
+  const [fotosActivas, setFotosActivas] = useState([]);
   const [fotoActiva, setFotoActiva] = useState(0);
+  const [cargandoFotos, setCargandoFotos] = useState(false);
 
-  const abrirAlbum = (album) => {
-    setAlbumActivo(album);
+  useEffect(() => {
+    getAlbums()
+      .then((data) => {
+        if (data && data.length > 0) setAlbums(data);
+      })
+      .catch(() => {});
+  }, []);
+
+  const abrirAlbum = async (album) => {
     setFotoActiva(0);
+    // Álbum del backend (tiene id)
+    if (album.id) {
+      setCargandoFotos(true);
+      setAlbumActivo(album);
+      try {
+        const data = await getAlbumFotos(album.id);
+        setFotosActivas(data.fotos || []);
+      } catch {
+        setFotosActivas([]);
+      } finally {
+        setCargandoFotos(false);
+      }
+    } else {
+      // Álbum estático
+      setAlbumActivo(album);
+      setFotosActivas(album.fotos.map((url) => ({ url })));
+    }
   };
 
-  const cerrar = () => setAlbumActivo(null);
+  const cerrar = () => { setAlbumActivo(null); setFotosActivas([]); };
+  const prev = () => setFotoActiva((c) => (c - 1 + fotosActivas.length) % fotosActivas.length);
+  const next = () => setFotoActiva((c) => (c + 1) % fotosActivas.length);
 
-  const prev = () => setFotoActiva((c) => (c - 1 + albumActivo.fotos.length) % albumActivo.fotos.length);
-  const next = () => setFotoActiva((c) => (c + 1) % albumActivo.fotos.length);
+  // Normalizar portada para álbumes estáticos vs backend
+  const getPortada = (album) => album.portada || album.fotos?.[0] || null;
+  const getCount = (album) => album._count?.fotos ?? album.fotos?.length ?? 0;
 
   return (
     <>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {galeriaAlbumes.map((album) => (
+        {albums.map((album, i) => (
           <button
-            key={album.titulo}
+            key={album.id || album.titulo}
             type="button"
             onClick={() => abrirAlbum(album)}
             className="group overflow-hidden rounded-2xl shadow-soft focus:outline-none focus:ring-2 focus:ring-primary"
           >
             <div className="relative overflow-hidden">
-              <img
-                src={album.portada}
-                alt={album.titulo}
-                loading="lazy"
-                className="h-48 w-full object-cover transition duration-300 group-hover:scale-105"
-              />
+              {getPortada(album) ? (
+                <img
+                  src={getPortada(album)}
+                  alt={album.titulo}
+                  loading="lazy"
+                  className="h-48 w-full object-cover transition duration-300 group-hover:scale-105"
+                />
+              ) : (
+                <div className="h-48 w-full bg-slate-100 flex items-center justify-center text-slate-300 text-4xl">📷</div>
+              )}
               <div className="absolute inset-0 bg-black/30 opacity-0 transition group-hover:opacity-100" />
               <div className="absolute inset-0 flex items-center justify-center opacity-0 transition group-hover:opacity-100">
                 <span className="rounded-full bg-white/90 px-4 py-2 text-sm font-semibold text-primary">
@@ -178,7 +212,7 @@ function Galeria() {
             </div>
             <div className="bg-white px-4 py-3 text-left">
               <p className="font-semibold text-primary">{album.titulo}</p>
-              <p className="text-xs text-slate-400">{album.fotos.length} foto{album.fotos.length !== 1 ? "s" : ""}</p>
+              <p className="text-xs text-slate-400">{getCount(album)} foto{getCount(album) !== 1 ? "s" : ""}</p>
             </div>
           </button>
         ))}
@@ -204,43 +238,44 @@ function Galeria() {
 
             <p className="mb-4 text-sm font-semibold text-white">{albumActivo.titulo}</p>
 
-            <div className="relative flex w-full max-w-3xl items-center justify-center gap-4">
-              {albumActivo.fotos.length > 1 && (
-                <button
-                  type="button"
-                  onClick={prev}
-                  className="shrink-0 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20"
-                  aria-label="Anterior"
-                >
-                  <ChevronLeft className="h-6 w-6" />
-                </button>
-              )}
+            {cargandoFotos ? (
+              <div className="flex h-48 items-center justify-center text-white/60">
+                <svg className="h-8 w-8 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                </svg>
+              </div>
+            ) : (
+              <div className="relative flex w-full max-w-3xl items-center justify-center gap-4">
+                {fotosActivas.length > 1 && (
+                  <button type="button" onClick={prev} className="shrink-0 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20" aria-label="Anterior">
+                    <ChevronLeft className="h-6 w-6" />
+                  </button>
+                )}
 
-              <motion.img
-                key={fotoActiva}
-                initial={{ opacity: 0, scale: 0.97 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.2 }}
-                src={albumActivo.fotos[fotoActiva]}
-                alt={`${albumActivo.titulo} ${fotoActiva + 1}`}
-                className="max-h-[70vh] rounded-xl object-contain shadow-2xl"
-              />
+                {fotosActivas[fotoActiva] && (
+                  <motion.img
+                    key={fotoActiva}
+                    initial={{ opacity: 0, scale: 0.97 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.2 }}
+                    src={fotosActivas[fotoActiva].url}
+                    alt={fotosActivas[fotoActiva].caption || `${albumActivo.titulo} ${fotoActiva + 1}`}
+                    className="max-h-[70vh] rounded-xl object-contain shadow-2xl"
+                  />
+                )}
 
-              {albumActivo.fotos.length > 1 && (
-                <button
-                  type="button"
-                  onClick={next}
-                  className="shrink-0 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20"
-                  aria-label="Siguiente"
-                >
-                  <ChevronRight className="h-6 w-6" />
-                </button>
-              )}
-            </div>
+                {fotosActivas.length > 1 && (
+                  <button type="button" onClick={next} className="shrink-0 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20" aria-label="Siguiente">
+                    <ChevronRight className="h-6 w-6" />
+                  </button>
+                )}
+              </div>
+            )}
 
-            {albumActivo.fotos.length > 1 && (
+            {fotosActivas.length > 1 && (
               <p className="mt-4 text-sm text-white/60">
-                {fotoActiva + 1} / {albumActivo.fotos.length}
+                {fotoActiva + 1} / {fotosActivas.length}
               </p>
             )}
           </motion.div>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { getGaleria } from "../../api/galeria";
+import { getAlbums } from "../../api/albums";
 
 const fotosEstaticas = [
   {
@@ -34,13 +34,20 @@ export default function FotoMosaico() {
   const [fotos, setFotos] = useState(fotosEstaticas);
 
   useEffect(() => {
-    getGaleria()
+    getAlbums()
       .then((data) => {
-        if (data && data.length > 0) setFotos(data);
+        if (data && data.length > 0) {
+          // Convertir álbumes a formato de fotos para el mosaico
+          const fotosDeAlbumes = data
+            .filter((a) => a.portada || a.fotos?.[0]?.url)
+            .map((a) => ({
+              url: a.portada || a.fotos?.[0]?.url,
+              caption: a.titulo,
+            }));
+          if (fotosDeAlbumes.length >= 2) setFotos(fotosDeAlbumes);
+        }
       })
-      .catch(() => {
-        // Fallback a fotos estáticas si el backend no responde
-      });
+      .catch(() => {});
   }, []);
 
   return (
