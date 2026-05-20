@@ -8,6 +8,10 @@ export async function getTestimoniosAdmin() {
   return apiFetch("/api/testimonios/admin");
 }
 
+export async function getTestimonioById(id) {
+  return apiFetch(`/api/testimonios/id/${id}`);
+}
+
 export async function crearTestimonio(payload) {
   return apiFetch("/api/testimonios", { method: "POST", body: JSON.stringify(payload) });
 }

@@ -101,6 +101,7 @@ function AdminNoticiaForm() {
     setSaving(true);
     try {
       const payload = { ...form };
+      if (!payload.imagen) delete payload.imagen;
       if (isEditing) {
         await actualizarNoticia(id, payload);
       } else {

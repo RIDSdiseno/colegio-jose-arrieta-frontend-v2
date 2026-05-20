@@ -7,9 +7,11 @@ async function apiFetch(path, options = {}) {
   if (ADMIN_SECRET) headers["x-admin-secret"] = ADMIN_SECRET;
 
   const res = await fetch(`${BASE_URL}${path}`, { ...options, headers });
-  const data = await res.json();
 
-  if (!res.ok) throw new Error(data.error || "Error del servidor");
+  let data;
+  try { data = await res.json(); } catch { data = {}; }
+
+  if (!res.ok) throw new Error(data.error || `Error ${res.status}`);
   return data;
 }
 

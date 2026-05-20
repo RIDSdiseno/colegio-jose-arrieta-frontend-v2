@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Loader2, Star } from "lucide-react";
-import { crearTestimonio, actualizarTestimonio, getTestimoniosAdmin } from "../../api/testimonios";
+import { crearTestimonio, actualizarTestimonio, getTestimonioById } from "../../api/testimonios";
 
 const COLORES = [
   "#1e3a5f", "#2563eb", "#16a34a", "#dc2626",
@@ -29,23 +29,18 @@ function AdminTestimonioForm() {
 
   useEffect(() => {
     if (!isEditing) return;
-    getTestimoniosAdmin()
-      .then((data) => {
-        const t = data.find((x) => x.id === id);
-        if (!t) {
-          setError("No se encontró el testimonio.");
-        } else {
-          setForm({
-            nombre: t.nombre || "",
-            cargo: t.cargo || "",
-            texto: t.texto || "",
-            estrellas: t.estrellas ?? 5,
-            color: t.color || "#1e3a5f",
-            activo: t.activo ?? true,
-          });
-        }
+    getTestimonioById(id)
+      .then((t) => {
+        setForm({
+          nombre: t.nombre || "",
+          cargo: t.cargo || "",
+          texto: t.texto || "",
+          estrellas: t.estrellas ?? 5,
+          color: t.color || "#1e3a5f",
+          activo: t.activo ?? true,
+        });
       })
-      .catch(() => setError("Error al cargar el testimonio."))
+      .catch(() => setError("No se encontró el testimonio."))
       .finally(() => setLoading(false));
   }, [id, isEditing]);
 

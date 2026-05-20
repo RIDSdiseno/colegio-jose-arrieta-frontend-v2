@@ -4,6 +4,10 @@ export async function getGaleria() {
   return apiFetch("/api/galeria");
 }
 
+export async function getGaleriaAdmin() {
+  return apiFetch("/api/galeria/admin");
+}
+
 export async function crearFoto(payload) {
   return apiFetch("/api/galeria", { method: "POST", body: JSON.stringify(payload) });
 }
