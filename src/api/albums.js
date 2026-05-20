@@ -6,11 +6,11 @@ export async function getAlbums() {
 }
 
 export async function getAlbumsAdmin() {
-  return apiFetch("/api/albums/admin");
+  return apiFetch("/api/albums/admin", { admin: true });
 }
 
 export async function getAlbumById(id) {
-  return apiFetch(`/api/albums/id/${id}`);
+  return apiFetch(`/api/albums/id/${id}`, { admin: true });
 }
 
 export async function getAlbumFotos(id) {
@@ -18,23 +18,23 @@ export async function getAlbumFotos(id) {
 }
 
 export async function crearAlbum(payload) {
-  return apiFetch("/api/albums", { method: "POST", body: JSON.stringify(payload) });
+  return apiFetch("/api/albums", { method: "POST", body: JSON.stringify(payload), admin: true });
 }
 
 export async function actualizarAlbum(id, payload) {
-  return apiFetch(`/api/albums/${id}`, { method: "PUT", body: JSON.stringify(payload) });
+  return apiFetch(`/api/albums/${id}`, { method: "PUT", body: JSON.stringify(payload), admin: true });
 }
 
 export async function eliminarAlbum(id) {
-  return apiFetch(`/api/albums/${id}`, { method: "DELETE" });
+  return apiFetch(`/api/albums/${id}`, { method: "DELETE", admin: true });
 }
 
 export async function agregarFoto(albumId, payload) {
-  return apiFetch(`/api/albums/${albumId}/fotos`, { method: "POST", body: JSON.stringify(payload) });
+  return apiFetch(`/api/albums/${albumId}/fotos`, { method: "POST", body: JSON.stringify(payload), admin: true });
 }
 
 export async function eliminarFoto(fotoId) {
-  return apiFetch(`/api/albums/fotos/${fotoId}`, { method: "DELETE" });
+  return apiFetch(`/api/albums/fotos/${fotoId}`, { method: "DELETE", admin: true });
 }
 
 export async function subirImagenAlbum(file) {

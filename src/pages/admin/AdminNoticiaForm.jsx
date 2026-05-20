@@ -100,8 +100,8 @@ function AdminNoticiaForm() {
     setError("");
     setSaving(true);
     try {
-      const payload = { ...form };
-      if (!payload.imagen) delete payload.imagen;
+      const payload = { ...form, imagen: form.imagen || null };
+      if (!isEditing && !payload.imagen) delete payload.imagen;
       if (isEditing) {
         await actualizarNoticia(id, payload);
       } else {

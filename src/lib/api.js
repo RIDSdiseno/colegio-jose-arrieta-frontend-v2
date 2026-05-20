@@ -4,7 +4,7 @@ const ADMIN_SECRET = import.meta.env.VITE_ADMIN_SECRET;
 
 async function apiFetch(path, options = {}) {
   const headers = { "Content-Type": "application/json", ...options.headers };
-  if (ADMIN_SECRET) headers["x-admin-secret"] = ADMIN_SECRET;
+  if (options.admin && ADMIN_SECRET) headers["x-admin-secret"] = ADMIN_SECRET;
 
   const res = await fetch(`${BASE_URL}${path}`, { ...options, headers });
 

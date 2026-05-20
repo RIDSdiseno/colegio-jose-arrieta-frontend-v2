@@ -20,19 +20,19 @@ export async function getNoticiasAdmin({ limit = 50, page = 1 } = {}) {
 }
 
 export async function getNoticiaById(id) {
-  return apiFetch(`/api/noticias/id/${id}`);
+  return apiFetch(`/api/noticias/id/${id}`, { admin: true });
 }
 
 export async function crearNoticia(payload) {
-  return apiFetch("/api/noticias", { method: "POST", body: JSON.stringify(payload) });
+  return apiFetch("/api/noticias", { method: "POST", body: JSON.stringify(payload), admin: true });
 }
 
 export async function actualizarNoticia(id, payload) {
-  return apiFetch(`/api/noticias/${id}`, { method: "PUT", body: JSON.stringify(payload) });
+  return apiFetch(`/api/noticias/${id}`, { method: "PUT", body: JSON.stringify(payload), admin: true });
 }
 
 export async function eliminarNoticia(id) {
-  return apiFetch(`/api/noticias/${id}`, { method: "DELETE" });
+  return apiFetch(`/api/noticias/${id}`, { method: "DELETE", admin: true });
 }
 
 // ── Subir imagen (Supabase Storage) ───────────────────────────────────────────
