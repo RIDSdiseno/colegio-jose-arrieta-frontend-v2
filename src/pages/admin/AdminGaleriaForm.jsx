@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, ImagePlus, Loader2 } from "lucide-react";
-import { getGaleriaAdmin, crearFoto, actualizarFoto } from "../../api/galeria";
-import { supabase } from "../../lib/supabase";
+import { getFotoById, crearFoto, actualizarFoto, subirImagenGaleria } from "../../api/galeria";
 
 const EMPTY = {
   url: "",
@@ -10,16 +9,6 @@ const EMPTY = {
   orden: 0,
   activo: true,
 };
-
-async function subirImagenGaleria(file) {
-  if (!supabase) throw new Error("Supabase no está configurado para subir imágenes.");
-  const ext = file.name.split(".").pop();
-  const nombre = `${Date.now()}.${ext}`;
-  const { error } = await supabase.storage.from("galeria").upload(nombre, file, { upsert: false });
-  if (error) throw new Error(error.message);
-  const { data } = supabase.storage.from("galeria").getPublicUrl(nombre);
-  return data.publicUrl;
-}
 
 function AdminGaleriaForm() {
   const { id } = useParams();
@@ -35,21 +24,16 @@ function AdminGaleriaForm() {
 
   useEffect(() => {
     if (!isEditing) return;
-    getGaleriaAdmin()
-      .then((data) => {
-        const foto = data.find((f) => f.id === id);
-        if (!foto) {
-          setError("No se encontró la foto.");
-        } else {
-          setForm({
-            url: foto.url || "",
-            caption: foto.caption || "",
-            orden: foto.orden ?? 0,
-            activo: foto.activo ?? true,
-          });
-        }
+    getFotoById(id)
+      .then((foto) => {
+        setForm({
+          url: foto.url || "",
+          caption: foto.caption || "",
+          orden: foto.orden ?? 0,
+          activo: foto.activo ?? true,
+        });
       })
-      .catch(() => setError("Error al cargar la foto."))
+      .catch(() => setError("No se encontró la foto."))
       .finally(() => setLoading(false));
   }, [id, isEditing]);
 
