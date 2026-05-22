@@ -28,6 +28,7 @@ const EMPTY = {
   extracto: "",
   texto: "",
   imagenes: [],      // fotos del cuerpo del artículo
+  fotosUbicacion: "antes", // "antes" | "despues" del texto
   categoria: "General",
   imagen: "",        // portada
   fecha: new Date().toISOString().split("T")[0],
@@ -36,7 +37,18 @@ const EMPTY = {
 /** Separa el contenido HTML guardado en texto plano + array de URLs de imágenes */
 function parseContenido(html = "") {
   const imagenes = [];
-  const texto = html
+  // Extraer imágenes del wp-gallery o sueltas
+  const sinGallery = html.replace(/<div class="wp-gallery">([\s\S]*?)<\/div>/gi, (_, inner) => {
+    const imgRegex = /<img[^>]+>/gi;
+    let m;
+    while ((m = imgRegex.exec(inner)) !== null) {
+      const src = m[0].match(/src="([^"]+)"/)?.[1];
+      if (src) imagenes.push(src);
+    }
+    return "";
+  });
+  // Extraer imágenes sueltas restantes
+  const texto = sinGallery
     .replace(/<img[^>]+>/gi, (m) => {
       const src = m.match(/src="([^"]+)"/)?.[1];
       if (src) imagenes.push(src);
@@ -44,18 +56,28 @@ function parseContenido(html = "") {
     })
     .replace(/<br\s*\/?>/gi, "\n")
     .trim();
-  return { texto, imagenes };
+  // Detectar si las fotos estaban antes o después del texto
+  const posGallery = html.search(/<div class="wp-gallery"/i);
+  const posImg = html.search(/<img[^>]+>/i);
+  const primerFoto = posGallery !== -1 ? posGallery : posImg;
+  const primerTexto = html.search(/[^<\s]/);
+  const fotosUbicacion = primerFoto !== -1 && primerFoto < primerTexto ? "antes" : "despues";
+  return { texto, imagenes, fotosUbicacion };
 }
 
 /** Reconstruye el contenido HTML a guardar en BD */
-function buildContenido(texto, imagenes) {
-  // Convertir saltos de línea del texto en <br> para que se muestren bien
+function buildContenido(texto, imagenes, fotosUbicacion = "antes") {
   const htmlTexto = texto
     .trim()
     .replace(/\r\n/g, "\n")
     .replace(/\n/g, "<br>");
-  const htmlImgs = imagenes.map((u) => `<img src="${u}" alt="">`).join("\n");
-  return [htmlTexto, htmlImgs].filter(Boolean).join("\n\n");
+  const htmlImgs = imagenes.length > 0
+    ? `<div class="wp-gallery">${imagenes.map((u) => `<img src="${u}" alt="">`).join("")}</div>`
+    : "";
+  const partes = fotosUbicacion === "antes"
+    ? [htmlImgs, htmlTexto]
+    : [htmlTexto, htmlImgs];
+  return partes.filter(Boolean).join("\n\n");
 }
 
 function AdminNoticiaForm() {
@@ -76,13 +98,14 @@ function AdminNoticiaForm() {
     if (!isEditing) return;
     getNoticiaById(id)
       .then((data) => {
-        const { texto, imagenes } = parseContenido(data.contenido || "");
+        const { texto, imagenes, fotosUbicacion } = parseContenido(data.contenido || "");
         setForm({
           titulo: data.titulo || "",
           slug: data.slug || "",
           extracto: data.extracto || "",
           texto,
           imagenes,
+          fotosUbicacion,
           categoria: data.categoria || "General",
           imagen: data.imagen || "",
           fecha: data.fecha
@@ -147,7 +170,7 @@ function AdminNoticiaForm() {
     setError("");
     setSaving(true);
     try {
-      const contenido = buildContenido(form.texto, form.imagenes);
+      const contenido = buildContenido(form.texto, form.imagenes, form.fotosUbicacion);
       const payload = {
         titulo: form.titulo,
         slug: form.slug,
@@ -245,16 +268,21 @@ function AdminNoticiaForm() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-slate-700">
-              Extracto <span className="text-red-500">*</span>
-            </label>
+            <div className="mb-1 flex items-center justify-between">
+              <label className="text-sm font-medium text-slate-700">
+                Extracto <span className="text-red-500">*</span>
+              </label>
+              <span className={`text-xs ${form.extracto.length > 180 ? "text-red-400" : "text-slate-400"}`}>
+                {form.extracto.length}/180
+              </span>
+            </div>
             <textarea
               name="extracto"
               required
               rows={2}
               value={form.extracto}
               onChange={handleChange}
-              placeholder="Breve descripción que aparece en el listado de noticias."
+              placeholder="Breve descripción que aparece en el listado de noticias (máx. 180 caracteres)."
               className="w-full resize-none rounded-xl border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
             />
           </div>
@@ -276,9 +304,28 @@ function AdminNoticiaForm() {
 
         {/* Fotos del artículo */}
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft">
-          <p className="mb-3 text-sm font-medium text-slate-700">
-            Fotos del artículo
-          </p>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm font-medium text-slate-700">Fotos del artículo</p>
+            <div className="flex gap-2">
+              {[
+                { value: "antes", label: "Fotos primero" },
+                { value: "despues", label: "Texto primero" },
+              ].map((op) => (
+                <button
+                  key={op.value}
+                  type="button"
+                  onClick={() => setForm((prev) => ({ ...prev, fotosUbicacion: op.value }))}
+                  className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition ${
+                    form.fotosUbicacion === op.value
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-slate-200 text-slate-500 hover:border-slate-300"
+                  }`}
+                >
+                  {op.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
           {form.imagenes.length > 0 ? (
             <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -322,7 +369,7 @@ function AdminNoticiaForm() {
             onChange={handleAddContentImage}
           />
           <p className="mt-2 text-xs text-slate-400">
-            Las fotos se muestran al final del artículo. Puedes agregar todas las que quieras.
+            Las fotos forman una galería en el artículo. Usa los botones de arriba para elegir si van antes o después del texto.
           </p>
         </div>
 
@@ -337,7 +384,7 @@ function AdminNoticiaForm() {
               <img
                 src={form.imagen}
                 alt="Vista previa"
-                className="h-48 w-full rounded-xl object-cover"
+                className="max-h-64 w-full rounded-xl object-contain"
               />
               <button
                 type="button"

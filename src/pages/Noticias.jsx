@@ -107,10 +107,12 @@ function Noticias() {
             </Button>
           </form>
 
-          {/* Resultado de búsqueda — solo cuando hay resultados */}
-          {queryParam && !loading && items.length > 0 && (
+          {/* Resultado de búsqueda */}
+          {queryParam && !loading && (
             <p className="mb-6 text-sm text-slate-500">
-              Resultados para <span className="font-semibold text-primary">"{queryParam}"</span> — {items.length} {items.length === 1 ? "noticia encontrada" : "noticias encontradas"}
+              {items.length > 0 ? (
+                <>Resultados para <span className="font-semibold text-primary">"{queryParam}"</span> — {items.length} {items.length === 1 ? "noticia encontrada" : "noticias encontradas"}</>
+              ) : null}
             </p>
           )}
 
@@ -133,7 +135,7 @@ function Noticias() {
                         src={item.imagen || "https://images.unsplash.com/photo-1497486751825-1233686d5d80?auto=format&fit=crop&w=1200&q=80"}
                         alt={item.titulo}
                         loading="lazy"
-                        className="h-48 w-full object-cover transition hover:opacity-90"
+                        className="h-48 w-full object-contain bg-white transition hover:opacity-90"
                       />
                     </Link>
                     <div className="p-5">

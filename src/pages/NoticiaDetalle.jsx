@@ -27,7 +27,7 @@ function NoticiaDetalle() {
         <div className="mx-auto max-w-4xl animate-pulse space-y-4">
           <div className="h-10 w-2/3 rounded bg-slate-200" />
           <div className="h-4 w-1/3 rounded bg-slate-200" />
-          <div className="h-72 rounded-2xl bg-slate-200" />
+          <div className="h-64 rounded-2xl bg-slate-200" />
           <div className="space-y-2">
             <div className="h-3 w-full rounded bg-slate-200" />
             <div className="h-3 w-5/6 rounded bg-slate-200" />
@@ -78,19 +78,26 @@ function NoticiaDetalle() {
             {noticia.titulo}
           </h1>
 
-          {noticia.imagen ? (
-            <img
-              src={noticia.imagen}
-              alt={noticia.titulo}
-              className="mt-6 h-[300px] w-full rounded-2xl object-cover sm:h-[420px]"
-            />
-          ) : null}
+          {noticia.extracto && (
+            <p className="mt-3 text-lg text-slate-500 leading-relaxed">{noticia.extracto}</p>
+          )}
+
+          {noticia.imagen && (
+            <div className="mt-6 overflow-hidden rounded-2xl border border-slate-100 bg-slate-50 shadow-sm">
+              <img
+                src={noticia.imagen}
+                alt={noticia.titulo}
+                className="mx-auto block w-full object-contain max-h-[520px]"
+              />
+            </div>
+          )}
 
           <div
             className="wp-content mt-8 overflow-x-hidden"
             dangerouslySetInnerHTML={{
               __html: DOMPurify.sanitize(
-                (noticia.contenido || "").replace(/\n/g, "<br>")
+                (noticia.contenido || "").replace(/\n/g, "<br>"),
+                { ADD_ATTR: ["class"], FORBID_ATTR: ["style"] }
               ),
             }}
           />

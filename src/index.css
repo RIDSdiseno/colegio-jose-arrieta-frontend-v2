@@ -94,19 +94,45 @@ h6 {
   color: #475569;
   font-style: italic;
 }
-/* Imágenes del contenido */
+/* Imágenes sueltas en el contenido */
 .wp-content img {
   display: block;
-  max-width: 100%;
+  max-width: 65%;
   width: auto;
   height: auto;
   border-radius: 0.75rem;
   margin: 1.5rem auto;
   box-shadow: 0 2px 12px rgba(0,0,0,0.08);
 }
-/* Imágenes con width explícito */
+/* Imágenes con width explícito (pegadas desde WordPress) */
 .wp-content img[width] {
-  max-width: min(100%, calc(1px * var(--img-w, 9999)));
+  max-width: min(65%, calc(1px * var(--img-w, 9999)));
+}
+/* Galería de fotos del artículo */
+.wp-content .wp-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+.wp-content .wp-gallery img {
+  width: 100%;
+  max-width: 100%;
+  height: 260px;
+  object-fit: cover;
+  margin: 0;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+/* Una sola foto en galería: completa, sin recorte */
+.wp-content .wp-gallery:has(img:only-child) {
+  grid-template-columns: 1fr;
+  max-width: 100%;
+}
+.wp-content .wp-gallery:has(img:only-child) img {
+  height: auto;
+  max-height: none;
+  object-fit: contain;
 }
 .wp-content figure {
   margin: 1.5rem 0;
