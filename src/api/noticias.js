@@ -13,6 +13,10 @@ export async function getNoticiaPorSlug(slug) {
   return apiFetch(`/api/noticias/${slug}`);
 }
 
+export async function getNoticiasAdyacentes(slug) {
+  return apiFetch(`/api/noticias/${slug}/adyacentes`);
+}
+
 // ── API admin (Backend) ────────────────────────────────────────────────────────
 
 export async function getNoticiasAdmin({ limit = 50, page = 1 } = {}) {

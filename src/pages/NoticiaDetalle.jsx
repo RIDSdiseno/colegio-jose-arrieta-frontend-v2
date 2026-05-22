@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { CalendarDays } from "lucide-react";
+import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
 import DOMPurify from "dompurify";
-import { getNoticiaPorSlug } from "../api/noticias";
+import { getNoticiaPorSlug, getNoticiasAdyacentes } from "../api/noticias";
 import { formatDate } from "../lib/utils";
 import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
@@ -11,12 +11,22 @@ import Button from "../components/ui/Button";
 function NoticiaDetalle() {
   const { slug } = useParams();
   const [noticia, setNoticia] = useState(null);
+  const [adyacentes, setAdyacentes] = useState({ anterior: null, siguiente: null });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
+    setNoticia(null);
+    setAdyacentes({ anterior: null, siguiente: null });
+    setLoading(true);
+    setError("");
     getNoticiaPorSlug(slug)
-      .then(setNoticia)
+      .then((data) => {
+        setNoticia(data);
+        getNoticiasAdyacentes(slug)
+          .then(setAdyacentes)
+          .catch(() => {}); // adyacentes es secundario, su fallo no rompe la página
+      })
       .catch((err) => setError(err.message || "No pudimos cargar la noticia."))
       .finally(() => setLoading(false));
   }, [slug]);
@@ -62,10 +72,6 @@ function NoticiaDetalle() {
 
       <section className="py-14">
         <div className="container-main mx-auto max-w-4xl">
-          <Button to="/noticias" variant="outline" className="mb-6 text-sm">
-            ← Volver a noticias
-          </Button>
-
           <div className="flex flex-wrap items-center gap-3">
             <Badge>{noticia.categoria}</Badge>
             <span className="inline-flex items-center gap-1 text-sm text-slate-500">
@@ -102,10 +108,44 @@ function NoticiaDetalle() {
             }}
           />
 
-          <div className="mt-10 border-t border-slate-200 pt-8">
-            <Button to="/noticias" variant="outline">
-              ← Volver a noticias
-            </Button>
+          <div className="mt-10 border-t border-slate-200 pt-8 space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                {adyacentes.anterior ? (
+                  <Link
+                    to={`/noticias/${adyacentes.anterior.slug}`}
+                    className="group flex h-full flex-col gap-2 rounded-2xl border-2 border-slate-200 bg-white p-4 shadow-sm transition hover:border-primary hover:shadow-md"
+                  >
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wide text-slate-400 group-hover:text-primary">
+                      <ChevronLeft className="h-3.5 w-3.5" /> Anterior
+                    </span>
+                    <span className="line-clamp-2 text-sm font-semibold text-slate-700 group-hover:text-primary">
+                      {adyacentes.anterior.titulo}
+                    </span>
+                  </Link>
+                ) : <div />}
+              </div>
+              <div>
+                {adyacentes.siguiente ? (
+                  <Link
+                    to={`/noticias/${adyacentes.siguiente.slug}`}
+                    className="group flex h-full flex-col items-end gap-2 rounded-2xl border-2 border-slate-200 bg-white p-4 shadow-sm text-right transition hover:border-primary hover:shadow-md"
+                  >
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wide text-slate-400 group-hover:text-primary">
+                      Siguiente <ChevronRight className="h-3.5 w-3.5" />
+                    </span>
+                    <span className="line-clamp-2 text-sm font-semibold text-slate-700 group-hover:text-primary">
+                      {adyacentes.siguiente.titulo}
+                    </span>
+                  </Link>
+                ) : <div />}
+              </div>
+            </div>
+            <div className="text-center">
+              <Button to="/noticias" variant="outline" className="text-sm">
+                ← Volver a noticias
+              </Button>
+            </div>
           </div>
         </div>
       </section>

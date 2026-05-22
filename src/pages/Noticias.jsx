@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { CalendarDays, Search, X } from "lucide-react";
-import { Link } from "react-router-dom";
 import { getNoticias } from "../api/noticias";
 import { formatDate } from "../lib/utils";
 import Badge from "../components/ui/Badge";
