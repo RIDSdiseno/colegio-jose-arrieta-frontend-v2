@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, ImagePlus, Loader2, Trash2, Upload } from "lucide-react";
+import { ImagePlus, Loader2, Trash2, Upload } from "lucide-react";
 import { getAlbumById, agregarFoto, eliminarFoto, subirImagenAlbum } from "../../api/albums";
+import AdminPageHeader from "../../components/admin/AdminPageHeader";
+import ErrorBanner from "../../components/admin/ErrorBanner";
+import AdminLoadingSpinner from "../../components/admin/AdminLoadingSpinner";
 
 function AdminAlbumFotos() {
   const { id } = useParams();
@@ -98,35 +101,13 @@ function AdminAlbumFotos() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex h-40 items-center justify-center text-slate-400">
-        <Loader2 className="h-6 w-6 animate-spin" />
-      </div>
-    );
-  }
+  if (loading) return <AdminLoadingSpinner />;
 
   return (
     <div className="mx-auto max-w-4xl">
-      <div className="mb-6 flex items-center gap-3">
-        <button
-          type="button"
-          onClick={() => navigate("/admin/albums")}
-          className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:border-primary hover:text-primary"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </button>
-        <div>
-          <h1 className="font-heading text-2xl font-bold text-primary">
-            {album?.titulo}
-          </h1>
-          <p className="text-sm text-slate-400">{album?.fotos?.length ?? 0} fotos</p>
-        </div>
-      </div>
+      <AdminPageHeader title={album?.titulo} subtitle={`${album?.fotos?.length ?? 0} fotos`} backTo="/admin/albums" />
 
-      {error ? (
-        <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
-      ) : null}
+      <ErrorBanner message={error} />
 
       {/* Subida masiva */}
       <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-soft">

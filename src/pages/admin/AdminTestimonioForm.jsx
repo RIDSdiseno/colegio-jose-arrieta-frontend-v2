@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Loader2, Star } from "lucide-react";
+import { Loader2, Star } from "lucide-react";
 import { crearTestimonio, actualizarTestimonio, getTestimonioById } from "../../api/testimonios";
+import AdminPageHeader from "../../components/admin/AdminPageHeader";
+import ErrorBanner from "../../components/admin/ErrorBanner";
+import AdminFormActions from "../../components/admin/AdminFormActions";
+import AdminLoadingSpinner from "../../components/admin/AdminLoadingSpinner";
 
 const COLORES = [
   "#1e3a5f", "#2563eb", "#16a34a", "#dc2626",
@@ -68,13 +72,7 @@ function AdminTestimonioForm() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex h-40 items-center justify-center text-slate-400">
-        <Loader2 className="h-6 w-6 animate-spin" />
-      </div>
-    );
-  }
+  if (loading) return <AdminLoadingSpinner />;
 
   // Iniciales para la preview
   const initials = form.nombre
@@ -85,24 +83,9 @@ function AdminTestimonioForm() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <div className="mb-6 flex items-center gap-3">
-        <button
-          type="button"
-          onClick={() => navigate("/admin/testimonios")}
-          className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:border-primary hover:text-primary"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </button>
-        <h1 className="font-heading text-2xl font-bold text-primary">
-          {isEditing ? "Editar testimonio" : "Nuevo testimonio"}
-        </h1>
-      </div>
+      <AdminPageHeader title={isEditing ? "Editar testimonio" : "Nuevo testimonio"} backTo="/admin/testimonios" />
 
-      {error ? (
-        <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          {error}
-        </div>
-      ) : null}
+      <ErrorBanner message={error} />
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft space-y-5">
@@ -225,23 +208,7 @@ function AdminTestimonioForm() {
           </div>
         ) : null}
 
-        <div className="flex justify-end gap-3">
-          <button
-            type="button"
-            onClick={() => navigate("/admin/testimonios")}
-            className="rounded-xl border border-slate-200 px-6 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            disabled={saving}
-            className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-primaryHover disabled:opacity-60"
-          >
-            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-            {saving ? "Guardando..." : isEditing ? "Guardar cambios" : "Publicar testimonio"}
-          </button>
-        </div>
+        <AdminFormActions saving={saving} cancelTo="/admin/testimonios" isEditing={isEditing} saveLabel={isEditing ? "Guardar testimonio" : "Crear testimonio"} />
       </form>
     </div>
   );

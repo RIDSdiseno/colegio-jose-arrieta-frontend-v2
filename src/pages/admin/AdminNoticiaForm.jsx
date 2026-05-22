@@ -1,12 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, ImagePlus, Loader2 } from "lucide-react";
+import { ImagePlus, Loader2, Plus, X } from "lucide-react";
 import {
   crearNoticia,
   actualizarNoticia,
   subirImagen,
   getNoticiaById,
 } from "../../api/noticias";
+import { slugify } from "../../lib/utils";
+import AdminPageHeader from "../../components/admin/AdminPageHeader";
+import ErrorBanner from "../../components/admin/ErrorBanner";
+import AdminFormActions from "../../components/admin/AdminFormActions";
+import AdminLoadingSpinner from "../../components/admin/AdminLoadingSpinner";
 
 const CATEGORIAS = [
   "General",
@@ -21,20 +26,36 @@ const EMPTY = {
   titulo: "",
   slug: "",
   extracto: "",
-  contenido: "",
+  texto: "",
+  imagenes: [],      // fotos del cuerpo del artículo
   categoria: "General",
-  imagen: "",
+  imagen: "",        // portada
   fecha: new Date().toISOString().split("T")[0],
 };
 
-function slugify(str) {
-  return str
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/[^a-z0-9\s-]/g, "")
+/** Separa el contenido HTML guardado en texto plano + array de URLs de imágenes */
+function parseContenido(html = "") {
+  const imagenes = [];
+  const texto = html
+    .replace(/<img[^>]+>/gi, (m) => {
+      const src = m.match(/src="([^"]+)"/)?.[1];
+      if (src) imagenes.push(src);
+      return "";
+    })
+    .replace(/<br\s*\/?>/gi, "\n")
+    .trim();
+  return { texto, imagenes };
+}
+
+/** Reconstruye el contenido HTML a guardar en BD */
+function buildContenido(texto, imagenes) {
+  // Convertir saltos de línea del texto en <br> para que se muestren bien
+  const htmlTexto = texto
     .trim()
-    .replace(/\s+/g, "-");
+    .replace(/\r\n/g, "\n")
+    .replace(/\n/g, "<br>");
+  const htmlImgs = imagenes.map((u) => `<img src="${u}" alt="">`).join("\n");
+  return [htmlTexto, htmlImgs].filter(Boolean).join("\n\n");
 }
 
 function AdminNoticiaForm() {
@@ -46,18 +67,22 @@ function AdminNoticiaForm() {
   const [loading, setLoading] = useState(isEditing);
   const [saving, setSaving] = useState(false);
   const [uploadingImg, setUploadingImg] = useState(false);
+  const [uploadingContent, setUploadingContent] = useState(false);
   const [error, setError] = useState("");
   const fileRef = useRef(null);
+  const contentFileRef = useRef(null);
 
   useEffect(() => {
     if (!isEditing) return;
     getNoticiaById(id)
       .then((data) => {
+        const { texto, imagenes } = parseContenido(data.contenido || "");
         setForm({
           titulo: data.titulo || "",
           slug: data.slug || "",
           extracto: data.extracto || "",
-          contenido: data.contenido || "",
+          texto,
+          imagenes,
           categoria: data.categoria || "General",
           imagen: data.imagen || "",
           fecha: data.fecha
@@ -73,9 +98,7 @@ function AdminNoticiaForm() {
     const { name, value } = e.target;
     setForm((prev) => {
       const next = { ...prev, [name]: value };
-      if (name === "titulo" && !isEditing) {
-        next.slug = slugify(value);
-      }
+      if (name === "titulo" && !isEditing) next.slug = slugify(value);
       return next;
     });
   };
@@ -92,7 +115,31 @@ function AdminNoticiaForm() {
       setError("Error al subir la imagen: " + err.message);
     } finally {
       setUploadingImg(false);
+      if (fileRef.current) fileRef.current.value = "";
     }
+  };
+
+  const handleAddContentImage = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingContent(true);
+    setError("");
+    try {
+      const url = await subirImagen(file);
+      setForm((prev) => ({ ...prev, imagenes: [...prev.imagenes, url] }));
+    } catch (err) {
+      setError("Error al subir imagen: " + err.message);
+    } finally {
+      setUploadingContent(false);
+      if (contentFileRef.current) contentFileRef.current.value = "";
+    }
+  };
+
+  const handleRemoveContentImage = (idx) => {
+    setForm((prev) => ({
+      ...prev,
+      imagenes: prev.imagenes.filter((_, i) => i !== idx),
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -100,8 +147,16 @@ function AdminNoticiaForm() {
     setError("");
     setSaving(true);
     try {
-      const payload = { ...form, imagen: form.imagen || null };
-      if (!isEditing && !payload.imagen) delete payload.imagen;
+      const contenido = buildContenido(form.texto, form.imagenes);
+      const payload = {
+        titulo: form.titulo,
+        slug: form.slug,
+        extracto: form.extracto,
+        contenido,
+        categoria: form.categoria,
+        imagen: form.imagen || null,
+        fecha: form.fecha,
+      };
       if (isEditing) {
         await actualizarNoticia(id, payload);
       } else {
@@ -115,36 +170,16 @@ function AdminNoticiaForm() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex h-40 items-center justify-center text-slate-400">
-        <Loader2 className="h-6 w-6 animate-spin" />
-      </div>
-    );
-  }
+  if (loading) return <AdminLoadingSpinner />;
 
   return (
     <div className="mx-auto max-w-3xl">
-      <div className="mb-6 flex items-center gap-3">
-        <button
-          type="button"
-          onClick={() => navigate("/admin/noticias")}
-          className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:border-primary hover:text-primary"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </button>
-        <h1 className="font-heading text-2xl font-bold text-primary">
-          {isEditing ? "Editar noticia" : "Nueva noticia"}
-        </h1>
-      </div>
+      <AdminPageHeader title={isEditing ? "Editar noticia" : "Nueva noticia"} backTo="/admin/noticias" />
 
-      {error ? (
-        <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          {error}
-        </div>
-      ) : null}
+      <ErrorBanner message={error} />
 
       <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Datos básicos */}
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft space-y-5">
           <div>
             <label className="mb-1 block text-sm font-medium text-slate-700">
@@ -226,25 +261,75 @@ function AdminNoticiaForm() {
 
           <div>
             <label className="mb-1 block text-sm font-medium text-slate-700">
-              Contenido completo
+              Texto del artículo
             </label>
             <textarea
-              name="contenido"
-              rows={8}
-              value={form.contenido}
+              name="texto"
+              rows={10}
+              value={form.texto}
               onChange={handleChange}
-              placeholder="Puedes usar HTML básico: <p>, <b>, <ul>, <li>, <a href='...'>..."
-              className="w-full rounded-xl border border-slate-300 px-4 py-2.5 font-mono text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+              placeholder="Escribe el contenido de la noticia aquí..."
+              className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
             />
-            <p className="mt-1 text-xs text-slate-400">
-              Acepta HTML básico para dar formato al contenido.
-            </p>
           </div>
         </div>
 
+        {/* Fotos del artículo */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft">
+          <p className="mb-3 text-sm font-medium text-slate-700">
+            Fotos del artículo
+          </p>
+
+          {form.imagenes.length > 0 ? (
+            <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {form.imagenes.map((url, idx) => (
+                <div key={idx} className="group relative overflow-hidden rounded-xl border border-slate-200">
+                  <img
+                    src={url}
+                    alt=""
+                    className="h-32 w-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveContentImage(idx)}
+                    className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-lg bg-black/50 text-white opacity-0 transition hover:bg-red-500 group-hover:opacity-100"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : null}
+
+          <button
+            type="button"
+            onClick={() => contentFileRef.current?.click()}
+            disabled={uploadingContent}
+            className="inline-flex items-center gap-2 rounded-xl border border-dashed border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-600 transition hover:border-primary hover:text-primary disabled:opacity-60"
+          >
+            {uploadingContent ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Plus className="h-4 w-4" />
+            )}
+            {uploadingContent ? "Subiendo..." : "Agregar foto"}
+          </button>
+          <input
+            ref={contentFileRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleAddContentImage}
+          />
+          <p className="mt-2 text-xs text-slate-400">
+            Las fotos se muestran al final del artículo. Puedes agregar todas las que quieras.
+          </p>
+        </div>
+
+        {/* Imagen destacada (portada) */}
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft">
           <label className="mb-3 block text-sm font-medium text-slate-700">
-            Imagen destacada
+            Imagen destacada (portada)
           </label>
 
           {form.imagen ? (
@@ -295,23 +380,7 @@ function AdminNoticiaForm() {
           </div>
         </div>
 
-        <div className="flex justify-end gap-3">
-          <button
-            type="button"
-            onClick={() => navigate("/admin/noticias")}
-            className="rounded-xl border border-slate-200 px-6 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            disabled={saving}
-            className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-primaryHover disabled:opacity-60"
-          >
-            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-            {saving ? "Guardando..." : isEditing ? "Guardar cambios" : "Publicar noticia"}
-          </button>
-        </div>
+        <AdminFormActions saving={saving} cancelTo="/admin/noticias" isEditing={isEditing} saveLabel={isEditing ? "Guardar cambios" : "Publicar noticia"} />
       </form>
     </div>
   );

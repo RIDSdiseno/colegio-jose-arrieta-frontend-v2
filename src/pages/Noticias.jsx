@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { CalendarDays, Search, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getNoticias } from "../api/noticias";
+import { formatDate } from "../lib/utils";
 import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
 import PageHero from "../components/ui/PageHero";
@@ -140,7 +141,7 @@ function Noticias() {
                         <Badge>{item.categoria}</Badge>
                         <span className="inline-flex items-center gap-1 text-xs text-slate-500">
                           <CalendarDays className="h-3.5 w-3.5" />
-                          {item.fecha}
+                          {formatDate(item.fecha)}
                         </span>
                       </div>
                       <h2 className="line-clamp-2 font-heading text-xl font-semibold text-primary">

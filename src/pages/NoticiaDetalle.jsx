@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { CalendarDays } from "lucide-react";
 import DOMPurify from "dompurify";
 import { getNoticiaPorSlug } from "../api/noticias";
+import { formatDate } from "../lib/utils";
 import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
 
@@ -69,7 +70,7 @@ function NoticiaDetalle() {
             <Badge>{noticia.categoria}</Badge>
             <span className="inline-flex items-center gap-1 text-sm text-slate-500">
               <CalendarDays className="h-4 w-4" />
-              {noticia.fecha}
+              {formatDate(noticia.fecha)}
             </span>
           </div>
 
@@ -87,7 +88,11 @@ function NoticiaDetalle() {
 
           <div
             className="wp-content mt-8 overflow-x-hidden"
-            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(noticia.contenido) }}
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(
+                (noticia.contenido || "").replace(/\n/g, "<br>")
+              ),
+            }}
           />
 
           <div className="mt-10 border-t border-slate-200 pt-8">

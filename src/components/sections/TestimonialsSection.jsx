@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getTestimonios } from "../../api/testimonios";
-import staticTestimonials from "../../data/testimonials";
 
 function Stars({ count = 5 }) {
   return (
@@ -16,7 +15,7 @@ function Stars({ count = 5 }) {
 
 function TestimonialsSection() {
   const [active, setActive] = useState(0);
-  const [testimonials, setTestimonials] = useState(staticTestimonials);
+  const [testimonials, setTestimonials] = useState([]);
 
   useEffect(() => {
     getTestimonios()

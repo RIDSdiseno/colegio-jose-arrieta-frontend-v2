@@ -94,19 +94,17 @@ h6 {
   color: #475569;
   font-style: italic;
 }
-/* Imágenes: centradas y con tamaño máximo razonable */
+/* Imágenes del contenido */
 .wp-content img {
   display: block;
   max-width: 100%;
-  max-height: 420px;
   width: auto;
   height: auto;
-  object-fit: contain;
   border-radius: 0.75rem;
-  margin: 1.25rem auto;
+  margin: 1.5rem auto;
   box-shadow: 0 2px 12px rgba(0,0,0,0.08);
 }
-/* Imágenes pequeñas/iconos que WP inserta en línea — no aplicar sombra ni bloque */
+/* Imágenes con width explícito */
 .wp-content img[width] {
   max-width: min(100%, calc(1px * var(--img-w, 9999)));
 }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { getBoletines } from "../api/boletines";
+import { formatDate } from "../lib/utils";
 import {
   TrendingUp, BookOpen, Globe, Heart, Users, Lightbulb,
   Handshake, Brain,
@@ -397,7 +398,7 @@ function ProyectoEducativo() {
                   <div className="flex-1 min-w-0">
                     <p className="truncate text-sm font-semibold text-slate-800">{b.titulo}</p>
                     <p className="mt-0.5 text-xs text-slate-400">
-                      {b.fecha}
+                      {formatDate(b.fecha)}
                       {b.isPdf && <span className="ml-2 rounded bg-secondary/15 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-secondary">PDF</span>}
                     </p>
                   </div>

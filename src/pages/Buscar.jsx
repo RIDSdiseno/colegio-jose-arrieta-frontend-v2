@@ -3,6 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Search, FileText, Newspaper } from "lucide-react";
 import { getNoticias } from "../api/noticias";
+import { formatDate } from "../lib/utils";
 
 // Índice estático de páginas del sitio
 const PAGINAS = [
@@ -204,7 +205,7 @@ function Buscar() {
                       <div className="min-w-0">
                         <p className="font-heading text-sm font-bold text-primary line-clamp-1">{n.titulo}</p>
                         <p className="mt-0.5 text-xs text-slate-500 line-clamp-2">{n.extracto}</p>
-                        <p className="mt-1 text-xs text-slate-300">{n.fecha}</p>
+                        <p className="mt-1 text-xs text-slate-300">{formatDate(n.fecha)}</p>
                       </div>
                     </Link>
                   ))}

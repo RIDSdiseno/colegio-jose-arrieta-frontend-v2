@@ -3,6 +3,7 @@ import { ArrowRight, CalendarDays, Newspaper, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { getNoticias } from "../../api/noticias";
+import { formatDate } from "../../lib/utils";
 import SectionTitle from "../ui/SectionTitle";
 import Button from "../ui/Button";
 
@@ -52,7 +53,7 @@ function NewsCard({ item }) {
         {item.fecha && (
           <span className="mb-2 inline-flex items-center gap-1.5 text-xs text-white/60">
             <CalendarDays className="h-3 w-3" />
-            {item.fecha}
+            {formatDate(item.fecha)}
           </span>
         )}
         <h3 className="font-heading text-base font-bold leading-snug text-white line-clamp-2">

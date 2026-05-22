@@ -13,3 +13,14 @@ export function formatDate(isoDate, options = { year: "numeric", month: "long", 
     : isoDate;
   return new Date(normalized).toLocaleDateString("es-CL", options);
 }
+
+/** Convierte un string a slug URL-friendly */
+export function slugify(str = "") {
+  return str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-");
+}
