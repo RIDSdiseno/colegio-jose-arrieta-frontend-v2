@@ -40,6 +40,7 @@ function AdminAlbumFotos() {
       setError("Error al subir: " + err.message);
     } finally {
       setUploadingImg(false);
+      if (fileRef.current) fileRef.current.value = "";
     }
   };
 
@@ -78,6 +79,7 @@ function AdminAlbumFotos() {
       if (failed > 0) setError(`${files.length - failed} foto(s) subidas. ${failed} fallaron.`);
     } finally {
       setUploadingImg(false);
+      if (multiFileRef.current) multiFileRef.current.value = "";
       cargar();
     }
   };

@@ -39,12 +39,12 @@ export default function FotoMosaico() {
         if (data && data.length > 0) {
           // Convertir álbumes a formato de fotos para el mosaico
           const fotosDeAlbumes = data
-            .filter((a) => a.portada || a.fotos?.[0]?.url)
             .map((a) => ({
               url: a.portada || a.fotos?.[0]?.url,
               caption: a.titulo,
-            }));
-          if (fotosDeAlbumes.length >= 2) setFotos(fotosDeAlbumes);
+            }))
+            .filter((f) => f.url);
+          if (fotosDeAlbumes.length > 0) setFotos(fotosDeAlbumes);
         }
       })
       .catch(() => {});
