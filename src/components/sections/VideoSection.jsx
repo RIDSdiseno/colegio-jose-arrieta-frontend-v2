@@ -1,10 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Play, X } from "lucide-react";
 import SectionTitle from "../ui/SectionTitle";
+import { getVideos } from "../../api/videos";
+import { getYoutubeId } from "../../lib/youtube";
 
 function VideoSection() {
-  const [open, setOpen] = useState(false);
+  const [videos, setVideos] = useState([]);
+  const [activeId, setActiveId] = useState(null); // ID de YouTube del video abierto en modal
+
+  useEffect(() => {
+    getVideos().then(setVideos).catch(() => {});
+  }, []);
+
+  if (videos.length === 0) return null;
 
   return (
     <section className="bg-white py-16">
@@ -12,28 +21,43 @@ function VideoSection() {
         <SectionTitle
           eyebrow="Conócenos"
           title="Mira cómo vivimos el aprendizaje día a día"
-          subtitle="Explora nuestro canal y descubre la experiencia escolar del Colegio José Arrieta."
+          subtitle="Explora nuestros videos y descubre la experiencia escolar del Colegio José Arrieta."
         />
-        <div className="relative mx-auto max-w-4xl overflow-hidden rounded-3xl shadow-soft">
-          <img
-            src="https://img.youtube.com/vi/zXujbnT4RvU/maxresdefault.jpg"
-            alt="Video institucional Colegio José Arrieta"
-            className="h-[280px] w-full object-cover sm:h-[420px]"
-          />
-          <div className="absolute inset-0 bg-black/35" />
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            className="absolute left-1/2 top-1/2 inline-flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-full bg-secondary px-6 py-3 font-semibold text-primary shadow-lg transition hover:bg-secondaryHover hover:scale-105"
-          >
-            <Play className="h-4 w-4 fill-current" />
-            Ver video
-          </button>
+
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {videos.map((video) => {
+            const ytId = getYoutubeId(video.url);
+            if (!ytId) return null;
+            return (
+              <button
+                key={video.id}
+                type="button"
+                onClick={() => setActiveId(ytId)}
+                className="group text-left"
+              >
+                <div className="relative overflow-hidden rounded-2xl">
+                  <img
+                    src={`https://img.youtube.com/vi/${ytId}/mqdefault.jpg`}
+                    alt={video.titulo}
+                    className="h-44 w-full object-cover transition group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-black/30 transition group-hover:bg-black/40" />
+                  <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-secondary shadow-lg transition group-hover:scale-110">
+                    <Play className="h-5 w-5 fill-primary text-primary" />
+                  </span>
+                </div>
+                <div className="mt-3 px-1">
+                  <p className="font-semibold text-primary line-clamp-2 text-sm">{video.titulo}</p>
+                  <p className="mt-0.5 text-xs text-slate-400">{video.anio}</p>
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
 
       <AnimatePresence>
-        {open ? (
+        {activeId ? (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -42,9 +66,9 @@ function VideoSection() {
           >
             <button
               type="button"
-              onClick={() => setOpen(false)}
+              onClick={() => setActiveId(null)}
               className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20"
-              aria-label="Cerrar modal"
+              aria-label="Cerrar video"
             >
               <X className="h-5 w-5" />
             </button>
@@ -52,8 +76,8 @@ function VideoSection() {
               <div className="relative pb-[56.25%]">
                 <iframe
                   className="absolute inset-0 h-full w-full"
-                  src="https://www.youtube.com/embed/zXujbnT4RvU?autoplay=1"
-                  title="Video institucional Colegio José Arrieta"
+                  src={`https://www.youtube.com/embed/${activeId}?autoplay=1`}
+                  title="Video Colegio José Arrieta"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 />

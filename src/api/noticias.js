@@ -20,7 +20,7 @@ export async function getNoticiasAdyacentes(slug) {
 // ── API admin (Backend) ────────────────────────────────────────────────────────
 
 export async function getNoticiasAdmin({ limit = 50, page = 1 } = {}) {
-  return apiFetch(`/api/noticias?limit=${limit}&page=${page}`);
+  return apiFetch(`/api/noticias?limit=${limit}&page=${page}`, { admin: true });
 }
 
 export async function getNoticiaById(id) {

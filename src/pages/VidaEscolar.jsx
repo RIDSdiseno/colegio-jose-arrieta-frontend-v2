@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Helmet } from "react-helmet-async";
 import PageHero from "../components/ui/PageHero";
 import { getAlbums, getAlbumFotos } from "../api/albums";
+import { getVideos } from "../api/videos";
+import { getYoutubeId } from "../lib/youtube";
 
 const BASE = "https://colegiojosearrieta.cl/wp-content/uploads";
 
@@ -114,29 +116,6 @@ const galeriaAlbumes = [
   },
 ];
 
-// Videos reales del canal del colegio
-const videos = [
-  {
-    id: "zXujbnT4RvU",
-    titulo: "Video Institucional",
-    anno: "2024",
-  },
-  {
-    id: "c6u3Pzcns4I",
-    titulo: "Actividades 2022",
-    anno: "2022",
-  },
-  {
-    id: "gRMJBd7zSHM",
-    titulo: "Video Institucional 2015",
-    anno: "2015",
-  },
-  {
-    id: "lArNmyqbkoI",
-    titulo: "Video Institucional 2014",
-    anno: "2014",
-  },
-];
 
 function Galeria() {
   const [albums, setAlbums] = useState(galeriaAlbumes);
@@ -287,6 +266,8 @@ function Galeria() {
 
 function VideoCard({ video }) {
   const [open, setOpen] = useState(false);
+  const ytId = getYoutubeId(video.url);
+  if (!ytId) return null;
 
   return (
     <>
@@ -297,7 +278,7 @@ function VideoCard({ video }) {
       >
         <div className="relative overflow-hidden">
           <img
-            src={`https://img.youtube.com/vi/${video.id}/hqdefault.jpg`}
+            src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`}
             alt={video.titulo}
             className="h-44 w-full object-cover transition duration-300 group-hover:scale-105"
           />
@@ -310,7 +291,7 @@ function VideoCard({ video }) {
         </div>
         <div className="bg-white px-4 py-3 text-left">
           <p className="font-semibold text-primary">{video.titulo}</p>
-          <p className="text-xs text-slate-400">{video.anno}</p>
+          <p className="text-xs text-slate-400">{video.anio}</p>
         </div>
       </button>
 
@@ -334,7 +315,7 @@ function VideoCard({ video }) {
               <div className="relative pb-[56.25%]">
                 <iframe
                   className="absolute inset-0 h-full w-full"
-                  src={`https://www.youtube.com/embed/${video.id}?autoplay=1`}
+                  src={`https://www.youtube.com/embed/${ytId}?autoplay=1`}
                   title={video.titulo}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -349,6 +330,12 @@ function VideoCard({ video }) {
 }
 
 function VidaEscolar() {
+  const [videos, setVideos] = useState([]);
+
+  useEffect(() => {
+    getVideos().then(setVideos).catch(() => {});
+  }, []);
+
   return (
     <>
       <Helmet>
@@ -418,22 +405,24 @@ function VidaEscolar() {
         </div>
       </section>
 
-      {/* Videos reales */}
-      <section className="bg-slate-950 py-20">
-        <div className="container-main">
-          <div className="mb-10">
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-secondary">Videos</span>
-            <h2 className="mt-2 font-heading text-4xl font-black text-white sm:text-5xl">
-              Conoce el colegio<br /><span className="text-secondary">en video.</span>
-            </h2>
+      {/* Videos — solo si hay al menos uno */}
+      {videos.length > 0 && (
+        <section className="bg-slate-950 py-20">
+          <div className="container-main">
+            <div className="mb-10">
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-secondary">Videos</span>
+              <h2 className="mt-2 font-heading text-4xl font-black text-white sm:text-5xl">
+                Conoce el colegio<br /><span className="text-secondary">en video.</span>
+              </h2>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {videos.map((v) => (
+                <VideoCard key={v.id} video={v} />
+              ))}
+            </div>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {videos.map((v) => (
-              <VideoCard key={v.id} video={v} />
-            ))}
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
     </>
   );
 }
