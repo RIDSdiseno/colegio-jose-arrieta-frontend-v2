@@ -1,47 +1,29 @@
-import { stripHtml, formatDate } from "../lib/utils";
+import apiFetch from "../lib/api";
 
-const WP_BASE = "https://colegiojosearrieta.cl/wp-json/wp/v2";
-
-let cachedCategoryId = null;
-
-async function getBoletinCategoryId() {
-  if (cachedCategoryId) return cachedCategoryId;
-  const res = await fetch(`${WP_BASE}/categories?slug=boletin&per_page=1`);
-  if (!res.ok) return null;
-  const data = await res.json();
-  cachedCategoryId = data?.[0]?.id || null;
-  return cachedCategoryId;
-}
+// ── API pública ────────────────────────────────────────────────────────────────
 
 export async function getBoletines({ limit = 6 } = {}) {
-  const categoryId = await getBoletinCategoryId();
-  if (!categoryId) return [];
+  return apiFetch(`/api/boletines?limit=${limit}`);
+}
 
-  const params = new URLSearchParams({
-    categories: categoryId,
-    per_page: limit,
-    _embed: 1,
-    status: "publish",
-    orderby: "date",
-    order: "desc",
-  });
+// ── API admin ──────────────────────────────────────────────────────────────────
 
-  const res = await fetch(`${WP_BASE}/posts?${params}`);
-  if (!res.ok) return [];
-  const data = await res.json();
+export async function getBoletinesAdmin() {
+  return apiFetch("/api/boletines/admin", { admin: true });
+}
 
-  return data.map((post) => {
-    const contenido = post.content?.rendered || "";
-    const pdfMatch = contenido.match(/href="([^"]+\.pdf)"/i);
-    const pdfUrl = pdfMatch?.[1] || null;
+export async function getBoletinById(id) {
+  return apiFetch(`/api/boletines/id/${id}`, { admin: true });
+}
 
-    return {
-      id: post.id,
-      titulo: stripHtml(post.title?.rendered),
-      fecha: formatDate(post.date, { year: "numeric", month: "long" }),
-      link: pdfUrl || post.link,
-      isPdf: !!pdfUrl,
-      imagen: post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || null,
-    };
-  });
+export async function crearBoletin(data) {
+  return apiFetch("/api/boletines", { method: "POST", body: JSON.stringify(data), admin: true });
+}
+
+export async function actualizarBoletin(id, data) {
+  return apiFetch(`/api/boletines/${id}`, { method: "PUT", body: JSON.stringify(data), admin: true });
+}
+
+export async function eliminarBoletin(id) {
+  return apiFetch(`/api/boletines/${id}`, { method: "DELETE", admin: true });
 }

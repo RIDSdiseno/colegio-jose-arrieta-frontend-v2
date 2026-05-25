@@ -25,6 +25,8 @@ import AdminAlbumForm from "./pages/admin/AdminAlbumForm";
 import AdminAlbumFotos from "./pages/admin/AdminAlbumFotos";
 import AdminVideos from "./pages/admin/AdminVideos";
 import AdminVideoForm from "./pages/admin/AdminVideoForm";
+import AdminBoletines from "./pages/admin/AdminBoletines";
+import AdminBoletinForm from "./pages/admin/AdminBoletinForm";
 
 import ColegioLaReina from "./pages/seo/ColegioLaReina";
 import ColegioSubvencionado from "./pages/seo/ColegioSubvencionado";
@@ -78,6 +80,9 @@ function App() {
           <Route path="/admin/videos" element={<AdminVideos />} />
           <Route path="/admin/videos/nuevo" element={<AdminVideoForm />} />
           <Route path="/admin/videos/:id" element={<AdminVideoForm />} />
+          <Route path="/admin/boletines" element={<AdminBoletines />} />
+          <Route path="/admin/boletines/nuevo" element={<AdminBoletinForm />} />
+          <Route path="/admin/boletines/:id" element={<AdminBoletinForm />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
