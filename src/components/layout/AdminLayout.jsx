@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { LogOut, Newspaper, LayoutDashboard, Star, Images, Youtube, BookText } from "lucide-react";
+import { LogOut, Newspaper, LayoutDashboard, Star, Images, Youtube, BookText, FolderOpen } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
 const navItems = [
@@ -8,6 +8,7 @@ const navItems = [
   { to: "/admin/albums", label: "Galería", icon: Images },
   { to: "/admin/videos", label: "Videos", icon: Youtube },
   { to: "/admin/boletines", label: "Boletines", icon: BookText },
+  { to: "/admin/documentos", label: "Documentos", icon: FolderOpen },
 ];
 
 function AdminLayout() {

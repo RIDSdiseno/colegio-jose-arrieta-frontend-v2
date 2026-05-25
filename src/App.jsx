@@ -14,6 +14,7 @@ import Noticias from "./pages/Noticias";
 import NoticiaDetalle from "./pages/NoticiaDetalle";
 import Contacto from "./pages/Contacto";
 import Buscar from "./pages/Buscar";
+import Documentos from "./pages/Documentos";
 
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminNoticias from "./pages/admin/AdminNoticias";
@@ -27,6 +28,8 @@ import AdminVideos from "./pages/admin/AdminVideos";
 import AdminVideoForm from "./pages/admin/AdminVideoForm";
 import AdminBoletines from "./pages/admin/AdminBoletines";
 import AdminBoletinForm from "./pages/admin/AdminBoletinForm";
+import AdminDocumentos from "./pages/admin/AdminDocumentos";
+import AdminDocumentoForm from "./pages/admin/AdminDocumentoForm";
 
 import ColegioLaReina from "./pages/seo/ColegioLaReina";
 import ColegioSubvencionado from "./pages/seo/ColegioSubvencionado";
@@ -49,6 +52,7 @@ function App() {
           <Route path="/noticias/:slug" element={<NoticiaDetalle />} />
           <Route path="/buscar" element={<Buscar />} />
           <Route path="/contacto" element={<Contacto />} />
+          <Route path="/documentos" element={<Documentos />} />
 
           {/* SEO landing pages — no aparecen en el menú */}
           <Route path="/colegio-la-reina" element={<ColegioLaReina />} />
@@ -83,6 +87,9 @@ function App() {
           <Route path="/admin/boletines" element={<AdminBoletines />} />
           <Route path="/admin/boletines/nuevo" element={<AdminBoletinForm />} />
           <Route path="/admin/boletines/:id" element={<AdminBoletinForm />} />
+          <Route path="/admin/documentos" element={<AdminDocumentos />} />
+          <Route path="/admin/documentos/nuevo" element={<AdminDocumentoForm />} />
+          <Route path="/admin/documentos/:id" element={<AdminDocumentoForm />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -10,6 +10,7 @@ const navItems = [
   { label: "¿Por qué elegirnos?", to: "/por-que-elegirnos" },
   { label: "Proyecto Educativo", to: "/proyecto-educativo" },
   { label: "Vida Escolar", to: "/vida-escolar" },
+  { label: "Documentos", to: "/documentos" },
   { label: "Noticias", to: "/noticias" },
   { label: "Contacto", to: "/contacto" },
 ];

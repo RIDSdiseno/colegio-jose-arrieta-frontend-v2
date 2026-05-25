@@ -265,7 +265,7 @@ function ProyectoEducativo() {
           <div className="mb-10">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-secondary">Transparencia</span>
             <h2 className="mt-2 font-heading text-4xl font-black text-slate-900 sm:text-5xl">
-              Reglamentos y<br /><span className="text-primary">documentos.</span>
+              Reglamentos y<br /><span className="text-primary">protocolos.</span>
             </h2>
             <p className="mt-3 max-w-md text-sm leading-relaxed text-slate-500">
               Accede a todos los reglamentos, protocolos y planes institucionales vigentes.
