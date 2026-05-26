@@ -1,7 +1,4 @@
-import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { getBoletines } from "../api/boletines";
-import { formatDate } from "../lib/utils";
 import {
   TrendingUp, BookOpen, Globe, Heart, Users, Lightbulb,
   Handshake, Brain,
@@ -78,16 +75,6 @@ const ejes = [
 ];
 
 function ProyectoEducativo() {
-  const [boletines, setBoletines] = useState([]);
-  const [loadingBoletines, setLoadingBoletines] = useState(true);
-
-  useEffect(() => {
-    getBoletines({ limit: 6 })
-      .then(setBoletines)
-      .catch(() => setBoletines([]))
-      .finally(() => setLoadingBoletines(false));
-  }, []);
-
   return (
     <>
       <Helmet>
@@ -341,71 +328,6 @@ function ProyectoEducativo() {
               ))}
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ── Boletines ────────────────────────────────────────────────── */}
-      <section className="bg-slate-50 py-16">
-        <div className="container-main">
-          <div className="mb-10">
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-secondary">Comunicaciones</span>
-            <h2 className="mt-2 font-heading text-4xl font-black text-slate-900 sm:text-5xl">
-              Boletines del<br /><span className="text-primary">Colegio.</span>
-            </h2>
-          </div>
-          {loadingBoletines ? (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="animate-pulse rounded-2xl border border-slate-200 bg-white p-5 shadow-soft">
-                  <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-xl bg-slate-200" />
-                    <div className="flex-1 space-y-2">
-                      <div className="h-3 w-3/4 rounded bg-slate-200" />
-                      <div className="h-3 w-1/2 rounded bg-slate-200" />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : boletines.length === 0 ? (
-            <div className="flex flex-col items-center gap-4 rounded-2xl border border-slate-200 bg-white py-12 text-center shadow-soft">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10">
-                <FileText className="h-7 w-7 text-primary" />
-              </div>
-              <div>
-                <p className="font-heading text-lg font-semibold text-slate-800">Boletines del Colegio</p>
-                <p className="mt-1 text-sm text-slate-500">Los boletines estarán disponibles próximamente.</p>
-              </div>
-            </div>
-          ) : (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {boletines.map((b, i) => (
-                <motion.a
-                  key={b.id}
-                  href={b.link}
-                  target="_blank"
-                  rel="noreferrer"
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.05 }}
-                  className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-soft transition hover:border-primary/30 hover:shadow-md"
-                >
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 transition group-hover:bg-primary/20">
-                    <FileText className="h-5 w-5 text-primary" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="truncate text-sm font-semibold text-slate-800">{b.titulo}</p>
-                    <p className="mt-0.5 text-xs text-slate-400">
-                      {formatDate(b.fecha)}
-                      {b.isPdf && <span className="ml-2 rounded bg-secondary/15 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-secondary">PDF</span>}
-                    </p>
-                  </div>
-                  <Download className="h-4 w-4 shrink-0 text-slate-300 transition group-hover:text-secondary" />
-                </motion.a>
-              ))}
-            </div>
-          )}
         </div>
       </section>
 
