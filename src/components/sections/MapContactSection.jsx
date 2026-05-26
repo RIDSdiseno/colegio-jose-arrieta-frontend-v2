@@ -1,6 +1,7 @@
 import { MapPin, Phone, Mail, Clock, MessageCircle, ArrowRight, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { trackWhatsAppClick } from "../../lib/tracking";
 
 const contactInfo = [
   { icon: MapPin, text: "Av. José Arrieta 6870, La Reina" },
@@ -64,6 +65,7 @@ function MapContactSection() {
                     href="https://wa.me/56988936631?text=Hola%2C%20me%20interesa%20información%20sobre%20la%20admisión%202026"
                     target="_blank"
                     rel="noreferrer"
+                    onClick={() => trackWhatsAppClick("map_contact")}
                     className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#1ebe5d]"
                   >
                     <MessageCircle className="h-4 w-4" />

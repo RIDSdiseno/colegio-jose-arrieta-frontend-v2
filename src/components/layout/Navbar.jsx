@@ -148,7 +148,7 @@ function Navbar() {
             {/* CTA desktop */}
             <div className="hidden lg:block">
               <Button to="/admision" variant="secondary" className="whitespace-nowrap px-5 py-2.5 text-xs font-bold">
-                Postula 2026
+                Admisión 2026
               </Button>
             </div>
 
@@ -190,7 +190,7 @@ function Navbar() {
                   ))}
                   <div className="mt-2 border-t border-slate-100 pt-3">
                     <Button to="/admision" variant="primary" className="w-full">
-                      Postula 2026
+                      Admisión 2026
                     </Button>
                   </div>
                 </div>
