@@ -26,8 +26,6 @@ import AdminAlbumForm from "./pages/admin/AdminAlbumForm";
 import AdminAlbumFotos from "./pages/admin/AdminAlbumFotos";
 import AdminVideos from "./pages/admin/AdminVideos";
 import AdminVideoForm from "./pages/admin/AdminVideoForm";
-import AdminBoletines from "./pages/admin/AdminBoletines";
-import AdminBoletinForm from "./pages/admin/AdminBoletinForm";
 import AdminDocumentos from "./pages/admin/AdminDocumentos";
 import AdminDocumentoForm from "./pages/admin/AdminDocumentoForm";
 
@@ -84,9 +82,6 @@ function App() {
           <Route path="/admin/videos" element={<AdminVideos />} />
           <Route path="/admin/videos/nuevo" element={<AdminVideoForm />} />
           <Route path="/admin/videos/:id" element={<AdminVideoForm />} />
-          <Route path="/admin/boletines" element={<AdminBoletines />} />
-          <Route path="/admin/boletines/nuevo" element={<AdminBoletinForm />} />
-          <Route path="/admin/boletines/:id" element={<AdminBoletinForm />} />
           <Route path="/admin/documentos" element={<AdminDocumentos />} />
           <Route path="/admin/documentos/nuevo" element={<AdminDocumentoForm />} />
           <Route path="/admin/documentos/:id" element={<AdminDocumentoForm />} />
