@@ -6,11 +6,14 @@ const BASE_URL = (import.meta.env.VITE_API_URL || "http://localhost:4000").repla
 async function apiFetch(path, options = {}) {
   const headers = { "Content-Type": "application/json", ...options.headers };
 
-  if (options.admin && supabase) {
+  if (options.admin) {
+    if (!supabase) throw new Error("Supabase no configurado.");
     const { data } = await supabase.auth.getSession();
-    if (data.session?.access_token) {
-      headers["Authorization"] = `Bearer ${data.session.access_token}`;
+    if (!data.session?.access_token) {
+      window.location.href = "/admin/login";
+      throw new Error("Sesión expirada. Por favor inicia sesión nuevamente.");
     }
+    headers["Authorization"] = `Bearer ${data.session.access_token}`;
   }
 
   const res = await fetch(`${BASE_URL}${path}`, { ...options, headers });
