@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { LogIn } from "lucide-react";
 
@@ -9,6 +9,8 @@ const COOLDOWN_SECONDS = 20;
 function AdminLogin() {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from ?? "/admin/noticias";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -40,7 +42,7 @@ function AdminLogin() {
         setError(`Credenciales incorrectas. Intento ${newAttempts} de ${MAX_ATTEMPTS}.`);
       }
     } else {
-      navigate("/admin/noticias", { replace: true });
+      navigate(from, { replace: true });
     }
   };
 

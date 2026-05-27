@@ -37,9 +37,9 @@ function AdminDocumentos() {
     try {
       const doc = items.find((d) => d.id === id);
       await eliminarDocumento(id);
-      // Limpiar el PDF de Supabase Storage si fue subido ahí
-      if (doc?.link) await eliminarArchivoStorage(doc.link, "documentos");
       setItems((prev) => prev.filter((d) => d.id !== id));
+      // Limpiar el PDF de Supabase Storage en segundo plano (fire-and-forget)
+      if (doc?.link) eliminarArchivoStorage(doc.link, "documentos").catch(() => {});
     } catch (err) {
       setError(err.message);
     } finally {

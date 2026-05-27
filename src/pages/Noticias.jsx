@@ -37,6 +37,7 @@ function Noticias() {
   useEffect(() => {
     let cancelled = false;
     setInputValue(queryParam);
+    setPage(1); // Resetear página al cambiar búsqueda — evita que fetchMore use página de búsqueda anterior
     setLoading(true);
     setError("");
 
