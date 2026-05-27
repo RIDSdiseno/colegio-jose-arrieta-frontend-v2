@@ -14,7 +14,7 @@ function Home() {
   return (
     <>
       <Helmet>
-        <title>Colegio José Arrieta — Mejor Colegio en La Reina, Santiago | Admisión 2026</title>
+        <title>Colegio José Arrieta — Educación Integral en La Reina, Santiago | Admisión 2026</title>
         <meta
           name="description"
           content="Colegio José Arrieta: uno de los mejores colegios subvencionados en La Reina, Santiago. Más de 50 años formando alumnos con educación integral, inglés desde Pre-Kínder y valores. Admisión 2026 abierta."

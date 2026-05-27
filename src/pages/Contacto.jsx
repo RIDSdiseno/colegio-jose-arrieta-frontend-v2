@@ -26,8 +26,10 @@ const contactItems = [
   {
     icon: Phone,
     label: "Teléfonos",
-    value: "+56 2 2279 1863 / +56 2 2278 4685",
-    href: "tel:+56222791863",
+    links: [
+      { value: "+56 2 2279 1863", href: "tel:+56222791863" },
+      { value: "+56 2 2278 4685", href: "tel:+56222784685" },
+    ],
   },
   {
     icon: MessageCircle,
@@ -109,14 +111,26 @@ function Contacto() {
             <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft">
               <h2 className="font-heading text-xl font-bold text-slate-900">Datos de contacto</h2>
               <ul className="mt-4 space-y-4">
-                {contactItems.map(({ icon: Icon, label, value, href }) => (
+                {contactItems.map(({ icon: Icon, label, value, href, links }) => (
                   <li key={label} className="flex items-start gap-3">
                     <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                       <Icon className="h-4 w-4 text-primary" />
                     </div>
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{label}</p>
-                      {href ? (
+                      {links ? (
+                        <div className="mt-0.5 flex flex-col gap-0.5">
+                          {links.map((l) => (
+                            <a
+                              key={l.href}
+                              href={l.href}
+                              className="text-sm text-slate-700 transition hover:text-primary"
+                            >
+                              {l.value}
+                            </a>
+                          ))}
+                        </div>
+                      ) : href ? (
                         <a
                           href={href}
                           target={href.startsWith("http") ? "_blank" : undefined}
