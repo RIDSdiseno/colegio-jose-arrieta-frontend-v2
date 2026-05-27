@@ -1,21 +1,28 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Plus, Pencil, Trash2, CalendarDays, AlertTriangle } from "lucide-react";
+import { Plus, Pencil, Trash2, CalendarDays, AlertTriangle, ChevronLeft, ChevronRight } from "lucide-react";
 import { getNoticiasAdmin, eliminarNoticia } from "../../api/noticias";
+
+const PAGE_SIZE = 20;
 
 function AdminNoticias() {
   const [items, setItems] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [confirmId, setConfirmId] = useState(null);
   const [deleting, setDeleting] = useState(false);
 
-  const cargar = async () => {
+  const cargar = async (p) => {
     setLoading(true);
     setError("");
     try {
-      const res = await getNoticiasAdmin({ limit: 50 });
+      const res = await getNoticiasAdmin({ limit: PAGE_SIZE, page: p });
       setItems(res.data || []);
+      setTotal(res.total || 0);
+      setTotalPages(res.totalPages || 1);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -23,13 +30,20 @@ function AdminNoticias() {
     }
   };
 
-  useEffect(() => { cargar(); }, []);
+  useEffect(() => { cargar(page); }, [page]);
 
   const handleEliminar = async (id) => {
     setDeleting(true);
     try {
       await eliminarNoticia(id);
-      setItems((prev) => prev.filter((n) => n.id !== id));
+      // Si era el último item de la página actual, retroceder una página
+      // setPage dispara useEffect([page]) que llama cargar — no llamar cargar directo
+      const newPage = items.length === 1 && page > 1 ? page - 1 : page;
+      if (newPage !== page) {
+        setPage(newPage); // useEffect lo recarga
+      } else {
+        cargar(page); // misma página, recargar manualmente
+      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -43,7 +57,7 @@ function AdminNoticias() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="font-heading text-2xl font-bold text-primary">Noticias</h1>
-          <p className="mt-0.5 text-sm text-slate-500">{items.length} publicaciones</p>
+          <p className="mt-0.5 text-sm text-slate-500">{total} publicaciones</p>
         </div>
         <Link
           to="/admin/noticias/nueva"
@@ -135,6 +149,33 @@ function AdminNoticias() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* Paginación */}
+      {totalPages > 1 && (
+        <div className="mt-4 flex items-center justify-between">
+          <p className="text-xs text-slate-400">
+            Página {page} de {totalPages}
+          </p>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1 || loading}
+              className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition hover:border-primary hover:text-primary disabled:opacity-40"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages || loading}
+              className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition hover:border-primary hover:text-primary disabled:opacity-40"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       )}
 

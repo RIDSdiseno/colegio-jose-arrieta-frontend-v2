@@ -10,10 +10,10 @@ import PageHero from "../components/ui/PageHero";
 import { trackFormularioContacto } from "../lib/tracking";
 
 const schema = z.object({
-  nombre: z.string().min(3, "Ingresa tu nombre."),
-  email: z.string().email("Ingresa un email válido."),
-  telefono: z.string().min(8, "Ingresa un teléfono válido."),
-  mensaje: z.string().min(10, "Escribe un mensaje más detallado."),
+  nombre:   z.string().min(3, "Ingresa tu nombre.").max(100, "Nombre demasiado largo.").trim(),
+  email:    z.string().email("Ingresa un email válido.").max(150, "Email demasiado largo.").trim(),
+  telefono: z.string().min(8, "Ingresa un teléfono válido.").max(20, "Teléfono demasiado largo.").trim(),
+  mensaje:  z.string().min(10, "Escribe un mensaje más detallado.").max(2000, "El mensaje no puede superar los 2000 caracteres.").trim(),
 });
 
 const contactItems = [

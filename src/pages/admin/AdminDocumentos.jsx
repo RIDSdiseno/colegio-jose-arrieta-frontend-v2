@@ -25,6 +25,13 @@ function AdminDocumentos() {
 
   useEffect(() => { cargar(); }, []);
 
+  useEffect(() => {
+    if (!confirmId) return;
+    const handler = (e) => { if (e.key === "Escape" && !deleting) setConfirmId(null); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [confirmId, deleting]);
+
   const handleEliminar = async (id) => {
     setDeleting(true);
     try {
@@ -131,8 +138,11 @@ function AdminDocumentos() {
       )}
 
       {confirmId ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+          onClick={() => { if (!deleting) setConfirmId(null); }}
+        >
+          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center gap-3 text-amber-600">
               <AlertTriangle className="h-5 w-5" />
               <h2 className="font-heading text-lg font-semibold">¿Eliminar documento?</h2>

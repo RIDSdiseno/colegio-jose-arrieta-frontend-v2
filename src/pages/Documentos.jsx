@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { FileText, ExternalLink, Download, ChevronDown } from "lucide-react";
+import { FileText, Download, ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
 import PageHero from "../components/ui/PageHero";
 import CTASection from "../components/sections/CTASection";

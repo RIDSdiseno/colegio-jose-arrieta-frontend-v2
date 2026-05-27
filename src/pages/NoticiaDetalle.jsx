@@ -20,15 +20,21 @@ function NoticiaDetalle() {
     setAdyacentes({ anterior: null, siguiente: null });
     setLoading(true);
     setError("");
-    getNoticiaPorSlug(slug)
-      .then((data) => {
-        setNoticia(data);
-        getNoticiasAdyacentes(slug)
-          .then(setAdyacentes)
-          .catch(() => {}); // adyacentes es secundario, su fallo no rompe la página
-      })
-      .catch((err) => setError(err.message || "No pudimos cargar la noticia."))
-      .finally(() => setLoading(false));
+
+    // Lanzar ambos fetches en paralelo — adyacentes es secundario y su fallo no rompe la página
+    Promise.allSettled([
+      getNoticiaPorSlug(slug),
+      getNoticiasAdyacentes(slug),
+    ]).then(([noticiaResult, adyacentesResult]) => {
+      if (noticiaResult.status === "rejected") {
+        setError(noticiaResult.reason?.message || "No pudimos cargar la noticia.");
+      } else {
+        setNoticia(noticiaResult.value);
+      }
+      if (adyacentesResult.status === "fulfilled") {
+        setAdyacentes(adyacentesResult.value);
+      }
+    }).finally(() => setLoading(false));
   }, [slug]);
 
   if (loading) {

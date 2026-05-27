@@ -13,6 +13,14 @@ function VideoSection() {
     getVideos().then(setVideos).catch(() => {});
   }, []);
 
+  // Cerrar modal con tecla Escape
+  useEffect(() => {
+    if (!activeId) return;
+    const handler = (e) => { if (e.key === "Escape") setActiveId(null); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [activeId]);
+
   if (videos.length === 0) return null;
 
   return (
@@ -63,6 +71,7 @@ function VideoSection() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[80] grid place-content-center bg-black/80 p-4"
+            onClick={(e) => { if (e.target === e.currentTarget) setActiveId(null); }}
           >
             <button
               type="button"

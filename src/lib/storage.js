@@ -2,7 +2,7 @@ import { supabase } from "./supabase";
 
 const MAX_SIZE_MB = 10;
 const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
-const ALLOWED_MIME_IMAGEN = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml"];
+const ALLOWED_MIME_IMAGEN = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 const ALLOWED_MIME_PDF = ["application/pdf"];
 
 /**
@@ -23,7 +23,8 @@ export async function subirArchivo(file, bucket, prefix = "", allowedMime = ALLO
   }
 
   const ext = file.name.split(".").pop().toLowerCase();
-  const nombre = prefix ? `${prefix}/${Date.now()}.${ext}` : `${Date.now()}.${ext}`;
+  const uid = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const nombre = prefix ? `${prefix}/${uid}.${ext}` : `${uid}.${ext}`;
   const { error } = await supabase.storage.from(bucket).upload(nombre, file, { upsert: false });
   if (error) throw new Error(error.message);
   const { data } = supabase.storage.from(bucket).getPublicUrl(nombre);

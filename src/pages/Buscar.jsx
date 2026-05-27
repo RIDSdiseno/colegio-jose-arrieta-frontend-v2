@@ -3,7 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Search, FileText, Newspaper } from "lucide-react";
 import { getNoticias } from "../api/noticias";
-import { formatDate } from "../lib/utils";
+import { formatDate, normalizeSearch } from "../lib/utils";
 
 // Índice estático de páginas del sitio
 const PAGINAS = [
@@ -22,8 +22,8 @@ const PAGINAS = [
   {
     titulo: "Proyecto Educativo",
     to: "/proyecto-educativo",
-    descripcion: "Conoce nuestros ejes pedagógicos, talleres, reglamentos y boletines del colegio.",
-    keywords: "proyecto educativo ejes talleres reglamentos boletines pedagogico programa inglés arte deporte",
+    descripcion: "Conoce nuestros ejes pedagógicos, talleres, reglamentos y protocolos del colegio.",
+    keywords: "proyecto educativo ejes talleres reglamentos protocolos pedagogico programa inglés arte deporte",
   },
   {
     titulo: "Admisión 2026",
@@ -45,17 +45,10 @@ const PAGINAS = [
   },
 ];
 
-function normalize(str) {
-  return str
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "");
-}
-
 function searchPaginas(q) {
-  const query = normalize(q);
+  const query = normalizeSearch(q);
   return PAGINAS.filter((p) =>
-    normalize(`${p.titulo} ${p.descripcion} ${p.keywords}`).includes(query)
+    normalizeSearch(`${p.titulo} ${p.descripcion} ${p.keywords}`).includes(query)
   );
 }
 

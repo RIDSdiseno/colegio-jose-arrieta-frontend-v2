@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ImagePlus, Loader2 } from "lucide-react";
 import { getAlbumById, crearAlbum, actualizarAlbum, subirImagenAlbum } from "../../api/albums";
+import { eliminarArchivoStorage } from "../../lib/storage";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
 import ErrorBanner from "../../components/admin/ErrorBanner";
 import AdminFormActions from "../../components/admin/AdminFormActions";
@@ -20,23 +21,35 @@ function AdminAlbumForm() {
   const [uploadingImg, setUploadingImg] = useState(false);
   const [error, setError] = useState("");
   const fileRef = useRef(null);
+  // URL de portada ya guardada en DB — evita borrar imágenes existentes al limpiar el campo
+  const savedPortadaRef = useRef("");
 
   useEffect(() => {
     if (!isEditing) return;
     getAlbumById(id)
-      .then((album) => setForm({
-        titulo: album.titulo || "",
-        descripcion: album.descripcion || "",
-        portada: album.portada || "",
-        orden: album.orden ?? 0,
-        activo: album.activo ?? true,
-      }))
+      .then((album) => {
+        setForm({
+          titulo: album.titulo || "",
+          descripcion: album.descripcion || "",
+          portada: album.portada || "",
+          orden: album.orden ?? 0,
+          activo: album.activo ?? true,
+        });
+        savedPortadaRef.current = album.portada || "";
+      })
       .catch(() => setError("No se encontró el álbum."))
       .finally(() => setLoading(false));
   }, [id, isEditing]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    // Si el admin sobreescribe la portada manualmente, limpiar el upload previo no guardado
+    if (name === "portada") {
+      const prev = form.portada;
+      if (prev && prev !== savedPortadaRef.current) {
+        eliminarArchivoStorage(prev, "galeria").catch(() => {});
+      }
+    }
     setForm((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : name === "orden" ? parseInt(value) || 0 : value,
@@ -49,7 +62,12 @@ function AdminAlbumForm() {
     setUploadingImg(true);
     setError("");
     try {
+      const prevPortada = form.portada;
       const url = await subirImagenAlbum(file);
+      // Si había una portada subida en esta sesión (no la de BD), limpiarla
+      if (prevPortada && prevPortada !== savedPortadaRef.current) {
+        eliminarArchivoStorage(prevPortada, "galeria").catch(() => {});
+      }
       setForm((prev) => ({ ...prev, portada: url }));
     } catch (err) {
       setError("Error al subir la imagen: " + err.message);
@@ -125,7 +143,13 @@ function AdminAlbumForm() {
                 <img src={form.portada} alt="Portada" className="h-48 w-full rounded-xl object-cover" />
                 <button
                   type="button"
-                  onClick={() => setForm((prev) => ({ ...prev, portada: "" }))}
+                  onClick={() => {
+                    const url = form.portada;
+                    if (url && url !== savedPortadaRef.current) {
+                      eliminarArchivoStorage(url, "galeria").catch(() => {});
+                    }
+                    setForm((prev) => ({ ...prev, portada: "" }));
+                  }}
                   className="absolute right-2 top-2 rounded-lg bg-black/50 px-2 py-1 text-xs text-white transition hover:bg-black/70"
                 >
                   Quitar

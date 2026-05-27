@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ImagePlus, Loader2, Trash2, Upload } from "lucide-react";
 import { getAlbumById, agregarFoto, eliminarFoto, subirImagenAlbum } from "../../api/albums";
+import { eliminarArchivoStorage } from "../../lib/storage";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
 import ErrorBanner from "../../components/admin/ErrorBanner";
 import AdminLoadingSpinner from "../../components/admin/AdminLoadingSpinner";
@@ -22,14 +23,21 @@ function AdminAlbumFotos() {
   const fileRef = useRef(null);
   const multiFileRef = useRef(null);
 
-  const cargar = () => {
+  const cargar = useCallback(() => {
     getAlbumById(id)
       .then(setAlbum)
       .catch(() => setError("No se pudo cargar el álbum."))
       .finally(() => setLoading(false));
-  };
+  }, [id]);
 
-  useEffect(() => { cargar(); }, [id]);
+  useEffect(() => { cargar(); }, [cargar]);
+
+  useEffect(() => {
+    if (!confirmId) return;
+    const handler = (e) => { if (e.key === "Escape" && !deleting) setConfirmId(null); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [confirmId, deleting]);
 
   const handleUploadSingle = async (e) => {
     const file = e.target.files?.[0];
@@ -72,11 +80,16 @@ function AdminAlbumFotos() {
     let failed = 0;
     try {
       for (const file of files) {
+        let uploadedUrl = null;
         try {
-          const url = await subirImagenAlbum(file);
-          await agregarFoto(id, { url });
+          uploadedUrl = await subirImagenAlbum(file);
+          await agregarFoto(id, { url: uploadedUrl });
         } catch {
           failed++;
+          // Si la imagen se subió pero el registro en BD falló, limpiar el archivo huérfano
+          if (uploadedUrl) {
+            await eliminarArchivoStorage(uploadedUrl, "galeria").catch(() => {});
+          }
         }
       }
       if (failed > 0) setError(`${files.length - failed} foto(s) subidas. ${failed} fallaron.`);
@@ -91,7 +104,11 @@ function AdminAlbumFotos() {
     if (!confirmId) return;
     setDeleting(true);
     try {
+      // Obtener URL antes de eliminar para poder limpiar Storage
+      const foto = album?.fotos?.find((f) => f.id === confirmId);
       await eliminarFoto(confirmId);
+      // Limpiar archivo de Storage en segundo plano (fire-and-forget)
+      if (foto?.url) eliminarArchivoStorage(foto.url, "galeria").catch(() => {});
       setConfirmId(null);
       cargar();
     } catch (err) {
@@ -187,6 +204,7 @@ function AdminAlbumFotos() {
                 </div>
               ) : null}
               <button
+                type="button"
                 onClick={() => setConfirmId(foto.id)}
                 className="absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-lg bg-black/50 text-white opacity-0 transition hover:bg-red-500 group-hover:opacity-100"
               >
@@ -199,18 +217,23 @@ function AdminAlbumFotos() {
 
       {/* Modal confirmar eliminación */}
       {confirmId ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+          onClick={() => { if (!deleting) setConfirmId(null); }}
+        >
+          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
             <h3 className="font-heading text-lg font-bold text-slate-800">¿Eliminar foto?</h3>
             <p className="mt-1 text-sm text-slate-500">Esta acción no se puede deshacer.</p>
             <div className="mt-5 flex gap-3">
               <button
+                type="button"
                 onClick={() => setConfirmId(null)}
                 className="flex-1 rounded-xl border border-slate-200 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
               >
                 Cancelar
               </button>
               <button
+                type="button"
                 onClick={handleDelete}
                 disabled={deleting}
                 className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-red-500 py-2 text-sm font-semibold text-white transition hover:bg-red-600 disabled:opacity-60"

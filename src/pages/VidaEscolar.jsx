@@ -157,6 +157,18 @@ function Galeria() {
   const prev = () => setFotoActiva((c) => (c - 1 + fotosActivas.length) % fotosActivas.length);
   const next = () => setFotoActiva((c) => (c + 1) % fotosActivas.length);
 
+  // Cerrar con Escape y navegar con flechas del teclado
+  useEffect(() => {
+    if (!albumActivo) return;
+    const handler = (e) => {
+      if (e.key === "Escape") cerrar();
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "ArrowRight") next();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [albumActivo, fotosActivas.length]);
+
   // Normalizar portada para álbumes estáticos vs backend
   const getPortada = (album) => album.portada || album.fotos?.[0] || null;
   const getCount = (album) => album._count?.fotos ?? album.fotos?.length ?? 0;
@@ -178,6 +190,7 @@ function Galeria() {
                   alt={album.titulo}
                   loading="lazy"
                   className="h-48 w-full object-cover transition duration-300 group-hover:scale-105"
+                  onError={(e) => { e.currentTarget.style.display = "none"; }}
                 />
               ) : (
                 <div className="h-48 w-full bg-slate-100 flex items-center justify-center text-slate-300 text-4xl">📷</div>
@@ -205,6 +218,7 @@ function Galeria() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[90] flex flex-col items-center justify-center bg-black/90 p-4"
+            onClick={(e) => { if (e.target === e.currentTarget) cerrar(); }}
           >
             <button
               type="button"
@@ -267,6 +281,15 @@ function Galeria() {
 function VideoCard({ video }) {
   const [open, setOpen] = useState(false);
   const ytId = getYoutubeId(video.url);
+
+  // Cerrar modal con Escape — hook antes de cualquier return condicional (Reglas de Hooks)
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e) => { if (e.key === "Escape") setOpen(false); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [open]);
+
   if (!ytId) return null;
 
   return (
@@ -302,6 +325,7 @@ function VideoCard({ video }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[80] grid place-content-center bg-black/80 p-4"
+            onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}
           >
             <button
               type="button"

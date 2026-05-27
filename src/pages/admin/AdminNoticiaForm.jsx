@@ -7,6 +7,7 @@ import {
   subirImagen,
   getNoticiaById,
 } from "../../api/noticias";
+import { eliminarArchivoStorage } from "../../lib/storage";
 import { slugify } from "../../lib/utils";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
 import ErrorBanner from "../../components/admin/ErrorBanner";
@@ -93,6 +94,9 @@ function AdminNoticiaForm() {
   const [error, setError] = useState("");
   const fileRef = useRef(null);
   const contentFileRef = useRef(null);
+  // URLs ya guardadas en DB — evitan borrar imágenes existentes al limpiar campos
+  const savedImagenRef = useRef("");
+  const savedImagenesRef = useRef([]);
 
   useEffect(() => {
     if (!isEditing) return;
@@ -112,6 +116,8 @@ function AdminNoticiaForm() {
             ? data.fecha.split("T")[0]
             : new Date().toISOString().split("T")[0],
         });
+        savedImagenRef.current = data.imagen || "";
+        savedImagenesRef.current = imagenes;
       })
       .catch(() => setError("No se encontró la noticia."))
       .finally(() => setLoading(false));
@@ -119,6 +125,13 @@ function AdminNoticiaForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    // Si el admin sobreescribe la portada manualmente (campo de texto), limpiar el upload previo
+    if (name === "imagen") {
+      const prev = form.imagen;
+      if (prev && prev !== savedImagenRef.current) {
+        eliminarArchivoStorage(prev, "noticias").catch(() => {});
+      }
+    }
     setForm((prev) => {
       const next = { ...prev, [name]: value };
       if (name === "titulo" && !isEditing) next.slug = slugify(value);
@@ -132,7 +145,12 @@ function AdminNoticiaForm() {
     setUploadingImg(true);
     setError("");
     try {
+      const prevImagen = form.imagen;
       const url = await subirImagen(file);
+      // Si había una portada subida en esta sesión (no la de BD), limpiarla
+      if (prevImagen && prevImagen !== savedImagenRef.current) {
+        eliminarArchivoStorage(prevImagen, "noticias").catch(() => {});
+      }
       setForm((prev) => ({ ...prev, imagen: url }));
     } catch (err) {
       setError("Error al subir la imagen: " + err.message);
@@ -159,6 +177,11 @@ function AdminNoticiaForm() {
   };
 
   const handleRemoveContentImage = (idx) => {
+    const url = form.imagenes[idx];
+    // Solo borrar de Storage si la imagen fue subida en esta sesión, no si ya estaba en BD
+    if (url && !savedImagenesRef.current.includes(url)) {
+      eliminarArchivoStorage(url, "noticias").catch(() => {});
+    }
     setForm((prev) => ({
       ...prev,
       imagenes: prev.imagenes.filter((_, i) => i !== idx),
@@ -272,8 +295,8 @@ function AdminNoticiaForm() {
               <label className="text-sm font-medium text-slate-700">
                 Extracto <span className="text-red-500">*</span>
               </label>
-              <span className={`text-xs ${form.extracto.length > 180 ? "text-red-400" : "text-slate-400"}`}>
-                {form.extracto.length}/180
+              <span className={`text-xs ${form.extracto.length > 500 ? "text-red-400" : "text-slate-400"}`}>
+                {form.extracto.length}/500
               </span>
             </div>
             <textarea
@@ -282,7 +305,7 @@ function AdminNoticiaForm() {
               rows={2}
               value={form.extracto}
               onChange={handleChange}
-              placeholder="Breve descripción que aparece en el listado de noticias (máx. 180 caracteres)."
+              placeholder="Breve descripción que aparece en el listado de noticias (máx. 500 caracteres)."
               className="w-full resize-none rounded-xl border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
             />
           </div>
@@ -388,7 +411,13 @@ function AdminNoticiaForm() {
               />
               <button
                 type="button"
-                onClick={() => setForm((prev) => ({ ...prev, imagen: "" }))}
+                onClick={() => {
+                  const url = form.imagen;
+                  if (url && url !== savedImagenRef.current) {
+                    eliminarArchivoStorage(url, "noticias").catch(() => {});
+                  }
+                  setForm((prev) => ({ ...prev, imagen: "" }));
+                }}
                 className="absolute right-2 top-2 rounded-lg bg-black/50 px-2 py-1 text-xs text-white transition hover:bg-black/70"
               >
                 Quitar

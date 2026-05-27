@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { LogIn } from "lucide-react";
+
+const MAX_ATTEMPTS = 3;
+const COOLDOWN_SECONDS = 20;
 
 function AdminLogin() {
   const { login } = useAuth();
@@ -10,15 +13,32 @@ function AdminLogin() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [attempts, setAttempts] = useState(0);
+  const [cooldown, setCooldown] = useState(0);
+
+  // Cuenta regresiva del cooldown
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const timer = setTimeout(() => setCooldown((c) => c - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [cooldown]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (cooldown > 0) return;
     setError("");
     setLoading(true);
     const { error: err } = await login(email, password);
     setLoading(false);
     if (err) {
-      setError("Credenciales incorrectas. Verifica tu email y contraseña.");
+      const newAttempts = attempts + 1;
+      setAttempts(newAttempts);
+      if (newAttempts >= MAX_ATTEMPTS) {
+        setCooldown(COOLDOWN_SECONDS);
+        setError(`Demasiados intentos fallidos. Espera ${COOLDOWN_SECONDS} segundos.`);
+      } else {
+        setError(`Credenciales incorrectas. Intento ${newAttempts} de ${MAX_ATTEMPTS}.`);
+      }
     } else {
       navigate("/admin/noticias", { replace: true });
     }
@@ -74,10 +94,10 @@ function AdminLogin() {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || cooldown > 0}
             className="w-full rounded-xl bg-primary py-3 text-sm font-semibold text-white transition hover:bg-primaryHover disabled:opacity-60"
           >
-            {loading ? "Ingresando..." : "Ingresar"}
+            {cooldown > 0 ? `Espera ${cooldown}s` : loading ? "Ingresando..." : "Ingresar"}
           </button>
         </form>
       </div>

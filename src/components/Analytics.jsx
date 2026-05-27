@@ -8,42 +8,48 @@ const META_PIXEL_ID = import.meta.env.VITE_META_PIXEL_ID;
 function injectGTM(id) {
   if (!id || document.getElementById("gtm-script")) return;
 
-  // GTM head snippet
+  // Inicializar dataLayer antes de cargar GTM (evita race condition)
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+
+  // GTM head snippet — usa src externo en lugar de innerHTML para compatibilidad con CSP
   const script = document.createElement("script");
   script.id = "gtm-script";
-  script.innerHTML = `
-    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','${id}');
-  `;
+  script.async = true;
+  script.src = `https://www.googletagmanager.com/gtm.js?id=${id}`;
   document.head.prepend(script);
 
   // GTM body noscript
   const noscript = document.createElement("noscript");
   noscript.id = "gtm-noscript";
-  noscript.innerHTML = `<iframe src="https://www.googletagmanager.com/ns.html?id=${id}" height="0" width="0" style="display:none;visibility:hidden"></iframe>`;
+  const iframe = document.createElement("iframe");
+  iframe.src = `https://www.googletagmanager.com/ns.html?id=${id}`;
+  iframe.height = "0";
+  iframe.width = "0";
+  iframe.style.cssText = "display:none;visibility:hidden";
+  noscript.appendChild(iframe);
   document.body.prepend(noscript);
 }
 
 function injectMetaPixel(id) {
   if (!id || document.getElementById("meta-pixel-script")) return;
 
+  // Inicializar fbq antes de cargar el SDK externo
+  window.fbq = window.fbq || function () {
+    (window.fbq.q = window.fbq.q || []).push(arguments);
+  };
+  window._fbq = window._fbq || window.fbq;
+  window.fbq.loaded = true;
+  window.fbq.version = "2.0";
+  window.fbq.queue = [];
+  window.fbq("init", id);
+  window.fbq("track", "PageView");
+
+  // Cargar SDK externo con src en lugar de innerHTML
   const script = document.createElement("script");
   script.id = "meta-pixel-script";
-  script.innerHTML = `
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '${id}');
-    fbq('track', 'PageView');
-  `;
+  script.async = true;
+  script.src = "https://connect.facebook.net/en_US/fbevents.js";
   document.head.appendChild(script);
 }
 

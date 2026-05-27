@@ -10,6 +10,10 @@ function ProtectedRoute({ children }) {
     </div>
   );
   if (!session) return <Navigate to="/admin/login" replace />;
+
+  const role = session.user?.app_metadata?.role ?? session.user?.user_metadata?.role;
+  if (role !== "admin") return <Navigate to="/" replace />;
+
   return children;
 }
 

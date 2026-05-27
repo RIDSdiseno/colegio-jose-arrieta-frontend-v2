@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" fill="none">
+  <rect width="1200" height="800" fill="#1e3a5f"/>
+  <rect x="0" y="0" width="1200" height="800" fill="url(#grad)"/>
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="1200" y2="800" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1e3a5f"/>
+      <stop offset="100%" stop-color="#2d5282"/>
+    </linearGradient>
+  </defs>
+  <!-- Newspaper icon -->
+  <rect x="460" y="260" width="280" height="220" rx="16" fill="none" stroke="#ffffff" stroke-width="12" stroke-opacity="0.3"/>
+  <line x1="490" y1="310" x2="690" y2="310" stroke="#ffffff" stroke-width="10" stroke-opacity="0.3" stroke-linecap="round"/>
+  <line x1="490" y1="345" x2="690" y2="345" stroke="#ffffff" stroke-width="8" stroke-opacity="0.2" stroke-linecap="round"/>
+  <line x1="490" y1="378" x2="620" y2="378" stroke="#ffffff" stroke-width="8" stroke-opacity="0.2" stroke-linecap="round"/>
+  <!-- Small square block (image placeholder inside card) -->
+  <rect x="490" y="400" width="60" height="50" rx="6" fill="#ffffff" fill-opacity="0.15"/>
+</svg>

@@ -6,22 +6,24 @@ import { getNoticias } from "../../api/noticias";
 import { formatDate } from "../../lib/utils";
 import SectionTitle from "../ui/SectionTitle";
 import Button from "../ui/Button";
+import newsPlaceholder from "../../assets/news-placeholder.svg";
 
-const FALLBACK_IMG =
-  "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?auto=format&fit=crop&w=1200&q=80";
+const FALLBACK_IMG = newsPlaceholder;
 
 const SIDEBAR_LINKS = [
   {
     label: "Noticias Preescolar",
-    href: "/noticias?nivel=preescolar",
-    bg: "https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=800&q=70",
+    href: "/noticias",
+    bg: null,
+    bgClass: "bg-gradient-to-br from-sky-600 to-blue-800",
     icon: Newspaper,
     internal: true,
   },
   {
     label: "Reglamentos",
     href: "/proyecto-educativo",
-    bg: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=800&q=70",
+    bg: null,
+    bgClass: "bg-gradient-to-br from-emerald-600 to-teal-800",
     icon: BookOpen,
     internal: true,
   },
@@ -136,19 +138,14 @@ function NewsSection() {
           {/* Derecha — banners de acceso rápido + video */}
           <div className="flex flex-col gap-4">
             {/* Banners de acceso rápido */}
-            {SIDEBAR_LINKS.map(({ label, href, bg, icon: Icon, internal }) => {
+            {SIDEBAR_LINKS.map(({ label, href, bgClass, icon: Icon, internal }) => {
               const content = (
                 <motion.div
                   whileHover={{ scale: 1.02 }}
-                  className="group relative flex items-center justify-between overflow-hidden rounded-2xl px-6 py-5 shadow-soft"
+                  className={`group relative flex items-center justify-between overflow-hidden rounded-2xl px-6 py-5 shadow-soft ${bgClass}`}
                   style={{ minHeight: "88px" }}
                 >
-                  <img
-                    src={bg}
-                    alt={label}
-                    className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-primary/80" />
+                  <div className="absolute inset-0 bg-black/20" />
                   <div className="relative z-10 flex w-full items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15">

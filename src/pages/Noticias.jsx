@@ -7,6 +7,7 @@ import { formatDate } from "../lib/utils";
 import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
 import PageHero from "../components/ui/PageHero";
+import newsPlaceholder from "../assets/news-placeholder.svg";
 
 function SkeletonCard() {
   return (
@@ -32,27 +33,44 @@ function Noticias() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState("");
 
-  const fetchNoticias = async ({ nextPage = 1, replace = false, search = queryParam } = {}) => {
+  // Carga inicial y cuando cambia ?q= — con flag de cancelación para evitar race conditions
+  useEffect(() => {
+    let cancelled = false;
+    setInputValue(queryParam);
+    setLoading(true);
+    setError("");
+
+    getNoticias({ page: 1, limit: 6, search: queryParam })
+      .then((response) => {
+        if (cancelled) return;
+        setItems(response.data);
+        setPage(response.page);
+        setTotalPages(response.totalPages);
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        setError(err.message || "No pudimos cargar las noticias.");
+      })
+      .finally(() => { if (!cancelled) setLoading(false); });
+
+    return () => { cancelled = true; };
+  }, [queryParam]);
+
+  // Cargar más resultados (paginación)
+  async function fetchMore() {
     try {
-      replace ? setLoading(true) : setLoadingMore(true);
+      setLoadingMore(true);
       setError("");
-      const response = await getNoticias({ page: nextPage, limit: 6, search });
-      setItems((prev) => (replace ? response.data : [...prev, ...response.data]));
+      const response = await getNoticias({ page: page + 1, limit: 6, search: queryParam });
+      setItems((prev) => [...prev, ...response.data]);
       setPage(response.page);
       setTotalPages(response.totalPages);
     } catch (err) {
       setError(err.message || "No pudimos cargar las noticias.");
     } finally {
-      setLoading(false);
       setLoadingMore(false);
     }
-  };
-
-  // Cuando cambia el parámetro ?q= (desde el topbar o al borrar)
-  useEffect(() => {
-    setInputValue(queryParam);
-    fetchNoticias({ nextPage: 1, replace: true, search: queryParam });
-  }, [queryParam]);
+  }
 
   function handleSearch(e) {
     e.preventDefault();
@@ -131,7 +149,7 @@ function Noticias() {
                   >
                     <Link to={`/noticias/${item.slug}`}>
                       <img
-                        src={item.imagen || "https://images.unsplash.com/photo-1497486751825-1233686d5d80?auto=format&fit=crop&w=1200&q=80"}
+                        src={item.imagen || newsPlaceholder}
                         alt={item.titulo}
                         loading="lazy"
                         className="h-48 w-full object-contain bg-white transition hover:opacity-90"
@@ -183,7 +201,7 @@ function Noticias() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => fetchNoticias({ nextPage: page + 1, replace: false, search: queryParam })}
+                onClick={fetchMore}
                 disabled={loadingMore}
               >
                 {loadingMore ? "Cargando..." : "Cargar más"}
