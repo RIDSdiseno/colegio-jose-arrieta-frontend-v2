@@ -10,7 +10,8 @@ function AdminLogin() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from ?? "/admin/noticias";
+  const rawFrom = location.state?.from ?? "/admin/noticias";
+  const from = typeof rawFrom === "string" && rawFrom.startsWith("/") ? rawFrom : "/admin/noticias";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");

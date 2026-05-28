@@ -92,7 +92,8 @@ function AdminAlbumFotos() {
           }
         }
       }
-      if (failed > 0) setError(`${files.length - failed} foto(s) subidas. ${failed} fallaron.`);
+      if (failed === files.length) setError(`No se pudo subir ninguna foto. Intenta de nuevo.`);
+      else if (failed > 0) setError(`${files.length - failed} foto(s) subidas correctamente. ${failed} fallaron.`);
     } finally {
       setUploadingImg(false);
       if (multiFileRef.current) multiFileRef.current.value = "";
