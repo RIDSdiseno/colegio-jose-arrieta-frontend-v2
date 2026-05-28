@@ -12,7 +12,7 @@ function ProtectedRoute({ children }) {
   );
   if (!session) return <Navigate to="/admin/login" replace state={{ from: location.pathname }} />;
 
-  const role = session.user?.app_metadata?.role ?? session.user?.user_metadata?.role;
+  const role = session.user?.app_metadata?.role;
   if (role !== "admin") return <Navigate to="/" replace />;
 
   return children;

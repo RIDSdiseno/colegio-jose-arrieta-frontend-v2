@@ -79,7 +79,7 @@ function buildContenido(texto, imagenes, fotosUbicacion = "antes") {
   const partes = fotosUbicacion === "antes"
     ? [htmlImgs, htmlTexto]
     : [htmlTexto, htmlImgs];
-  return partes.filter(Boolean).join("\n\n");
+  return partes.filter(Boolean).join("\n");
 }
 
 function AdminNoticiaForm() {
@@ -189,6 +189,17 @@ function AdminNoticiaForm() {
     }));
   };
 
+  const handleCancel = () => {
+    // Limpiar portada subida en esta sesión pero no guardada en BD
+    if (form.imagen && form.imagen !== savedImagenRef.current) {
+      eliminarArchivoStorage(form.imagen, "noticias").catch(() => {});
+    }
+    // Limpiar fotos de contenido subidas en esta sesión pero no guardadas en BD
+    form.imagenes
+      .filter((url) => !savedImagenesRef.current.includes(url))
+      .forEach((url) => eliminarArchivoStorage(url, "noticias").catch(() => {}));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -249,6 +260,7 @@ function AdminNoticiaForm() {
             <input
               name="slug"
               required
+              maxLength={200}
               value={form.slug}
               onChange={handleChange}
               placeholder="dia-del-deporte-2026"
@@ -456,7 +468,7 @@ function AdminNoticiaForm() {
           </div>
         </div>
 
-        <AdminFormActions saving={saving} cancelTo="/admin/noticias" isEditing={isEditing} saveLabel={isEditing ? "Guardar cambios" : "Publicar noticia"} />
+        <AdminFormActions saving={saving} cancelTo="/admin/noticias" isEditing={isEditing} saveLabel={isEditing ? "Guardar cambios" : "Publicar noticia"} onCancel={handleCancel} />
       </form>
     </div>
   );

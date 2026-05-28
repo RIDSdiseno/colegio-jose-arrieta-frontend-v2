@@ -27,6 +27,7 @@ function Noticias() {
 
   const [inputValue, setInputValue] = useState(queryParam);
   const [items, setItems] = useState([]);
+  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -45,6 +46,7 @@ function Noticias() {
       .then((response) => {
         if (cancelled) return;
         setItems(response.data);
+        setTotal(response.total || 0);
         setPage(response.page);
         setTotalPages(response.totalPages);
       })
@@ -64,6 +66,7 @@ function Noticias() {
       setError("");
       const response = await getNoticias({ page: page + 1, limit: 6, search: queryParam });
       setItems((prev) => [...prev, ...response.data]);
+      setTotal(response.total || 0);
       setPage(response.page);
       setTotalPages(response.totalPages);
     } catch (err) {
@@ -93,7 +96,7 @@ function Noticias() {
       </Helmet>
 
       <PageHero
-        img="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1920&q=80"
+        img="/images/alumnos.jpg"
         badge="Comunidad en acción"
         title="Noticias del"
         highlight="Colegio"
@@ -128,8 +131,8 @@ function Noticias() {
           {/* Resultado de búsqueda */}
           {queryParam && !loading && (
             <p className="mb-6 text-sm text-slate-500">
-              {items.length > 0 ? (
-                <>Resultados para <span className="font-semibold text-primary">"{queryParam}"</span> — {items.length} {items.length === 1 ? "noticia encontrada" : "noticias encontradas"}</>
+              {total > 0 ? (
+                <>Resultados para <span className="font-semibold text-primary">"{queryParam}"</span> — {total} {total === 1 ? "noticia encontrada" : "noticias encontradas"}</>
               ) : null}
             </p>
           )}

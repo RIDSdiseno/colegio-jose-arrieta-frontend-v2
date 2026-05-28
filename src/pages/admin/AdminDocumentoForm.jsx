@@ -8,6 +8,7 @@ import {
   subirDocumentoPdf,
   CATEGORIAS,
 } from "../../api/documentos";
+import { eliminarArchivoStorage } from "../../lib/storage";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
 import ErrorBanner from "../../components/admin/ErrorBanner";
 import AdminFormActions from "../../components/admin/AdminFormActions";
@@ -29,6 +30,8 @@ function AdminDocumentoForm() {
   const isEditing = Boolean(id) && id !== "nuevo";
   const navigate = useNavigate();
   const fileRef = useRef(null);
+  // URL ya guardada en BD — evita borrar PDFs existentes al reemplazar
+  const savedLinkRef = useRef("");
 
   const [form, setForm] = useState(EMPTY);
   const [loading, setLoading] = useState(isEditing);
@@ -39,14 +42,17 @@ function AdminDocumentoForm() {
   useEffect(() => {
     if (!isEditing) return;
     getDocumentoById(id)
-      .then((data) => setForm({
-        titulo: data.titulo || "",
-        categoria: data.categoria || CATEGORIAS[0],
-        anio: data.anio ?? ANO_ACTUAL,
-        link: data.link || "",
-        activo: data.activo ?? true,
-        orden: data.orden ?? 0,
-      }))
+      .then((data) => {
+        savedLinkRef.current = data.link || "";
+        setForm({
+          titulo: data.titulo || "",
+          categoria: data.categoria || CATEGORIAS[0],
+          anio: data.anio ?? ANO_ACTUAL,
+          link: data.link || "",
+          activo: data.activo ?? true,
+          orden: data.orden ?? 0,
+        });
+      })
       .catch(() => setError("No se encontró el documento."))
       .finally(() => setLoading(false));
   }, [id, isEditing]);
@@ -62,13 +68,25 @@ function AdminDocumentoForm() {
     setError("");
     setUploading(true);
     try {
+      const prevLink = form.link;
       const url = await subirDocumentoPdf(file, form.anio || ANO_ACTUAL);
+      // Si había un PDF subido en esta sesión (no el guardado en BD), limpiarlo
+      if (prevLink && prevLink !== savedLinkRef.current) {
+        eliminarArchivoStorage(prevLink, "documentos").catch(() => {});
+      }
       setForm((prev) => ({ ...prev, link: url }));
     } catch (err) {
       setError(`Error al subir el PDF: ${err.message}`);
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = "";
+    }
+  };
+
+  const handleCancel = () => {
+    // Limpiar PDF subido en esta sesión pero no guardado en BD
+    if (form.link && form.link !== savedLinkRef.current) {
+      eliminarArchivoStorage(form.link, "documentos").catch(() => {});
     }
   };
 
@@ -208,7 +226,12 @@ function AdminDocumentoForm() {
               {form.link && (
                 <button
                   type="button"
-                  onClick={() => setForm((prev) => ({ ...prev, link: "" }))}
+                  onClick={() => {
+                    if (form.link && form.link !== savedLinkRef.current) {
+                      eliminarArchivoStorage(form.link, "documentos").catch(() => {});
+                    }
+                    setForm((prev) => ({ ...prev, link: "" }));
+                  }}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                 >
                   <X className="h-4 w-4" />
@@ -259,6 +282,7 @@ function AdminDocumentoForm() {
           cancelTo="/admin/documentos"
           isEditing={isEditing}
           saveLabel={isEditing ? "Guardar cambios" : "Agregar documento"}
+          onCancel={handleCancel}
         />
       </form>
     </div>

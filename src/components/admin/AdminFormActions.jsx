@@ -1,14 +1,14 @@
 import { Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-export default function AdminFormActions({ saving, cancelTo, isEditing, saveLabel }) {
+export default function AdminFormActions({ saving, cancelTo, isEditing, saveLabel, onCancel }) {
   const navigate = useNavigate();
   const label = saveLabel ?? (isEditing ? "Guardar cambios" : "Guardar");
   return (
     <div className="flex justify-end gap-3">
       <button
         type="button"
-        onClick={() => navigate(cancelTo)}
+        onClick={() => { onCancel?.(); navigate(cancelTo); }}
         className="rounded-xl border border-slate-200 px-6 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
       >
         Cancelar

@@ -95,9 +95,10 @@ function AdminAlbumFotos() {
       if (failed === files.length) setError(`No se pudo subir ninguna foto. Intenta de nuevo.`);
       else if (failed > 0) setError(`${files.length - failed} foto(s) subidas correctamente. ${failed} fallaron.`);
     } finally {
-      setUploadingImg(false);
       if (multiFileRef.current) multiFileRef.current.value = "";
-      cargar();
+      // Esperar a que el grid se refresque antes de re-habilitar el botón
+      await cargar();
+      setUploadingImg(false);
     }
   };
 
@@ -152,7 +153,11 @@ function AdminAlbumFotos() {
               value={newUrl}
               onChange={(e) => setNewUrl(e.target.value)}
               placeholder="URL de imagen https://"
-              className="flex-1 rounded-xl border border-slate-300 px-4 py-2 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className={`flex-1 rounded-xl border px-4 py-2 text-sm outline-none transition focus:ring-2 ${
+                newUrl && !newUrl.startsWith("https://")
+                  ? "border-red-300 focus:border-red-400 focus:ring-red-200"
+                  : "border-slate-300 focus:border-primary focus:ring-primary/20"
+              }`}
             />
             <button
               type="button"
@@ -172,14 +177,14 @@ function AdminAlbumFotos() {
           />
           <button
             type="submit"
-            disabled={adding || !newUrl}
+            disabled={adding || !newUrl || !newUrl.startsWith("https://")}
             className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2 text-sm font-semibold text-white transition hover:bg-primaryHover disabled:opacity-60"
           >
             {adding ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
             Agregar
           </button>
         </div>
-        {newUrl ? (
+        {newUrl && newUrl.startsWith("https://") ? (
           <img src={newUrl} alt="Preview" className="mt-3 h-24 rounded-xl object-cover" />
         ) : null}
       </form>

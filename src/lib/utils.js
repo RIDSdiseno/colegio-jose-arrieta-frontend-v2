@@ -34,5 +34,7 @@ export function slugify(str = "") {
     .replace(/[^a-z0-9\s-]/g, "")  // elimina caracteres no permitidos
     .trim()
     .replace(/\s+/g, "-")           // espacios → guión
-    .replace(/-{2,}/g, "-");        // guiones dobles → uno solo
+    .replace(/-{2,}/g, "-")         // guiones dobles → uno solo
+    .slice(0, 200)                   // máx. 200 caracteres (límite del backend)
+    .replace(/-+$/, "");             // eliminar guión final si el corte cayó en uno
 }
