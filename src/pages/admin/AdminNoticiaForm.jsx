@@ -61,7 +61,8 @@ function parseContenido(html = "") {
   const posGallery = html.search(/<div class="wp-gallery"/i);
   const posImg = html.search(/<img[^>]+>/i);
   const primerFoto = posGallery !== -1 ? posGallery : posImg;
-  const primerTexto = html.search(/[^<\s]/);
+  // Buscar posición del primer texto real (ignorando etiquetas HTML y espacios)
+  const primerTexto = html.search(/>[^<\s]/);
   const fotosUbicacion = primerFoto !== -1 && primerFoto < primerTexto ? "antes" : "despues";
   return { texto, imagenes, fotosUbicacion };
 }
@@ -293,7 +294,7 @@ function AdminNoticiaForm() {
           <div>
             <div className="mb-1 flex items-center justify-between">
               <label className="text-sm font-medium text-slate-700">
-                Extracto <span className="text-red-500">*</span>
+                Extracto
               </label>
               <span className={`text-xs ${form.extracto.length > 500 ? "text-red-400" : "text-slate-400"}`}>
                 {form.extracto.length}/500
@@ -301,7 +302,6 @@ function AdminNoticiaForm() {
             </div>
             <textarea
               name="extracto"
-              required
               rows={2}
               value={form.extracto}
               onChange={handleChange}

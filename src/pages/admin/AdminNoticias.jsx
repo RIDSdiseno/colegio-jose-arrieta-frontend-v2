@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Plus, Pencil, Trash2, CalendarDays, AlertTriangle, ChevronLeft, ChevronRight } from "lucide-react";
 import { getNoticiasAdmin, eliminarNoticia } from "../../api/noticias";
+import { eliminarArchivoStorage } from "../../lib/storage";
 
 const PAGE_SIZE = 20;
 
@@ -12,7 +13,7 @@ function AdminNoticias() {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [confirmId, setConfirmId] = useState(null);
+  const [confirmTarget, setConfirmTarget] = useState(null); // { id, imagen }
   const [deleting, setDeleting] = useState(false);
 
   const cargar = async (p) => {
@@ -32,23 +33,30 @@ function AdminNoticias() {
 
   useEffect(() => { cargar(page); }, [page]);
 
-  const handleEliminar = async (id) => {
+  useEffect(() => {
+    if (!confirmTarget) return;
+    const handler = (e) => { if (e.key === "Escape" && !deleting) setConfirmTarget(null); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [confirmTarget, deleting]);
+
+  const handleEliminar = async () => {
+    if (!confirmTarget) return;
     setDeleting(true);
     try {
-      await eliminarNoticia(id);
-      // Si era el último item de la página actual, retroceder una página
-      // setPage dispara useEffect([page]) que llama cargar — no llamar cargar directo
+      await eliminarNoticia(confirmTarget.id);
+      if (confirmTarget.imagen) eliminarArchivoStorage(confirmTarget.imagen, "noticias").catch(() => {});
       const newPage = items.length === 1 && page > 1 ? page - 1 : page;
       if (newPage !== page) {
-        setPage(newPage); // useEffect lo recarga
+        setPage(newPage);
       } else {
-        cargar(page); // misma página, recargar manualmente
+        cargar(page);
       }
     } catch (err) {
       setError(err.message);
     } finally {
       setDeleting(false);
-      setConfirmId(null);
+      setConfirmTarget(null);
     }
   };
 
@@ -138,7 +146,7 @@ function AdminNoticias() {
                       </Link>
                       <button
                         type="button"
-                        onClick={() => setConfirmId(noticia.id)}
+                        onClick={() => setConfirmTarget({ id: noticia.id, imagen: noticia.imagen || null })}
                         className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition hover:border-red-400 hover:text-red-500"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
@@ -179,9 +187,12 @@ function AdminNoticias() {
         </div>
       )}
 
-      {confirmId ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">
+      {confirmTarget ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+          onClick={() => { if (!deleting) setConfirmTarget(null); }}
+        >
+          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center gap-3 text-amber-600">
               <AlertTriangle className="h-5 w-5" />
               <h2 className="font-heading text-lg font-semibold">¿Eliminar noticia?</h2>
@@ -192,14 +203,14 @@ function AdminNoticias() {
             <div className="mt-5 flex gap-3">
               <button
                 type="button"
-                onClick={() => setConfirmId(null)}
+                onClick={() => setConfirmTarget(null)}
                 className="flex-1 rounded-xl border border-slate-200 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
               >
                 Cancelar
               </button>
               <button
                 type="button"
-                onClick={() => handleEliminar(confirmId)}
+                onClick={handleEliminar}
                 disabled={deleting}
                 className="flex-1 rounded-xl bg-red-500 py-2 text-sm font-semibold text-white transition hover:bg-red-600 disabled:opacity-60"
               >
