@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Plus, Pencil, Trash2, AlertTriangle, Youtube } from "lucide-react";
 import { getVideosAdmin, eliminarVideo } from "../../api/videos";
@@ -11,7 +11,7 @@ function AdminVideos() {
   const [confirmId, setConfirmId] = useState(null);
   const [deleting, setDeleting] = useState(false);
 
-  const cargar = async () => {
+  const cargar = useCallback(async () => {
     setLoading(true);
     setError("");
     try {
@@ -21,9 +21,9 @@ function AdminVideos() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  useEffect(() => { cargar(); }, []);
+  useEffect(() => { cargar(); }, [cargar]);
 
   useEffect(() => {
     if (!confirmId) return;

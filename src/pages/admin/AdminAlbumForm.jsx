@@ -76,6 +76,13 @@ function AdminAlbumForm() {
     }
   };
 
+  const handleCancel = () => {
+    // Limpiar portada subida en esta sesión pero no guardada en BD
+    if (form.portada && form.portada !== savedPortadaRef.current) {
+      eliminarArchivoStorage(form.portada, "galeria").catch(() => {});
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -207,7 +214,7 @@ function AdminAlbumForm() {
           </div>
         </div>
 
-        <AdminFormActions saving={saving} cancelTo="/admin/albums" isEditing={isEditing} saveLabel={isEditing ? "Guardar álbum" : "Crear álbum"} />
+        <AdminFormActions saving={saving} cancelTo="/admin/albums" isEditing={isEditing} saveLabel={isEditing ? "Guardar álbum" : "Crear álbum"} onCancel={handleCancel} />
       </form>
     </div>
   );

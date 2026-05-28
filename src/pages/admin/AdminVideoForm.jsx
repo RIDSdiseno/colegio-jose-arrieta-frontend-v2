@@ -145,7 +145,7 @@ function AdminVideoForm() {
                 name="anio"
                 required
                 min="2000"
-                max="2099"
+                max="2100"
                 value={form.anio}
                 onChange={handleChange}
                 className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"

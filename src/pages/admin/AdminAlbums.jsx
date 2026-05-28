@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Pencil, Trash2, Loader2, Images, Eye, EyeOff } from "lucide-react";
 import { getAlbumsAdmin, eliminarAlbum } from "../../api/albums";
@@ -11,16 +11,16 @@ function AdminAlbums() {
   const [confirmId, setConfirmId] = useState(null);
   const [deleting, setDeleting] = useState(false);
 
-  const cargar = () => {
+  const cargar = useCallback(() => {
     setLoading(true);
     setError("");
     getAlbumsAdmin()
       .then(setAlbums)
       .catch(() => setError("No se pudieron cargar los álbumes."))
       .finally(() => setLoading(false));
-  };
+  }, []);
 
-  useEffect(() => { cargar(); }, []);
+  useEffect(() => { cargar(); }, [cargar]);
 
   useEffect(() => {
     if (!confirmId) return;
