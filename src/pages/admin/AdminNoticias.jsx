@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Plus, Pencil, Trash2, CalendarDays, AlertTriangle, ChevronLeft, ChevronRight } from "lucide-react";
-import { getNoticiasAdmin, eliminarNoticia } from "../../api/noticias";
+import { getNoticiasAdmin, getNoticiaById, eliminarNoticia } from "../../api/noticias";
 import { eliminarArchivoStorage } from "../../lib/storage";
 import { formatDate } from "../../lib/utils";
 
@@ -23,7 +23,7 @@ function AdminNoticias() {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [confirmTarget, setConfirmTarget] = useState(null); // { id, imagen, contenido }
+  const [confirmTarget, setConfirmTarget] = useState(null); // { id }
   const [deleting, setDeleting] = useState(false);
 
   const cargar = useCallback(async (p) => {
@@ -54,11 +54,14 @@ function AdminNoticias() {
     if (!confirmTarget) return;
     setDeleting(true);
     try {
+      // Obtener el registro completo antes de eliminar para conseguir todas las URLs de imágenes
+      // (evita cargar contenido HTML completo en el listado solo para el delete)
+      const full = await getNoticiaById(confirmTarget.id).catch(() => null);
       await eliminarNoticia(confirmTarget.id);
       // Limpiar portada e imágenes del cuerpo del artículo en Storage (fire-and-forget)
       const urlsABorrar = [
-        confirmTarget.imagen,
-        ...extractImagenesContenido(confirmTarget.contenido),
+        full?.imagen,
+        ...extractImagenesContenido(full?.contenido),
       ].filter(Boolean);
       urlsABorrar.forEach((url) => eliminarArchivoStorage(url, "noticias").catch(() => {}));
       const newPage = items.length === 1 && page > 1 ? page - 1 : page;
@@ -159,7 +162,7 @@ function AdminNoticias() {
                       </Link>
                       <button
                         type="button"
-                        onClick={() => setConfirmTarget({ id: noticia.id, imagen: noticia.imagen || null, contenido: noticia.contenido || "" })}
+                        onClick={() => setConfirmTarget({ id: noticia.id })}
                         className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition hover:border-red-400 hover:text-red-500"
                       >
                         <Trash2 className="h-3.5 w-3.5" />

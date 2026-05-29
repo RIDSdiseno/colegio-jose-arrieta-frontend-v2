@@ -54,7 +54,13 @@ export async function eliminarArchivoStorage(url, bucket) {
     // Formato: https://{project}.supabase.co/storage/v1/object/public/{bucket}/{path}
     const marker = `/object/public/${bucket}/`;
     const idx = url.indexOf(marker);
-    if (idx === -1) return; // URL externa, no es de Supabase — no hacer nada
+    if (idx === -1) {
+      // URL externa o con dominio personalizado — no hacer nada
+      if (process.env.NODE_ENV !== "production") {
+        console.debug(`[storage] URL no reconocida como Supabase — omitida: ${url}`);
+      }
+      return;
+    }
     const path = url.slice(idx + marker.length);
     await supabase.storage.from(bucket).remove([path]);
   } catch {

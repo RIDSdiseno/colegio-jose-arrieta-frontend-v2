@@ -9,7 +9,7 @@ export function formatDate(isoDate, options = { year: "numeric", month: "long", 
   // Fechas "YYYY-MM-DD" sin hora se parsean como UTC medianoche, mostrando
   // el día anterior en Chile (UTC-3/UTC-4). Añadir mediodía local evita el desfase.
   const normalized = /^\d{4}-\d{2}-\d{2}$/.test(String(isoDate))
-    ? `${isoDate}T12:00:00`
+    ? `${isoDate}T12:00:00Z`
     : isoDate;
   return new Date(normalized).toLocaleDateString("es-CL", options);
 }

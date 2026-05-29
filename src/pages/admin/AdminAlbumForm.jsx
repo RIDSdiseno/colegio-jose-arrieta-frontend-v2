@@ -89,7 +89,12 @@ function AdminAlbumForm() {
     setSaving(true);
     try {
       const payload = { ...form };
-      if (!payload.portada) delete payload.portada;
+      if (!payload.portada) {
+        // Al editar, enviar null explícitamente para que el backend limpie la portada en BD
+        // Al crear, omitir el campo para no enviar un string vacío
+        if (isEditing) payload.portada = null;
+        else delete payload.portada;
+      }
       if (isEditing) {
         await actualizarAlbum(id, payload);
       } else {

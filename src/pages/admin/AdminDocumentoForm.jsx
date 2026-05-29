@@ -69,7 +69,8 @@ function AdminDocumentoForm() {
     setUploading(true);
     try {
       const prevLink = form.link;
-      const url = await subirDocumentoPdf(file, form.anio || ANO_ACTUAL);
+      const anioParaSubida = form.anio || ANO_ACTUAL; // snapshot antes del await
+      const url = await subirDocumentoPdf(file, anioParaSubida);
       // Si había un PDF subido en esta sesión (no el guardado en BD), limpiarlo
       if (prevLink && prevLink !== savedLinkRef.current) {
         eliminarArchivoStorage(prevLink, "documentos").catch(() => {});
@@ -93,6 +94,10 @@ function AdminDocumentoForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    if (form.link && !form.link.startsWith("https://")) {
+      setError("El enlace del documento debe comenzar con https://");
+      return;
+    }
     setSaving(true);
     try {
       const payload = {

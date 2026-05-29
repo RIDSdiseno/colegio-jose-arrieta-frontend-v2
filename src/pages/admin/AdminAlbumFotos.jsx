@@ -23,11 +23,15 @@ function AdminAlbumFotos() {
   const fileRef = useRef(null);
   const multiFileRef = useRef(null);
 
-  const cargar = useCallback(() => {
-    getAlbumById(id)
-      .then(setAlbum)
-      .catch(() => setError("No se pudo cargar el álbum."))
-      .finally(() => setLoading(false));
+  const cargar = useCallback(async () => {
+    try {
+      const data = await getAlbumById(id);
+      setAlbum(data);
+    } catch {
+      setError("No se pudo cargar el álbum.");
+    } finally {
+      setLoading(false);
+    }
   }, [id]);
 
   useEffect(() => { cargar(); }, [cargar]);
@@ -111,12 +115,12 @@ function AdminAlbumFotos() {
       await eliminarFoto(confirmId);
       // Limpiar archivo de Storage en segundo plano (fire-and-forget)
       if (foto?.url) eliminarArchivoStorage(foto.url, "galeria").catch(() => {});
-      setConfirmId(null);
       cargar();
     } catch (err) {
       setError(err.message);
     } finally {
       setDeleting(false);
+      setConfirmId(null);
     }
   };
 

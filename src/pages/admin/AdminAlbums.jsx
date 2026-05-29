@@ -34,12 +34,12 @@ function AdminAlbums() {
     setDeleting(true);
     try {
       await eliminarAlbum(confirmId);
-      setConfirmId(null);
       cargar();
     } catch (err) {
       setError(err.message);
     } finally {
       setDeleting(false);
+      setConfirmId(null);
     }
   };
 

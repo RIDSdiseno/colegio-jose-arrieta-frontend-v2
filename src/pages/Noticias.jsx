@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useSearchParams, Link } from "react-router-dom";
 import { CalendarDays, Search, X } from "lucide-react";
@@ -33,6 +33,10 @@ function Noticias() {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState("");
+  // Ref con el queryParam más reciente — permite que fetchMore detecte si la búsqueda
+  // cambió mientras esperaba la respuesta (el closure de fetchMore tendría el valor viejo)
+  const activeQueryRef = useRef(queryParam);
+  useEffect(() => { activeQueryRef.current = queryParam; }, [queryParam]);
 
   // Carga inicial y cuando cambia ?q= — con flag de cancelación para evitar race conditions
   useEffect(() => {
@@ -61,10 +65,13 @@ function Noticias() {
 
   // Cargar más resultados (paginación)
   async function fetchMore() {
+    const currentQuery = queryParam; // capturado al inicio de esta llamada
     try {
       setLoadingMore(true);
       setError("");
-      const response = await getNoticias({ page: page + 1, limit: 6, search: queryParam });
+      const response = await getNoticias({ page: page + 1, limit: 6, search: currentQuery });
+      // Descartar si el término cambió mientras esperábamos (ref siempre tiene el valor más reciente)
+      if (currentQuery !== activeQueryRef.current) return;
       setItems((prev) => [...prev, ...response.data]);
       setTotal(response.total || 0);
       setPage(response.page);
@@ -206,7 +213,7 @@ function Noticias() {
                 type="button"
                 variant="outline"
                 onClick={fetchMore}
-                disabled={loadingMore}
+                disabled={loadingMore || loading}
               >
                 {loadingMore ? "Cargando..." : "Cargar más"}
               </Button>

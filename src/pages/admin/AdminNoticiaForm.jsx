@@ -62,7 +62,9 @@ function parseContenido(html = "") {
   const posImg = html.search(/<img[^>]+>/i);
   const primerFoto = posGallery !== -1 ? posGallery : posImg;
   // Buscar posición del primer texto real (ignorando etiquetas HTML y espacios)
-  const primerTexto = html.search(/>[^<\s]/);
+  // Buscar primera posición de texto real ignorando etiquetas HTML
+  const htmlSinEtiquetas = html.replace(/<[^>]+>/g, (tag) => " ".repeat(tag.length));
+  const primerTexto = htmlSinEtiquetas.search(/\S/);
   const fotosUbicacion = primerFoto !== -1 && primerFoto < primerTexto ? "antes" : "despues";
   return { texto, imagenes, fotosUbicacion };
 }
