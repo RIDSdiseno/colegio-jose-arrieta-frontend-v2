@@ -11,13 +11,17 @@ function AdminAlbums() {
   const [confirmId, setConfirmId] = useState(null);
   const [deleting, setDeleting] = useState(false);
 
-  const cargar = useCallback(() => {
+  const cargar = useCallback(async () => {
     setLoading(true);
     setError("");
-    getAlbumsAdmin()
-      .then(setAlbums)
-      .catch(() => setError("No se pudieron cargar los álbumes."))
-      .finally(() => setLoading(false));
+    try {
+      const data = await getAlbumsAdmin();
+      setAlbums(data);
+    } catch {
+      setError("No se pudieron cargar los álbumes.");
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => { cargar(); }, [cargar]);

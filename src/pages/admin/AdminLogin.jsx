@@ -14,7 +14,7 @@ function AdminLogin() {
   const from = typeof rawFrom === "string" && rawFrom.startsWith("/") ? rawFrom : "/admin/noticias";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(location.state?.error ?? "");
   const [loading, setLoading] = useState(false);
   const [attempts, setAttempts] = useState(0);
   const [cooldown, setCooldown] = useState(0);

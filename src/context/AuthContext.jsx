@@ -13,13 +13,11 @@ export function AuthProvider({ children }) {
       return;
     }
 
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setLoading(false);
-    });
-
+    // onAuthStateChange dispara INITIAL_SESSION como primer evento,
+    // reemplazando getSession por separado y evitando la race condition entre ambos.
     const { data: listener } = supabase.auth.onAuthStateChange((_event, s) => {
       setSession(s);
+      setLoading(false);
     });
 
     return () => listener.subscription.unsubscribe();

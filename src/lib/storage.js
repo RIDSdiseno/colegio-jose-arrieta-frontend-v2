@@ -56,7 +56,7 @@ export async function eliminarArchivoStorage(url, bucket) {
     const idx = url.indexOf(marker);
     if (idx === -1) {
       // URL externa o con dominio personalizado — no hacer nada
-      if (process.env.NODE_ENV !== "production") {
+      if (!import.meta.env.PROD) {
         console.debug(`[storage] URL no reconocida como Supabase — omitida: ${url}`);
       }
       return;

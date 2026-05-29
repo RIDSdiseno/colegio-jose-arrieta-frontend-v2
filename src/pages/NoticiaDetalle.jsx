@@ -109,7 +109,7 @@ function NoticiaDetalle() {
             dangerouslySetInnerHTML={{
               __html: DOMPurify.sanitize(
                 (noticia.contenido || "").replace(/\n/g, "<br>"),
-                { ADD_ATTR: ["class"], FORBID_ATTR: ["style"] }
+                { FORBID_ATTR: ["style"] }
               ),
             }}
           />

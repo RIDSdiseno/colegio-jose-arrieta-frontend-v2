@@ -1,7 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-export default function AdminPageHeader({ title, subtitle, backTo }) {
+export default function AdminPageHeader({ title, subtitle, backTo = "/" }) {
   const navigate = useNavigate();
   return (
     <div className="mb-6 flex items-center gap-3">

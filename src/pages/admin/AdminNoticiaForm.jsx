@@ -97,6 +97,8 @@ function AdminNoticiaForm() {
   const [error, setError] = useState("");
   const fileRef = useRef(null);
   const contentFileRef = useRef(null);
+  // Evita que al editar el título se sobreescriba un slug modificado manualmente
+  const slugEditedRef = useRef(false);
   // URLs ya guardadas en DB — evitan borrar imágenes existentes al limpiar campos
   const savedImagenRef = useRef("");
   const savedImagenesRef = useRef([]);
@@ -137,7 +139,8 @@ function AdminNoticiaForm() {
     }
     setForm((prev) => {
       const next = { ...prev, [name]: value };
-      if (name === "titulo" && !isEditing) next.slug = slugify(value);
+      if (name === "slug") slugEditedRef.current = true;
+      if (name === "titulo" && !isEditing && !slugEditedRef.current) next.slug = slugify(value);
       return next;
     });
   };

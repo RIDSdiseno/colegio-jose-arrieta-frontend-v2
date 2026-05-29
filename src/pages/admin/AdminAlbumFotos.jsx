@@ -24,6 +24,8 @@ function AdminAlbumFotos() {
   const multiFileRef = useRef(null);
 
   const cargar = useCallback(async () => {
+    setLoading(true);
+    setError("");
     try {
       const data = await getAlbumById(id);
       setAlbum(data);

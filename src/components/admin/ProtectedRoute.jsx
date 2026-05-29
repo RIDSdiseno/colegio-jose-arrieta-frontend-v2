@@ -13,7 +13,7 @@ function ProtectedRoute({ children }) {
   if (!session) return <Navigate to="/admin/login" replace state={{ from: location.pathname }} />;
 
   const role = session.user?.app_metadata?.role;
-  if (role !== "admin") return <Navigate to="/" replace />;
+  if (role !== "admin") return <Navigate to="/admin/login" replace state={{ error: "No tienes permiso para acceder al panel de administración." }} />;
 
   return children;
 }

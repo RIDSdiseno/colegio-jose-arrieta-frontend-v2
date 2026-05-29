@@ -136,11 +136,9 @@ function Noticias() {
           </form>
 
           {/* Resultado de búsqueda */}
-          {queryParam && !loading && (
+          {queryParam && !loading && total > 0 && (
             <p className="mb-6 text-sm text-slate-500">
-              {total > 0 ? (
-                <>Resultados para <span className="font-semibold text-primary">"{queryParam}"</span> — {total} {total === 1 ? "noticia encontrada" : "noticias encontradas"}</>
-              ) : null}
+              Resultados para <span className="font-semibold text-primary">"{queryParam}"</span> — {total} {total === 1 ? "noticia encontrada" : "noticias encontradas"}
             </p>
           )}
 

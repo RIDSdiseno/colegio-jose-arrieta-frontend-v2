@@ -126,7 +126,7 @@ function AdminVideoForm() {
           {ytId && (
             <div className="overflow-hidden rounded-xl border border-slate-200">
               <img
-                src={`https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`}
+                src={`https://img.youtube.com/vi/${ytId}/mqdefault.jpg`}
                 alt="Vista previa"
                 className="w-full object-cover max-h-52"
               />
