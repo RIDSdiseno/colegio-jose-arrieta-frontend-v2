@@ -107,10 +107,9 @@ function NoticiaDetalle() {
           <div
             className="wp-content mt-8 overflow-x-hidden"
             dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(
-                (noticia.contenido || "").replace(/\n/g, "<br>"),
-                { FORBID_ATTR: ["style"] }
-              ),
+              // buildContenido ya convierte \n → <br> antes de guardar en BD,
+              // así que el replace aquí sería redundante y potencialmente duplicaría <br>
+              __html: DOMPurify.sanitize(noticia.contenido || "", { FORBID_ATTR: ["style"] }),
             }}
           />
 

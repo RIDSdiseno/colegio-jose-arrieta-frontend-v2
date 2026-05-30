@@ -73,6 +73,8 @@ function AdminAlbumFotos() {
       cargar();
     } catch (err) {
       setError(err.message);
+      // Limpiar el archivo ya subido si no se pudo registrar en BD
+      eliminarArchivoStorage(newUrl, "galeria").catch(() => {});
     } finally {
       setAdding(false);
     }
@@ -103,7 +105,8 @@ function AdminAlbumFotos() {
     } finally {
       if (multiFileRef.current) multiFileRef.current.value = "";
       // Esperar a que el grid se refresque antes de re-habilitar el botón
-      await cargar();
+      // Usar try/catch para garantizar que setUploadingImg siempre se ejecuta
+      try { await cargar(); } catch { /* error ya mostrado arriba */ }
       setUploadingImg(false);
     }
   };
