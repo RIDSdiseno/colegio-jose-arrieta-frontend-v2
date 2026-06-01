@@ -118,7 +118,7 @@ function AdminNoticiaForm() {
           categoria: data.categoria || "General",
           imagen: data.imagen || "",
           fecha: data.fecha
-            ? data.fecha.split("T")[0]
+            ? new Date(data.fecha).toISOString().split("T")[0]
             : new Date().toISOString().split("T")[0],
         });
         savedImagenRef.current = data.imagen || "";

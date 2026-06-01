@@ -120,7 +120,7 @@ function AdminAlbumFotos() {
       await eliminarFoto(confirmId);
       // Limpiar archivo de Storage en segundo plano (fire-and-forget)
       if (foto?.url) eliminarArchivoStorage(foto.url, "galeria").catch(() => {});
-      cargar();
+      await cargar();
     } catch (err) {
       setError(err.message);
     } finally {
