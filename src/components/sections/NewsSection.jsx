@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { getNoticias } from "../../api/noticias";
 import { formatDate } from "../../lib/utils";
 import SectionTitle from "../ui/SectionTitle";
-import Button from "../ui/Button";
 import newsPlaceholder from "../../assets/news-placeholder.svg";
 
 const FALLBACK_IMG = newsPlaceholder;
@@ -93,9 +92,6 @@ function NewsSection() {
             title="Últimas noticias del colegio"
             subtitle="Mantente al día con actividades, logros y novedades de nuestra comunidad."
           />
-          <Button to="/noticias" variant="outline" className="shrink-0">
-            Ver todas
-          </Button>
         </div>
 
         {error && (

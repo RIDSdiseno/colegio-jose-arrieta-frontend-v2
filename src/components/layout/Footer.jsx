@@ -38,7 +38,8 @@ const admisionLinks = [
 function Footer() {
   return (
     <footer className="mt-16 bg-primary text-white">
-      <div className="container-main grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-4">
+      {/* pr-12 en md evita que los botones flotantes (fixed right-0) tapen la columna derecha */}
+      <div className="container-main grid gap-10 py-14 md:grid-cols-2 md:pr-12 lg:grid-cols-4 lg:pr-8">
 
         {/* Col 1 — Logo + descripción + redes */}
         <section>
@@ -128,7 +129,10 @@ function Footer() {
             </li>
             <li className="flex gap-2">
               <Phone className="mt-0.5 h-4 w-4 shrink-0 text-secondary" />
-              <span>+56 2 2279 1863 / +56 2 2278 4685</span>
+              <div className="flex flex-col gap-0.5">
+                <a href="tel:+56222791863" className="transition hover:text-secondary">+56 2 2279 1863</a>
+                <a href="tel:+56222784685" className="transition hover:text-secondary">+56 2 2278 4685</a>
+              </div>
             </li>
             <li className="flex gap-2">
               <Mail className="mt-0.5 h-4 w-4 shrink-0 text-secondary" />

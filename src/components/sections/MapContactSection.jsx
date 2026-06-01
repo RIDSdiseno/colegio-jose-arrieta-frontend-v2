@@ -6,8 +6,11 @@ import { trackWhatsAppClick } from "../../lib/tracking";
 const contactInfo = [
   { icon: MapPin, text: "Av. José Arrieta 6870, La Reina" },
   { icon: MapPin, text: "Januario Espinoza 7131, La Reina" },
-  { icon: Phone,  text: "+56 2 2279 1863  /  +56 2 2278 4685" },
-  { icon: Mail,   text: "colegio@colegiojosearrieta.cl" },
+  { icon: Phone,  links: [
+    { label: "+56 2 2279 1863", href: "tel:+56222791863" },
+    { label: "+56 2 2278 4685", href: "tel:+56222784685" },
+  ]},
+  { icon: Mail,   text: "colegio@colegiojosearrieta.cl", href: "mailto:colegio@colegiojosearrieta.cl" },
   { icon: Clock,  text: "Lun–Vie  08:20–12:30  y  14:00–18:00" },
 ];
 
@@ -50,12 +53,22 @@ function MapContactSection() {
 
               <div className="relative z-10">
                 <ul className="space-y-4">
-                  {contactInfo.map(({ icon: Icon, text }) => (
-                    <li key={text} className="flex items-start gap-3 text-sm text-white/75">
+                  {contactInfo.map(({ icon: Icon, text, href, links }, i) => (
+                    <li key={i} className="flex items-start gap-3 text-sm text-white/75">
                       <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10">
                         <Icon className="h-3.5 w-3.5 text-secondary" />
                       </span>
-                      {text}
+                      {links ? (
+                        <div className="flex flex-col gap-0.5">
+                          {links.map((l) => (
+                            <a key={l.href} href={l.href} className="transition hover:text-secondary">{l.label}</a>
+                          ))}
+                        </div>
+                      ) : href ? (
+                        <a href={href} className="transition hover:text-secondary">{text}</a>
+                      ) : (
+                        text
+                      )}
                     </li>
                   ))}
                 </ul>

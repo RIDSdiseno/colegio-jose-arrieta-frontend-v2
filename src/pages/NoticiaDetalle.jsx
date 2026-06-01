@@ -94,16 +94,6 @@ function NoticiaDetalle() {
             <p className="mt-3 text-lg text-slate-500 leading-relaxed">{noticia.extracto}</p>
           )}
 
-          {noticia.imagen && (
-            <div className="mt-6 overflow-hidden rounded-2xl border border-slate-100 bg-slate-50 shadow-sm">
-              <img
-                src={noticia.imagen}
-                alt={noticia.titulo}
-                className="mx-auto block w-full object-contain max-h-[520px]"
-              />
-            </div>
-          )}
-
           <div
             className="wp-content mt-8 overflow-x-hidden"
             dangerouslySetInnerHTML={{

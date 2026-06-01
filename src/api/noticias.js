@@ -3,10 +3,16 @@ import { subirArchivo } from "../lib/storage";
 
 // ── API pública (Backend) ──────────────────────────────────────────────────────
 
-export async function getNoticias({ limit = 6, page = 1, search = "" } = {}) {
+export async function getNoticias({ limit = 6, page = 1, search = "", categoria = "", anio = 0 } = {}) {
   const params = new URLSearchParams({ limit, page });
   if (search.trim()) params.set("search", search.trim());
+  if (categoria.trim()) params.set("categoria", categoria.trim());
+  if (anio) params.set("anio", anio);
   return apiFetch(`/api/noticias?${params}`);
+}
+
+export async function getAnosNoticias() {
+  return apiFetch("/api/noticias/anos");
 }
 
 export async function getNoticiaPorSlug(slug) {

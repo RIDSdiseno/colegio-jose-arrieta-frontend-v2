@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useSearchParams, Link } from "react-router-dom";
 import { CalendarDays, Search, X } from "lucide-react";
-import { getNoticias } from "../api/noticias";
+import { getNoticias, getAnosNoticias } from "../api/noticias";
 import { formatDate } from "../lib/utils";
 import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
@@ -21,9 +21,13 @@ function SkeletonCard() {
   );
 }
 
+const CATEGORIAS = ["General", "Académico", "Deportivo", "Cultural", "Institucional", "Comunidad"];
+
 function Noticias() {
   const [searchParams, setSearchParams] = useSearchParams();
   const queryParam = searchParams.get("q") || "";
+  const catParam = searchParams.get("cat") || "";
+  const anioParam = parseInt(searchParams.get("anio")) || 0;
 
   const [inputValue, setInputValue] = useState(queryParam);
   const [items, setItems] = useState([]);
@@ -33,20 +37,30 @@ function Noticias() {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState("");
-  // Ref con el queryParam más reciente — permite que fetchMore detecte si la búsqueda
-  // cambió mientras esperaba la respuesta (el closure de fetchMore tendría el valor viejo)
-  const activeQueryRef = useRef(queryParam);
-  useEffect(() => { activeQueryRef.current = queryParam; }, [queryParam]);
+  const [anos, setAnos] = useState([]);
 
-  // Carga inicial y cuando cambia ?q= — con flag de cancelación para evitar race conditions
+  // Cargar años disponibles una sola vez al montar
+  useEffect(() => {
+    getAnosNoticias().then(setAnos).catch(() => {});
+  }, []);
+
+  // Refs para detectar cambios en fetchMore y descartar respuestas obsoletas
+  const activeQueryRef = useRef(queryParam);
+  const activeCatRef = useRef(catParam);
+  const activeAnioRef = useRef(anioParam);
+  useEffect(() => { activeQueryRef.current = queryParam; }, [queryParam]);
+  useEffect(() => { activeCatRef.current = catParam; }, [catParam]);
+  useEffect(() => { activeAnioRef.current = anioParam; }, [anioParam]);
+
+  // Carga inicial y cuando cambia ?q= o ?cat=
   useEffect(() => {
     let cancelled = false;
     setInputValue(queryParam);
-    setPage(1); // Resetear página al cambiar búsqueda — evita que fetchMore use página de búsqueda anterior
+    setPage(1);
     setLoading(true);
     setError("");
 
-    getNoticias({ page: 1, limit: 6, search: queryParam })
+    getNoticias({ page: 1, limit: 6, search: queryParam, categoria: catParam, anio: anioParam })
       .then((response) => {
         if (cancelled) return;
         setItems(response.data);
@@ -61,17 +75,18 @@ function Noticias() {
       .finally(() => { if (!cancelled) setLoading(false); });
 
     return () => { cancelled = true; };
-  }, [queryParam]);
+  }, [queryParam, catParam, anioParam]);
 
-  // Cargar más resultados (paginación)
+  // Cargar más resultados
   async function fetchMore() {
-    const currentQuery = queryParam; // capturado al inicio de esta llamada
+    const currentQuery = queryParam;
+    const currentCat = catParam;
+    const currentAnio = anioParam;
     try {
       setLoadingMore(true);
       setError("");
-      const response = await getNoticias({ page: page + 1, limit: 6, search: currentQuery });
-      // Descartar si el término cambió mientras esperábamos (ref siempre tiene el valor más reciente)
-      if (currentQuery !== activeQueryRef.current) return;
+      const response = await getNoticias({ page: page + 1, limit: 6, search: currentQuery, categoria: currentCat, anio: currentAnio });
+      if (currentQuery !== activeQueryRef.current || currentCat !== activeCatRef.current || currentAnio !== activeAnioRef.current) return;
       setItems((prev) => [...prev, ...response.data]);
       setTotal(response.total || 0);
       setPage(response.page);
@@ -86,12 +101,35 @@ function Noticias() {
   function handleSearch(e) {
     e.preventDefault();
     const q = inputValue.trim();
-    setSearchParams(q ? { q } : {});
+    const next = {};
+    if (q) next.q = q;
+    if (catParam) next.cat = catParam;
+    if (anioParam) next.anio = anioParam;
+    setSearchParams(next);
   }
 
   function clearSearch() {
     setInputValue("");
-    setSearchParams({});
+    const next = {};
+    if (catParam) next.cat = catParam;
+    if (anioParam) next.anio = anioParam;
+    setSearchParams(next);
+  }
+
+  function selectCategoria(cat) {
+    const next = {};
+    if (queryParam) next.q = queryParam;
+    if (cat) next.cat = cat;
+    if (anioParam) next.anio = anioParam;
+    setSearchParams(next);
+  }
+
+  function selectAnio(anio) {
+    const next = {};
+    if (queryParam) next.q = queryParam;
+    if (catParam) next.cat = catParam;
+    if (anio) next.anio = anio;
+    setSearchParams(next);
   }
 
   return (
@@ -135,10 +173,84 @@ function Noticias() {
             </Button>
           </form>
 
-          {/* Resultado de búsqueda */}
-          {queryParam && !loading && total > 0 && (
+          {/* Filtro por categoría */}
+          <div className="mb-6 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => selectCategoria("")}
+              className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
+                !catParam
+                  ? "bg-primary text-white"
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+              }`}
+            >
+              Todas
+            </button>
+            {CATEGORIAS.map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => selectCategoria(cat)}
+                className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
+                  catParam === cat
+                    ? "bg-primary text-white"
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* Filtro por año */}
+          {anos.length > 0 && (
+            <div className="mb-6 flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => selectAnio(0)}
+                className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
+                  !anioParam
+                    ? "bg-slate-700 text-white"
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                }`}
+              >
+                Todos los años
+              </button>
+              {anos.map((a) => (
+                <button
+                  key={a}
+                  type="button"
+                  onClick={() => selectAnio(a)}
+                  className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
+                    anioParam === a
+                      ? "bg-slate-700 text-white"
+                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  }`}
+                >
+                  {a}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Info de filtros activos */}
+          {(!!queryParam || !!catParam || !!anioParam) && !loading && (
             <p className="mb-6 text-sm text-slate-500">
-              Resultados para <span className="font-semibold text-primary">"{queryParam}"</span> — {total} {total === 1 ? "noticia encontrada" : "noticias encontradas"}
+              {total > 0 ? (
+                <>
+                  {total} {total === 1 ? "noticia encontrada" : "noticias encontradas"}
+                  {queryParam && <> para <span className="font-semibold text-primary">"{queryParam}"</span></>}
+                  {catParam && <> en <span className="font-semibold text-primary">{catParam}</span></>}
+                  {anioParam ? <> · <span className="font-semibold text-primary">{anioParam}</span></> : null}
+                </>
+              ) : (
+                <>
+                  Sin resultados
+                  {queryParam && <> para <span className="font-semibold text-primary">"{queryParam}"</span></>}
+                  {catParam && <> en <span className="font-semibold text-primary">{catParam}</span></>}
+                  {anioParam ? <> en <span className="font-semibold text-primary">{anioParam}</span></> : null}
+                </>
+              )}
             </p>
           )}
 
@@ -195,11 +307,11 @@ function Noticias() {
                 <Search className="h-7 w-7 text-primary/50" />
               </div>
               <p className="font-heading text-lg font-semibold text-slate-700">
-                {queryParam ? `Sin resultados para "${queryParam}"` : "Próximamente"}
+                {queryParam || catParam || anioParam ? "Sin resultados" : "Próximamente"}
               </p>
               <p className="max-w-xs text-sm text-slate-400">
-                {queryParam
-                  ? "Intenta con otras palabras clave."
+                {queryParam || catParam || anioParam
+                  ? "Intenta con otras palabras clave, categoría o año."
                   : "Aquí aparecerán las noticias y novedades del colegio."}
               </p>
             </div>
