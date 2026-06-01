@@ -16,7 +16,8 @@ function AdminLogin() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(location.state?.error ?? "");
   const [loading, setLoading] = useState(false);
-  const [attempts, setAttempts] = useState(0);
+  // Persistir intentos en sessionStorage para que un refresh no los resetee
+  const [attempts, setAttempts] = useState(() => parseInt(sessionStorage.getItem("loginAttempts") || "0"));
   const [cooldown, setCooldown] = useState(0);
 
   // Cuenta regresiva del cooldown
@@ -36,6 +37,7 @@ function AdminLogin() {
     if (err) {
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
+      sessionStorage.setItem("loginAttempts", String(newAttempts));
       if (newAttempts >= MAX_ATTEMPTS) {
         setCooldown(COOLDOWN_SECONDS);
         setError(`Demasiados intentos fallidos. Espera ${COOLDOWN_SECONDS} segundos.`);
@@ -43,6 +45,7 @@ function AdminLogin() {
         setError(`Credenciales incorrectas. Intento ${newAttempts} de ${MAX_ATTEMPTS}.`);
       }
     } else {
+      sessionStorage.removeItem("loginAttempts");
       navigate(from, { replace: true });
     }
   };

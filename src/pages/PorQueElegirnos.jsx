@@ -278,7 +278,7 @@ function PorQueElegirnos() {
             </motion.div>
 
             {/* Fotos */}
-            <div className="lg:sticky lg:top-24">
+            <div>
               <motion.div
                 initial={{ opacity: 0, scale: 0.97 }}
                 whileInView={{ opacity: 1, scale: 1 }}

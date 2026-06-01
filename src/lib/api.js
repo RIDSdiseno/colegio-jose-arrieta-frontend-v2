@@ -11,7 +11,7 @@ async function apiFetch(path, options = {}) {
     const { data } = await supabase.auth.getSession();
     if (!data.session?.access_token) {
       window.location.href = "/admin/login";
-      throw new Error("Sesión expirada. Por favor inicia sesión nuevamente.");
+      throw new Error("Sesión expirada. Redirigiendo al login...");
     }
     headers["Authorization"] = `Bearer ${data.session.access_token}`;
   }

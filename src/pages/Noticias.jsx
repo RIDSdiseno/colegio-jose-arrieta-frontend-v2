@@ -162,7 +162,7 @@ function Noticias() {
                 placeholder="Buscar noticias..."
                 className="flex-1 bg-transparent text-sm text-slate-700 placeholder-slate-400 outline-none"
               />
-              {inputValue && (
+              {queryParam && (
                 <button type="button" onClick={clearSearch} className="text-slate-400 hover:text-slate-600 transition">
                   <X className="h-3.5 w-3.5" />
                 </button>
@@ -266,16 +266,20 @@ function Noticias() {
               : items.map((item) => (
                   <article
                     key={item.id}
-                    className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-soft transition hover:-translate-y-1"
+                    className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-soft transition hover:-translate-y-1"
                   >
-                    <Link to={`/noticias/${item.slug}`}>
-                      <img
-                        src={item.imagen || newsPlaceholder}
-                        alt={item.titulo}
-                        loading="lazy"
-                        className="h-48 w-full object-contain bg-white transition hover:opacity-90"
-                      />
-                    </Link>
+                    {/* Un solo Link cubre toda la tarjeta — evita links duplicados para el mismo destino */}
+                    <Link
+                      to={`/noticias/${item.slug}`}
+                      className="absolute inset-0 z-10"
+                      aria-label={item.titulo}
+                    />
+                    <img
+                      src={item.imagen || newsPlaceholder}
+                      alt={item.titulo}
+                      loading="lazy"
+                      className="h-48 w-full object-contain bg-white"
+                    />
                     <div className="p-5">
                       <div className="mb-3 flex items-center justify-between">
                         <Badge>{item.categoria}</Badge>
@@ -285,17 +289,12 @@ function Noticias() {
                         </span>
                       </div>
                       <h2 className="line-clamp-2 font-heading text-xl font-semibold text-primary">
-                        <Link to={`/noticias/${item.slug}`} className="hover:underline">
-                          {item.titulo}
-                        </Link>
+                        {item.titulo}
                       </h2>
                       <p className="mt-2 line-clamp-3 text-sm text-slate-600">{item.extracto}</p>
-                      <Link
-                        to={`/noticias/${item.slug}`}
-                        className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
-                      >
+                      <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary">
                         Leer noticia →
-                      </Link>
+                      </span>
                     </div>
                   </article>
                 ))}

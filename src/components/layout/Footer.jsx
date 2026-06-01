@@ -60,8 +60,8 @@ function Footer() {
           <div className="mt-5 flex items-center gap-3">
             {[
               { href: "https://www.instagram.com/colegioarrieta/", icon: Instagram, label: "Instagram" },
-              { href: "http://facebook.com/colegiojosearrieta", icon: Facebook, label: "Facebook" },
-              { href: "https://www.youtube.com/channel/UCVtQzc0st6Hs0y1s1qPA5Ew", icon: Youtube, label: "YouTube" },
+              { href: "https://www.facebook.com/colegiojosearrieta", icon: Facebook, label: "Facebook" },
+              { href: "https://www.youtube.com/@colegioarrieta", icon: Youtube, label: "YouTube" },
             ].map(({ href, icon: Icon, label }) => (
               <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}
                 className="rounded-full bg-white/10 p-3 transition hover:bg-secondary hover:text-primary">
