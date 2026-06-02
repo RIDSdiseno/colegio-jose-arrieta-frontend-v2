@@ -25,7 +25,7 @@ const pilares = [
     icon: Heart,
     titulo: "Vida Saludable",
     texto: "Fomentamos la actividad física, la alimentación sana y los buenos hábitos en nuestra comunidad.",
-    img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1200&q=80",
+    img: "/images/vida-escolar.jpg",
   },
 ];
 
@@ -67,8 +67,8 @@ function PorQueElegirnos() {
 
       <PageHero
         imgs={[
-          "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?auto=format&fit=crop&w=1920&q=80",
-          "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1920&q=80",
+          "/images/alumnos.jpg",
+          "/images/vanguardia.jpg",
         ]}
         badge="Comunidad Educativa"
         title="¿Por qué"

@@ -19,7 +19,7 @@ export default function ColegioLaReina() {
         <title>Mejores Colegios en La Reina, Santiago | Colegio José Arrieta</title>
         <meta
           name="description"
-          content="Busca el mejor colegio en La Reina, Santiago? El Colegio José Arrieta lleva más de 50 años formando alumnos con excelencia académica y valores. Admisión 2026 abierta."
+          content="¿Buscas el mejor colegio en La Reina, Santiago? El Colegio José Arrieta lleva más de 50 años formando alumnos con excelencia académica y valores. Admisión 2026 abierta."
         />
         <meta name="keywords" content="mejores colegios La Reina, colegios La Reina Santiago, colegio La Reina admisión 2026, colegio básica La Reina" />
         <link rel="canonical" href="https://colegiojosearrieta.cl/colegio-la-reina" />

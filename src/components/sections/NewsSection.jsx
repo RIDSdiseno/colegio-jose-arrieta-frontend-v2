@@ -3,6 +3,8 @@ import { ArrowRight, CalendarDays, Newspaper, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { getNoticias } from "../../api/noticias";
+import { getVideos } from "../../api/videos";
+import { getYoutubeId } from "../../lib/youtube";
 import { formatDate } from "../../lib/utils";
 import SectionTitle from "../ui/SectionTitle";
 import newsPlaceholder from "../../assets/news-placeholder.svg";
@@ -28,7 +30,7 @@ const SIDEBAR_LINKS = [
   },
 ];
 
-const YT_EMBED = "https://www.youtube.com/embed/diIKhu_OQTY?rel=0&modestbranding=1";
+const YT_EMBED_FALLBACK = "https://www.youtube.com/embed/diIKhu_OQTY?rel=0&modestbranding=1";
 
 function NewsSkeleton() {
   return <div className="animate-pulse overflow-hidden rounded-2xl bg-slate-200 h-64" />;
@@ -73,12 +75,24 @@ function NewsSection() {
   const [noticias, setNoticias] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [ytEmbed, setYtEmbed] = useState(YT_EMBED_FALLBACK);
 
   useEffect(() => {
     getNoticias({ limit: 4 })
       .then((result) => setNoticias(result?.data || []))
       .catch(() => setError("No se pudieron cargar las noticias."))
       .finally(() => setLoading(false));
+
+    // Cargar el primer video activo desde la API (orden 1)
+    getVideos()
+      .then((videos) => {
+        const primero = videos?.[0];
+        if (primero?.url) {
+          const id = getYoutubeId(primero.url);
+          if (id) setYtEmbed(`https://www.youtube.com/embed/${id}?rel=0&modestbranding=1`);
+        }
+      })
+      .catch(() => {}); // Si falla, usa el fallback hardcodeado
   }, []);
 
   return (
@@ -171,7 +185,7 @@ function NewsSection() {
             <div className="relative overflow-hidden rounded-2xl shadow-soft" style={{ paddingBottom: "56.25%", height: 0 }}>
               <iframe
                 title="Canal YouTube Colegio José Arrieta"
-                src={YT_EMBED}
+                src={ytEmbed}
                 className="absolute inset-0 h-full w-full"
                 style={{ border: 0 }}
                 loading="lazy"

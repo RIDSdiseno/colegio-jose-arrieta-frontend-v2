@@ -77,9 +77,12 @@ function Contacto() {
       setStatus({ type: "success", message: result?.message || "Mensaje enviado correctamente." });
       reset();
     } catch (error) {
+      const isConfigError = error.message?.includes("no está configurado");
       setStatus({
         type: "error",
-        message: error.message || "No se pudo enviar el mensaje, intenta nuevamente.",
+        message: isConfigError
+          ? "El formulario no está disponible. Escríbenos por WhatsApp al +56 9 8893 6631 o al correo colegio@colegiojosearrieta.cl"
+          : error.message || "No se pudo enviar el mensaje, intenta nuevamente.",
       });
     }
   };

@@ -29,6 +29,7 @@ import AdminVideoForm from "./pages/admin/AdminVideoForm";
 import AdminDocumentos from "./pages/admin/AdminDocumentos";
 import AdminDocumentoForm from "./pages/admin/AdminDocumentoForm";
 
+import NotFound from "./pages/NotFound";
 import ColegioLaReina from "./pages/seo/ColegioLaReina";
 import ColegioSubvencionado from "./pages/seo/ColegioSubvencionado";
 import ColegioEducacionIntegral from "./pages/seo/ColegioEducacionIntegral";
@@ -87,7 +88,7 @@ function App() {
           <Route path="/admin/documentos/:id" element={<AdminDocumentoForm />} />
         </Route>
 
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </AuthProvider>
   );

@@ -8,6 +8,11 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import PageHero from "../components/ui/PageHero";
+import SectionTitle from "../components/ui/SectionTitle";
+import {
+  trackFormularioVisita, trackWhatsAppClick,
+  trackPostulacionClick, trackVisitaAdmision,
+} from "../lib/tracking";
 
 // ── Imágenes del uniforme (coloca los archivos en /public/) ───────────────────
 const uniformeImages = [
@@ -85,11 +90,6 @@ function Lightbox({ images, startIndex, onClose }) {
     </motion.div>
   );
 }
-import SectionTitle from "../components/ui/SectionTitle";
-import {
-  trackFormularioVisita, trackWhatsAppClick,
-  trackPostulacionClick, trackVisitaAdmision,
-} from "../lib/tracking";
 
 const pasos = [
   { icon: ClipboardList, num: 1, label: "Regístrate en MINEDUC",  desc: "Crea tu cuenta en el sistema oficial del Ministerio de Educación." },
@@ -200,7 +200,7 @@ function Admision() {
       </Helmet>
 
       <PageHero
-        img="https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1920&q=80"
+        img="/images/alumnos.jpg"
         badge="Admisión 2026 · Inscripciones abiertas"
         title="Postula al Colegio"
         highlight="José Arrieta"
