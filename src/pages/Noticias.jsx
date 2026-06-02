@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useSearchParams, Link } from "react-router-dom";
 import { CalendarDays, Search, X } from "lucide-react";
-import { getNoticias, getAnosNoticias } from "../api/noticias";
+import { getNoticias, getAnosNoticias, CATEGORIAS_NOTICIAS } from "../api/noticias";
 import { formatDate } from "../lib/utils";
 import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
@@ -21,7 +21,7 @@ function SkeletonCard() {
   );
 }
 
-const CATEGORIAS = ["General", "Académico", "Deportivo", "Cultural", "Institucional", "Comunidad"];
+const CATEGORIAS = CATEGORIAS_NOTICIAS;
 
 function Noticias() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -98,38 +98,34 @@ function Noticias() {
     }
   }
 
+  // Helper para construir el objeto de params preservando todos los filtros activos
+  function buildParams({ q, cat, anio } = {}) {
+    const next = {};
+    const qVal    = q    !== undefined ? q    : queryParam;
+    const catVal  = cat  !== undefined ? cat  : catParam;
+    const anioVal = anio !== undefined ? anio : anioParam;
+    if (qVal)    next.q   = qVal;
+    if (catVal)  next.cat = catVal;
+    if (anioVal) next.anio = anioVal;
+    return next;
+  }
+
   function handleSearch(e) {
     e.preventDefault();
-    const q = inputValue.trim();
-    const next = {};
-    if (q) next.q = q;
-    if (catParam) next.cat = catParam;
-    if (anioParam) next.anio = anioParam;
-    setSearchParams(next);
+    setSearchParams(buildParams({ q: inputValue.trim() }));
   }
 
   function clearSearch() {
     setInputValue("");
-    const next = {};
-    if (catParam) next.cat = catParam;
-    if (anioParam) next.anio = anioParam;
-    setSearchParams(next);
+    setSearchParams(buildParams({ q: "" }));
   }
 
   function selectCategoria(cat) {
-    const next = {};
-    if (queryParam) next.q = queryParam;
-    if (cat) next.cat = cat;
-    if (anioParam) next.anio = anioParam;
-    setSearchParams(next);
+    setSearchParams(buildParams({ cat }));
   }
 
   function selectAnio(anio) {
-    const next = {};
-    if (queryParam) next.q = queryParam;
-    if (catParam) next.cat = catParam;
-    if (anio) next.anio = anio;
-    setSearchParams(next);
+    setSearchParams(buildParams({ anio }));
   }
 
   return (

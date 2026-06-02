@@ -84,7 +84,7 @@ function NewsSection() {
       .finally(() => setLoading(false));
 
     // Cargar el primer video activo desde la API (orden 1)
-    getVideos()
+    getVideos({ limit: 1 })
       .then((videos) => {
         const primero = videos?.[0];
         if (primero?.url) {

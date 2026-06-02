@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Pencil, Trash2, Loader2, Images, Eye, EyeOff } from "lucide-react";
 import { getAlbumsAdmin, eliminarAlbum } from "../../api/albums";
@@ -10,6 +10,12 @@ function AdminAlbums() {
   const [error, setError] = useState("");
   const [confirmId, setConfirmId] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [filtroEstado, setFiltroEstado] = useState("");
+
+  const albumsFiltrados = useMemo(() =>
+    filtroEstado === "" ? albums
+    : albums.filter((a) => a.activo === (filtroEstado === "activo")),
+  [albums, filtroEstado]);
 
   const cargar = useCallback(async () => {
     setLoading(true);
@@ -49,7 +55,7 @@ function AdminAlbums() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-4 flex items-center justify-between">
         <h1 className="font-heading text-2xl font-bold text-primary">Galería — Álbumes</h1>
         <button
           onClick={() => navigate("/admin/albums/nuevo")}
@@ -59,6 +65,20 @@ function AdminAlbums() {
           Nuevo álbum
         </button>
       </div>
+
+      {!loading && albums.length > 0 && (
+        <div className="mb-4 flex gap-3">
+          <select
+            value={filtroEstado}
+            onChange={(e) => setFiltroEstado(e.target.value)}
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+          >
+            <option value="">Todos</option>
+            <option value="activo">Visibles</option>
+            <option value="oculto">Ocultos</option>
+          </select>
+        </div>
+      )}
 
       {error ? (
         <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
@@ -73,9 +93,13 @@ function AdminAlbums() {
           <Images className="h-8 w-8" />
           <p className="text-sm">No hay álbumes aún.</p>
         </div>
+      ) : albumsFiltrados.length === 0 ? (
+        <div className="flex h-32 items-center justify-center text-sm text-slate-400">
+          No hay álbumes {filtroEstado === "activo" ? "visibles" : "ocultos"}.
+        </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {albums.map((album) => (
+          {albumsFiltrados.map((album) => (
             <div
               key={album.id}
               className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-soft transition hover:shadow-md"

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Plus, Pencil, Trash2, CalendarDays, AlertTriangle, ChevronLeft, ChevronRight } from "lucide-react";
-import { getNoticiasAdmin, getNoticiaById, eliminarNoticia } from "../../api/noticias";
+import { Plus, Pencil, Trash2, CalendarDays, AlertTriangle, ChevronLeft, ChevronRight, Search, X } from "lucide-react";
+import { getNoticiasAdmin, getNoticiaById, eliminarNoticia, getAnosNoticias, CATEGORIAS_NOTICIAS } from "../../api/noticias";
 import { eliminarArchivoStorage } from "../../lib/storage";
 import { formatDate } from "../../lib/utils";
 
@@ -25,12 +25,23 @@ function AdminNoticias() {
   const [error, setError] = useState("");
   const [confirmTarget, setConfirmTarget] = useState(null); // { id }
   const [deleting, setDeleting] = useState(false);
+  const [busqueda, setBusqueda] = useState("");
+  const [inputBusqueda, setInputBusqueda] = useState("");
+  const [filtroCategoria, setFiltroCategoria] = useState("");
+  const [filtroAnio, setFiltroAnio] = useState("");
+  const [anosDisponibles, setAnosDisponibles] = useState([]);
 
-  const cargar = useCallback(async (p) => {
+
+  // Cargar años disponibles al montar
+  useEffect(() => {
+    getAnosNoticias().then(setAnosDisponibles).catch(() => {});
+  }, []);
+
+  const cargar = useCallback(async (p, search = "", categoria = "", anio = 0) => {
     setLoading(true);
     setError("");
     try {
-      const res = await getNoticiasAdmin({ limit: PAGE_SIZE, page: p });
+      const res = await getNoticiasAdmin({ limit: PAGE_SIZE, page: p, search, categoria, anio });
       setItems(res.data || []);
       setTotal(res.total || 0);
       setTotalPages(res.totalPages || 1);
@@ -41,7 +52,25 @@ function AdminNoticias() {
     }
   }, []);
 
-  useEffect(() => { cargar(page); }, [page, cargar]);
+  useEffect(() => { cargar(page, busqueda, filtroCategoria, filtroAnio ? parseInt(filtroAnio) : 0); }, [page, busqueda, filtroCategoria, filtroAnio, cargar]);
+
+  const handleBuscar = (e) => {
+    e.preventDefault();
+    setBusqueda(inputBusqueda.trim());
+    setPage(1);
+  };
+
+  const limpiarBusqueda = () => {
+    setInputBusqueda("");
+    setBusqueda("");
+    setPage(1);
+  };
+
+  const limpiarFiltros = () => {
+    setFiltroCategoria("");
+    setFiltroAnio("");
+    setPage(1);
+  };
 
   useEffect(() => {
     if (!confirmTarget) return;
@@ -68,7 +97,7 @@ function AdminNoticias() {
       if (newPage !== page) {
         setPage(newPage);
       } else {
-        cargar(page);
+        cargar(page, busqueda, filtroCategoria, filtroAnio ? parseInt(filtroAnio) : 0);
       }
     } catch (err) {
       setError(err.message);
@@ -80,7 +109,7 @@ function AdminNoticias() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-4 flex items-center justify-between">
         <div>
           <h1 className="font-heading text-2xl font-bold text-primary">Noticias</h1>
           <p className="mt-0.5 text-sm text-slate-500">{total} publicaciones</p>
@@ -93,6 +122,58 @@ function AdminNoticias() {
           Nueva noticia
         </Link>
       </div>
+
+      {/* Buscador y filtros */}
+      <form onSubmit={handleBuscar} className="mb-4 flex flex-wrap gap-2">
+        <div className="flex flex-1 max-w-sm items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2">
+          <Search className="h-4 w-4 shrink-0 text-slate-400" />
+          <input
+            type="text"
+            value={inputBusqueda}
+            onChange={(e) => setInputBusqueda(e.target.value)}
+            placeholder="Buscar por título..."
+            className="flex-1 bg-transparent text-sm text-slate-700 placeholder-slate-400 outline-none"
+          />
+          {inputBusqueda && (
+            <button type="button" onClick={limpiarBusqueda} className="text-slate-400 hover:text-slate-600">
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
+        </div>
+        <button
+          type="submit"
+          className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primaryHover"
+        >
+          Buscar
+        </button>
+        <select
+          value={filtroCategoria}
+          onChange={(e) => { setFiltroCategoria(e.target.value); setPage(1); }}
+          className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+        >
+          <option value="">Todas las categorías</option>
+          {CATEGORIAS_NOTICIAS.map((c) => <option key={c} value={c}>{c}</option>)}
+        </select>
+        {anosDisponibles.length > 0 && (
+          <select
+            value={filtroAnio}
+            onChange={(e) => { setFiltroAnio(e.target.value); setPage(1); }}
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+          >
+            <option value="">Todos los años</option>
+            {anosDisponibles.map((a) => <option key={a} value={a}>{a}</option>)}
+          </select>
+        )}
+        {(filtroCategoria || filtroAnio) && (
+          <button
+            type="button"
+            onClick={limpiarFiltros}
+            className="rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-500 transition hover:bg-slate-50"
+          >
+            Limpiar filtros
+          </button>
+        )}
+      </form>
 
       {error ? (
         <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">

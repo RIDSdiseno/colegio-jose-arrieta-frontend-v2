@@ -1,13 +1,16 @@
 import apiFetch from "../lib/api";
 import { subirArchivo } from "../lib/storage";
 
+export const CATEGORIAS_NOTICIAS = ["General", "Académico", "Deportivo", "Cultural", "Institucional", "Comunidad"];
+
 // ── API pública (Backend) ──────────────────────────────────────────────────────
 
-export async function getNoticias({ limit = 6, page = 1, search = "", categoria = "", anio = 0 } = {}) {
+export async function getNoticias({ limit = 6, page = 1, search = "", categoria = "", anio = 0, orden = "desc" } = {}) {
   const params = new URLSearchParams({ limit, page });
   if (search.trim()) params.set("search", search.trim());
   if (categoria.trim()) params.set("categoria", categoria.trim());
   if (anio) params.set("anio", anio);
+  if (orden === "asc") params.set("orden", "asc");
   return apiFetch(`/api/noticias?${params}`);
 }
 
@@ -25,8 +28,12 @@ export async function getNoticiasAdyacentes(slug) {
 
 // ── API admin (Backend) ────────────────────────────────────────────────────────
 
-export async function getNoticiasAdmin({ limit = 50, page = 1 } = {}) {
-  return apiFetch(`/api/noticias/admin?limit=${limit}&page=${page}`, { admin: true });
+export async function getNoticiasAdmin({ limit = 50, page = 1, search = "", categoria = "", anio = 0 } = {}) {
+  const params = new URLSearchParams({ limit, page });
+  if (search.trim()) params.set("search", search.trim());
+  if (categoria.trim()) params.set("categoria", categoria.trim());
+  if (anio) params.set("anio", anio);
+  return apiFetch(`/api/noticias/admin?${params}`, { admin: true });
 }
 
 export async function getNoticiaById(id) {

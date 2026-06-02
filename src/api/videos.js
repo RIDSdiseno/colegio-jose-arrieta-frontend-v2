@@ -2,8 +2,9 @@ import apiFetch from "../lib/api";
 
 // ── API pública ────────────────────────────────────────────────────────────────
 
-export async function getVideos() {
-  return apiFetch("/api/videos");
+export async function getVideos({ limit } = {}) {
+  const params = limit ? `?limit=${limit}` : "";
+  return apiFetch(`/api/videos${params}`);
 }
 
 // ── API admin ──────────────────────────────────────────────────────────────────

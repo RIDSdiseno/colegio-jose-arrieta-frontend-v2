@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Plus, Pencil, Trash2, Star, AlertTriangle } from "lucide-react";
 import { getTestimoniosAdmin, eliminarTestimonio } from "../../api/testimonios";
@@ -9,6 +9,12 @@ function AdminTestimonios() {
   const [error, setError] = useState("");
   const [confirmId, setConfirmId] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [filtroEstado, setFiltroEstado] = useState("");
+
+  const itemsFiltrados = useMemo(() =>
+    filtroEstado === "" ? items
+    : items.filter((t) => t.activo === (filtroEstado === "activo")),
+  [items, filtroEstado]);
 
   const cargar = useCallback(async () => {
     setLoading(true);
@@ -47,10 +53,12 @@ function AdminTestimonios() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-4 flex items-center justify-between">
         <div>
           <h1 className="font-heading text-2xl font-bold text-primary">Testimonios</h1>
-          <p className="mt-0.5 text-sm text-slate-500">{items.length} reseñas</p>
+          <p className="mt-0.5 text-sm text-slate-500">
+            {itemsFiltrados.length}{filtroEstado ? ` de ${items.length}` : ""} reseñas
+          </p>
         </div>
         <Link
           to="/admin/testimonios/nuevo"
@@ -60,6 +68,20 @@ function AdminTestimonios() {
           Nuevo testimonio
         </Link>
       </div>
+
+      {!loading && items.length > 0 && (
+        <div className="mb-4 flex gap-3">
+          <select
+            value={filtroEstado}
+            onChange={(e) => setFiltroEstado(e.target.value)}
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+          >
+            <option value="">Todos</option>
+            <option value="activo">Visibles</option>
+            <option value="oculto">Ocultos</option>
+          </select>
+        </div>
+      )}
 
       {error ? (
         <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -80,6 +102,10 @@ function AdminTestimonios() {
             Agrega el primero
           </Link>
         </div>
+      ) : itemsFiltrados.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-slate-300 bg-white py-10 text-center text-slate-400">
+          No hay testimonios {filtroEstado === "activo" ? "visibles" : "ocultos"}.
+        </div>
       ) : (
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-soft">
           <table className="w-full text-sm">
@@ -93,7 +119,7 @@ function AdminTestimonios() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {items.map((t) => (
+              {itemsFiltrados.map((t) => (
                 <tr key={t.id} className="transition hover:bg-slate-50">
                   <td className="px-5 py-4 font-medium text-slate-800">{t.nombre}</td>
                   <td className="hidden px-5 py-4 text-slate-500 md:table-cell">{t.cargo || "—"}</td>

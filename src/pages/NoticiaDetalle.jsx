@@ -1,12 +1,46 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
+import { CalendarDays, ChevronLeft, ChevronRight, Copy, Check } from "lucide-react";
 import DOMPurify from "dompurify";
 import { getNoticiaPorSlug, getNoticiasAdyacentes } from "../api/noticias";
 import { formatDate } from "../lib/utils";
 import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
+
+function ShareButton({ titulo }) {
+  const [copied, setCopied] = useState(false);
+  const timerRef = useRef(null);
+
+  const url = window.location.href;
+
+  // Limpiar el timer al desmontar para evitar memory leak
+  useEffect(() => () => clearTimeout(timerRef.current), []);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(url)
+      .then(() => {
+        setCopied(true);
+        clearTimeout(timerRef.current);
+        timerRef.current = setTimeout(() => setCopied(false), 2000);
+      })
+      .catch(() => {}); // Falla silenciosa en HTTP o Safari sin permiso
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      title={copied ? "¡Copiado!" : "Copiar enlace"}
+      className={`flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3 text-sm font-medium transition ${
+        copied ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+      }`}
+    >
+      {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+      {copied ? "¡Copiado!" : "Copiar link"}
+    </button>
+  );
+}
 
 function NoticiaDetalle() {
   const { slug } = useParams();
@@ -86,9 +120,12 @@ function NoticiaDetalle() {
             </span>
           </div>
 
-          <h1 className="mt-4 font-heading text-3xl font-bold text-primary sm:text-4xl">
-            {noticia.titulo}
-          </h1>
+          <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
+            <h1 className="font-heading text-3xl font-bold text-primary sm:text-4xl">
+              {noticia.titulo}
+            </h1>
+            <ShareButton titulo={noticia.titulo} />
+          </div>
 
           {noticia.extracto && (
             <p className="mt-3 text-lg text-slate-500 leading-relaxed">{noticia.extracto}</p>

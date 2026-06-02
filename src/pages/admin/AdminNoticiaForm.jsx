@@ -6,6 +6,7 @@ import {
   actualizarNoticia,
   subirImagen,
   getNoticiaById,
+  CATEGORIAS_NOTICIAS,
 } from "../../api/noticias";
 import { eliminarArchivoStorage } from "../../lib/storage";
 import { slugify } from "../../lib/utils";
@@ -14,14 +15,7 @@ import ErrorBanner from "../../components/admin/ErrorBanner";
 import AdminFormActions from "../../components/admin/AdminFormActions";
 import AdminLoadingSpinner from "../../components/admin/AdminLoadingSpinner";
 
-const CATEGORIAS = [
-  "General",
-  "Académico",
-  "Deportivo",
-  "Cultural",
-  "Institucional",
-  "Comunidad",
-];
+const CATEGORIAS = CATEGORIAS_NOTICIAS;
 
 const EMPTY = {
   titulo: "",

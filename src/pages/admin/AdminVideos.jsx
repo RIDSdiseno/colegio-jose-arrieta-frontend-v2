@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Plus, Pencil, Trash2, AlertTriangle, Youtube } from "lucide-react";
 import { getVideosAdmin, eliminarVideo } from "../../api/videos";
@@ -10,6 +10,15 @@ function AdminVideos() {
   const [error, setError] = useState("");
   const [confirmId, setConfirmId] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [filtroAnio, setFiltroAnio] = useState("");
+
+  const anosDisponibles = useMemo(() =>
+    [...new Set(items.map((v) => v.anio))].sort((a, b) => b - a),
+  [items]);
+
+  const itemsFiltrados = useMemo(() =>
+    filtroAnio ? items.filter((v) => v.anio === parseInt(filtroAnio)) : items,
+  [items, filtroAnio]);
 
   const cargar = useCallback(async () => {
     setLoading(true);
@@ -47,10 +56,12 @@ function AdminVideos() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-4 flex items-center justify-between">
         <div>
           <h1 className="font-heading text-2xl font-bold text-primary">Videos</h1>
-          <p className="mt-0.5 text-sm text-slate-500">{items.length} videos</p>
+          <p className="mt-0.5 text-sm text-slate-500">
+            {itemsFiltrados.length}{filtroAnio ? ` de ${items.length}` : ""} videos
+          </p>
         </div>
         <Link
           to="/admin/videos/nuevo"
@@ -60,6 +71,31 @@ function AdminVideos() {
           Nuevo video
         </Link>
       </div>
+
+      {/* Filtro por año */}
+      {!loading && items.length > 0 && (
+        <div className="mb-4 flex gap-3">
+          <select
+            value={filtroAnio}
+            onChange={(e) => setFiltroAnio(e.target.value)}
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+          >
+            <option value="">Todos los años</option>
+            {anosDisponibles.map((a) => (
+              <option key={a} value={a}>{a}</option>
+            ))}
+          </select>
+          {filtroAnio && (
+            <button
+              type="button"
+              onClick={() => setFiltroAnio("")}
+              className="rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-500 transition hover:bg-slate-50"
+            >
+              Limpiar
+            </button>
+          )}
+        </div>
+      )}
 
       {error ? (
         <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -80,6 +116,10 @@ function AdminVideos() {
             Agrega el primero
           </Link>
         </div>
+      ) : itemsFiltrados.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-slate-300 bg-white py-10 text-center text-slate-400">
+          No hay videos del año {filtroAnio}.
+        </div>
       ) : (
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-soft">
           <table className="w-full text-sm">
@@ -93,7 +133,7 @@ function AdminVideos() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {items.map((video) => {
+              {itemsFiltrados.map((video) => {
                 const ytId = getYoutubeId(video.url);
                 return (
                   <tr key={video.id} className="transition hover:bg-slate-50">
