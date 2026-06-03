@@ -118,7 +118,8 @@ const galeriaAlbumes = [
 
 
 function Galeria() {
-  const [albums, setAlbums] = useState(galeriaAlbumes);
+  const [albums, setAlbums] = useState([]);
+  const [loadingAlbums, setLoadingAlbums] = useState(true);
   const [albumActivo, setAlbumActivo] = useState(null);
   const [fotosActivas, setFotosActivas] = useState([]);
   const [fotoActiva, setFotoActiva] = useState(0);
@@ -127,9 +128,11 @@ function Galeria() {
   useEffect(() => {
     getAlbums()
       .then((data) => {
-        if (data && data.length > 0) setAlbums(data);
+        // Si la API no devuelve nada, usar los albums de respaldo
+        setAlbums(data && data.length > 0 ? data : galeriaAlbumes);
       })
-      .catch(() => {});
+      .catch(() => { setAlbums(galeriaAlbumes); })
+      .finally(() => setLoadingAlbums(false));
   }, []);
 
   const abrirAlbum = async (album) => {
@@ -172,6 +175,16 @@ function Galeria() {
   // Normalizar portada para álbumes estáticos vs backend
   const getPortada = (album) => album.portada || album.fotos?.[0] || null;
   const getCount = (album) => album._count?.fotos ?? album.fotos?.length ?? 0;
+
+  if (loadingAlbums) {
+    return (
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="h-64 animate-pulse rounded-2xl bg-slate-200" />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <>

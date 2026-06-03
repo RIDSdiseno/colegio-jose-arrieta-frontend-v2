@@ -73,7 +73,7 @@ function Documentos() {
       </Helmet>
 
       <PageHero
-        img="/images/documentos-escolares.jpg"
+        img="/images/Documentos-de-Recursos-Humanos-basicos-para-tu-empresa.jpg"
         eyebrow={`Año académico ${anio}`}
         title="Documentos"
         highlight="del Colegio."

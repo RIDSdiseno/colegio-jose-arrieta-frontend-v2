@@ -219,7 +219,7 @@ function AdminNoticias() {
                       ) : (
                         <div className="h-10 w-10 shrink-0 rounded-lg bg-slate-100" />
                       )}
-                      <span className="line-clamp-1 font-medium text-slate-800">
+                      <span className="line-clamp-1 font-medium text-slate-800" title={noticia.titulo}>
                         {noticia.titulo}
                       </span>
                     </div>

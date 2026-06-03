@@ -150,7 +150,7 @@ function AdminVideos() {
                             <Youtube className="h-4 w-4 text-slate-400" />
                           </div>
                         )}
-                        <span className="line-clamp-1 font-medium text-slate-800">
+                        <span className="line-clamp-1 font-medium text-slate-800" title={video.titulo}>
                           {video.titulo}
                         </span>
                       </div>

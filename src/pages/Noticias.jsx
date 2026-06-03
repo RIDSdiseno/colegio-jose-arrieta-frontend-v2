@@ -137,7 +137,7 @@ function Noticias() {
       </Helmet>
 
       <PageHero
-        img="/images/alumnos.jpg"
+        img="/images/53471234_s.jpg"
         badge="Comunidad en acción"
         title="Noticias del"
         highlight="Colegio"

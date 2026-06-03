@@ -121,7 +121,7 @@ function AdminAlbums() {
               </div>
 
               <div className="p-4">
-                <h2 className="font-semibold text-slate-800 truncate">{album.titulo}</h2>
+                <h2 className="font-semibold text-slate-800 truncate" title={album.titulo}>{album.titulo}</h2>
                 {album.descripcion ? (
                   <p className="mt-0.5 text-xs text-slate-400 line-clamp-2">{album.descripcion}</p>
                 ) : null}

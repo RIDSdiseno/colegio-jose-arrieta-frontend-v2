@@ -158,7 +158,7 @@ function AdminDocumentos() {
                       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10">
                         <FileText className="h-4 w-4 text-primary" />
                       </div>
-                      <span className="line-clamp-1 font-medium text-slate-800">{doc.titulo}</span>
+                      <span className="line-clamp-1 font-medium text-slate-800" title={doc.titulo}>{doc.titulo}</span>
                     </div>
                   </td>
                   <td className="hidden px-5 py-4 text-slate-500 md:table-cell">{doc.categoria}</td>

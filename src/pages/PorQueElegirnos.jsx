@@ -67,7 +67,7 @@ function PorQueElegirnos() {
 
       <PageHero
         imgs={[
-          "/images/alumnos.jpg",
+          "/images/depositphotos_17140201-stock-photo-group-of-pupils.jpg",
           "/images/vanguardia.jpg",
         ]}
         badge="Comunidad Educativa"

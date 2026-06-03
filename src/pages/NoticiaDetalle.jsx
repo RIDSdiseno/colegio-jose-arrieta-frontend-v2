@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { CalendarDays, ChevronLeft, ChevronRight, Copy, Check } from "lucide-react";
 import DOMPurify from "dompurify";
-import { getNoticiaPorSlug, getNoticiasAdyacentes } from "../api/noticias";
+import { getNoticiaPorSlug, getNoticiasAdyacentes, getNoticias } from "../api/noticias";
 import { formatDate } from "../lib/utils";
 import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
@@ -46,12 +46,14 @@ function NoticiaDetalle() {
   const { slug } = useParams();
   const [noticia, setNoticia] = useState(null);
   const [adyacentes, setAdyacentes] = useState({ anterior: null, siguiente: null });
+  const [relacionadas, setRelacionadas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     setNoticia(null);
     setAdyacentes({ anterior: null, siguiente: null });
+    setRelacionadas([]);
     setLoading(true);
     setError("");
 
@@ -63,7 +65,17 @@ function NoticiaDetalle() {
       if (noticiaResult.status === "rejected") {
         setError(noticiaResult.reason?.message || "No pudimos cargar la noticia.");
       } else {
-        setNoticia(noticiaResult.value);
+        const n = noticiaResult.value;
+        setNoticia(n);
+        // Cargar relacionadas de la misma categoría (excluyendo la actual)
+        if (n?.categoria) {
+          getNoticias({ limit: 4, categoria: n.categoria })
+            .then((res) => {
+              const otras = (res?.data || []).filter((r) => r.slug !== slug).slice(0, 3);
+              setRelacionadas(otras);
+            })
+            .catch(() => {});
+        }
       }
       if (adyacentesResult.status === "fulfilled") {
         setAdyacentes(adyacentesResult.value);
@@ -179,6 +191,44 @@ function NoticiaDetalle() {
               </Button>
             </div>
           </div>
+
+          {/* Noticias relacionadas */}
+          {relacionadas.length > 0 && (
+            <div className="mt-12 border-t border-slate-200 pt-10">
+              <h2 className="mb-6 font-heading text-xl font-bold text-slate-800">
+                Más noticias de <span className="text-primary">{noticia.categoria}</span>
+              </h2>
+              <div className="grid gap-4 sm:grid-cols-3">
+                {relacionadas.map((r) => (
+                  <article
+                    key={r.id}
+                    className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-soft transition hover:-translate-y-1"
+                  >
+                    {/* Stretched link — un solo enlace cubre toda la tarjeta */}
+                    <Link
+                      to={`/noticias/${r.slug}`}
+                      className="absolute inset-0 z-10"
+                      aria-label={r.titulo}
+                    />
+                    {r.imagen && (
+                      <img
+                        src={r.imagen}
+                        alt={r.titulo}
+                        loading="lazy"
+                        className="h-36 w-full object-cover"
+                      />
+                    )}
+                    <div className="p-4">
+                      <p className="text-xs text-slate-400">{formatDate(r.fecha)}</p>
+                      <p className="mt-1 line-clamp-2 text-sm font-semibold text-slate-800 group-hover:text-primary">
+                        {r.titulo}
+                      </p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
     </>
