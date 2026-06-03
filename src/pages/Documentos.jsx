@@ -11,7 +11,7 @@ const ANO_ACTUAL = new Date().getFullYear();
 function DocLink({ doc, index }) {
   return (
     <motion.a
-      href={doc.link}
+      href={doc.link || "#"}
       target="_blank"
       rel="noreferrer"
       initial={{ opacity: 0, y: 8 }}
@@ -32,6 +32,8 @@ function Documentos() {
   const [anio, setAnio] = useState(ANO_ACTUAL);
   const [documentos, setDocumentos] = useState([]);
   const [loading, setLoading] = useState(true);
+  // Flag para evitar que el fetch de documentos corra antes de saber el año correcto
+  const [anosReady, setAnosReady] = useState(false);
 
   // Cargar años disponibles una sola vez
   useEffect(() => {
@@ -42,16 +44,18 @@ function Documentos() {
           setAnio(data[0]); // el más reciente
         }
       })
-      .catch(() => {}); // si falla, queda con el año actual
+      .catch(() => {}) // si falla, queda con el año actual
+      .finally(() => setAnosReady(true));
   }, []);
 
   useEffect(() => {
+    if (!anosReady) return; // esperar a que los años estén resueltos
     setLoading(true);
     getDocumentos({ anio })
       .then(setDocumentos)
       .catch(() => setDocumentos([]))
       .finally(() => setLoading(false));
-  }, [anio]);
+  }, [anio, anosReady]);
 
   // Agrupar por categoría respetando el orden de CATEGORIAS
   const porCategoria = CATEGORIAS.reduce((acc, cat) => {

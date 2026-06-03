@@ -4,7 +4,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Helmet } from "react-helmet-async";
 import { Mail, Phone, MessageCircle, MapPin, Clock } from "lucide-react";
-import { postFormularioContacto } from "../api/contacto";
+import { postFormularioContacto, CONFIG_ERROR_MSG } from "../api/contacto";
 import Button from "../components/ui/Button";
 import PageHero from "../components/ui/PageHero";
 import { trackFormularioContacto } from "../lib/tracking";
@@ -12,7 +12,7 @@ import { trackFormularioContacto } from "../lib/tracking";
 const schema = z.object({
   nombre:   z.string().min(3, "Ingresa tu nombre.").max(100, "Nombre demasiado largo.").trim(),
   email:    z.string().email("Ingresa un email válido.").max(150, "Email demasiado largo.").trim(),
-  telefono: z.string().min(8, "Ingresa un teléfono válido.").max(20, "Teléfono demasiado largo.").trim(),
+  telefono: z.string().min(8, "Ingresa un teléfono válido.").max(20, "Teléfono demasiado largo.").regex(/^[\d\s+\-()]+$/, "Solo se permiten números y caracteres de teléfono.").trim(),
   mensaje:  z.string().min(10, "Escribe un mensaje más detallado.").max(2000, "El mensaje no puede superar los 2000 caracteres.").trim(),
 });
 
@@ -73,11 +73,11 @@ function Contacto() {
     try {
       setStatus({ type: "", message: "" });
       const result = await postFormularioContacto(values);
-      trackFormularioContacto();
       setStatus({ type: "success", message: result?.message || "Mensaje enviado correctamente." });
+      trackFormularioContacto(); // después de confirmar el éxito en la UI
       reset();
     } catch (error) {
-      const isConfigError = error.message?.includes("no está configurado");
+      const isConfigError = error.message === CONFIG_ERROR_MSG;
       setStatus({
         type: "error",
         message: isConfigError
@@ -200,6 +200,7 @@ function Contacto() {
                 </label>
                 <input
                   id="telefono"
+                  type="tel"
                   {...register("telefono")}
                   placeholder="+56 9 XXXX XXXX"
                   className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"

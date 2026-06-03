@@ -20,7 +20,7 @@ const tallerIcons = {
 
 const metas = [
   {
-    icon: TrendingUp,
+    icon: Users,
     titulo: "75%",
     subtitulo: "Aprobación total",
     texto: "Al menos el 75% de los alumnos con todas sus asignaturas aprobadas.",
@@ -189,11 +189,12 @@ function ProyectoEducativo() {
         <div className="container-main">
           {/* Header editorial */}
           <div className="mb-10 overflow-hidden rounded-3xl">
-            <div className="relative h-52 sm:h-64">
+            <div className="relative h-52 sm:h-64 bg-primary">
               <img
                 src="https://colegiojosearrieta.cl/wp-content/uploads/2025/09/DSC_0369-Grande.jpg"
                 alt="Talleres extraprogramáticos Colegio José Arrieta"
                 className="h-full w-full object-cover"
+                onError={(e) => { e.currentTarget.style.display = "none"; }}
               />
               <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
               <div className="absolute inset-0 flex flex-col justify-center px-8 sm:px-12">
@@ -268,7 +269,7 @@ function ProyectoEducativo() {
               { icon: ShieldCheck, label: "Plan de Convivencia Escolar", href: "https://colegiojosearrieta.cl/wp-content/uploads/2025/07/Plan-de-Convivencia-Escolar-2025.pdf" },
               { icon: FileText,   label: "Normativa de Evaluaciones 2025", href: "https://colegiojosearrieta.cl/wp-content/uploads/2025/06/Normativa-de-evaluacion-2025-v6.pdf" },
               { icon: FileText,   label: "Plan de Formación Ciudadana", href: "https://colegiojosearrieta.cl/wp-content/uploads/2025/07/Plan-anual-de-formacion-ciudadana-2025.pdf" },
-              { icon: FileText,   label: "Reglamento Pre-Básica", href: "https://colegiojosearrieta.cl/wp-content/uploads/2020/12/Reglamento-Interno-V0.1.pdf" },
+              { icon: FileText,   label: "Reglamento Pre-Básica (2020)", href: "https://colegiojosearrieta.cl/wp-content/uploads/2020/12/Reglamento-Interno-V0.1.pdf" },
             ].map(({ icon: Icon, label, href }) => (
               <motion.a
                 key={label}

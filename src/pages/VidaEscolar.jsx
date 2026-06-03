@@ -143,7 +143,9 @@ function Galeria() {
       setAlbumActivo(album);
       try {
         const data = await getAlbumFotos(album.id);
-        setFotosActivas(data.fotos || []);
+        // Tolera respuesta como { fotos: [...] } o como array directo
+        const fotos = Array.isArray(data) ? data : (data?.fotos ?? []);
+        setFotosActivas(fotos);
       } catch {
         setFotosActivas([]);
       } finally {
@@ -161,16 +163,21 @@ function Galeria() {
   const next = () => setFotoActiva((c) => (c + 1) % fotosActivas.length);
 
   // Cerrar con Escape y navegar con flechas del teclado
+  // Se usan setState funcionales para evitar closure obsoleto con fotoActiva
   useEffect(() => {
     if (!albumActivo) return;
     const handler = (e) => {
       if (e.key === "Escape") cerrar();
-      if (e.key === "ArrowLeft") prev();
-      if (e.key === "ArrowRight") next();
+      // Usar fotosActivas.length dentro del handler para siempre tener el valor actual
+      // y evitar NaN cuando el array aún está cargando (length === 0)
+      if (e.key === "ArrowLeft")
+        setFotoActiva((c) => fotosActivas.length > 0 ? (c - 1 + fotosActivas.length) % fotosActivas.length : 0);
+      if (e.key === "ArrowRight")
+        setFotoActiva((c) => fotosActivas.length > 0 ? (c + 1) % fotosActivas.length : 0);
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [albumActivo, fotosActivas.length]);
+  }, [albumActivo, fotosActivas]);
 
   // Normalizar portada para álbumes estáticos vs backend
   const getPortada = (album) => album.portada || album.fotos?.[0] || null;
@@ -317,6 +324,7 @@ function VideoCard({ video }) {
             src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`}
             alt={video.titulo}
             className="h-44 w-full object-cover transition duration-300 group-hover:scale-105"
+            onError={(e) => { e.currentTarget.style.display = "none"; }}
           />
           <div className="absolute inset-0 bg-black/40 transition group-hover:bg-black/50" />
           <div className="absolute inset-0 flex items-center justify-center">

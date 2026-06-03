@@ -33,7 +33,8 @@ function AdminDocumentoForm() {
   // URL ya guardada en BD — evita borrar PDFs existentes al reemplazar
   const savedLinkRef = useRef("");
 
-  const [form, setForm] = useState(EMPTY);
+  // Inicializar con función para obtener el año en el momento del render, no al importar el módulo
+  const [form, setForm] = useState(() => ({ ...EMPTY, anio: new Date().getFullYear() }));
   const [loading, setLoading] = useState(isEditing);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -41,8 +42,10 @@ function AdminDocumentoForm() {
 
   useEffect(() => {
     if (!isEditing) return;
+    let cancelled = false;
     getDocumentoById(id)
       .then((data) => {
+        if (cancelled) return;
         savedLinkRef.current = data.link || "";
         setForm({
           titulo: data.titulo || "",
@@ -53,8 +56,9 @@ function AdminDocumentoForm() {
           orden: data.orden ?? 0,
         });
       })
-      .catch(() => setError("No se encontró el documento."))
-      .finally(() => setLoading(false));
+      .catch(() => { if (!cancelled) setError("No se encontró el documento."); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
   }, [id, isEditing]);
 
   const handleChange = (e) => {
@@ -199,9 +203,10 @@ function AdminDocumentoForm() {
                 onChange={handlePdfUpload}
                 className="hidden"
                 id="pdf-upload"
+                disabled={uploading}
               />
               <label
-                htmlFor="pdf-upload"
+                htmlFor={uploading ? undefined : "pdf-upload"}
                 className={`inline-flex cursor-pointer items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition ${
                   uploading
                     ? "border-slate-200 bg-slate-50 text-slate-400 cursor-not-allowed"

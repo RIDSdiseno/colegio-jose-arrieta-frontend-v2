@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Helmet } from "react-helmet-async";
 import {
   ExternalLink, MessageCircle, Mail as MailIcon,
@@ -64,6 +64,7 @@ function Lightbox({ images, startIndex, onClose }) {
           src={images[index].src}
           alt={images[index].label}
           className="mx-auto max-h-[80vh] w-full rounded-2xl object-contain shadow-2xl"
+          onError={(e) => { e.currentTarget.style.display = "none"; }}
         />
         <p className="mt-3 text-center text-sm font-semibold text-white/80">
           {images[index].label} — {index + 1} / {images.length}
@@ -114,10 +115,14 @@ function FormVisita() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const nombre = form.nombre.trim();
+    const telefono = form.telefono.trim();
+    const email = form.email.trim();
+    if (!nombre || !telefono) return; // bloquea envíos con solo espacios
     trackFormularioVisita();
     trackWhatsAppClick("formulario_visita");
     const wa = `https://wa.me/56988936631?text=${encodeURIComponent(
-      `Hola, me llamo ${form.nombre}. ${form.asunto}. Email: ${form.email}. Teléfono: ${form.telefono}`
+      `Hola, me llamo ${nombre}. ${form.asunto}. Email: ${email}. Teléfono: ${telefono}`
     )}`;
     window.open(wa, "_blank");
     setSent(true);
@@ -128,6 +133,13 @@ function FormVisita() {
       <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-6 text-center text-emerald-700">
         <CheckCircle2 className="mx-auto mb-2 h-8 w-8" />
         <p className="font-semibold">¡Gracias! Te redirigimos a WhatsApp para confirmar tu visita.</p>
+        <button
+          type="button"
+          onClick={() => setSent(false)}
+          className="mt-3 text-xs text-emerald-600 underline hover:text-emerald-800 transition"
+        >
+          Enviar otra solicitud
+        </button>
       </div>
     );
   }
@@ -187,6 +199,7 @@ function FormVisita() {
 function Admision() {
   useEffect(() => { trackVisitaAdmision(); }, []);
   const [lightbox, setLightbox] = useState(null); // index o null
+  const closeLightbox = useCallback(() => setLightbox(null), []);
 
   return (
     <>
@@ -387,6 +400,7 @@ function Admision() {
                     src={img.src}
                     alt={img.label}
                     className="h-24 w-full object-cover transition duration-300 group-hover:scale-105"
+                    onError={(e) => { e.currentTarget.style.display = "none"; }}
                   />
                   <div className="absolute inset-0 flex items-center justify-center bg-primary/0 transition group-hover:bg-primary/30">
                     <ZoomIn className="h-5 w-5 text-white opacity-0 transition group-hover:opacity-100" />
@@ -453,7 +467,7 @@ function Admision() {
           <Lightbox
             images={uniformeImages}
             startIndex={lightbox}
-            onClose={() => setLightbox(null)}
+            onClose={closeLightbox}
           />
         )}
       </AnimatePresence>

@@ -46,8 +46,8 @@ const espacios = [
 
 
 const hitos = [
-  { year: "1973",  texto: "Fundación del Colegio Particular José Arrieta por la Sra. Marta y dos profesoras pioneras." },
-  { year: "1973",  texto: "Reconocimiento oficial del Ministerio de Educación — Decreto N° 11621, el 26 de abril." },
+  { year: "1973",       texto: "Fundación del Colegio Particular José Arrieta por la Sra. Marta y dos profesoras pioneras." },
+  { year: "Abr. 1973", texto: "Reconocimiento oficial del Ministerio de Educación — Decreto N° 11621, el 26 de abril." },
   { year: "1990s", texto: "Transición a Escuela Subvencionada, ampliando el acceso a más familias de La Reina." },
   { year: "1997",  texto: "Ingreso al Sistema de Financiamiento Compartido (Resolución N° 2335 de 1996)." },
   { year: "Hoy",   texto: "Más de 50 años formando alumnos con tecnología de punta, valores y excelencia académica." },
@@ -160,9 +160,10 @@ function PorQueElegirnos() {
               className="overflow-hidden rounded-2xl shadow-soft"
             >
               <img
-                src="https://img.youtube.com/vi/zXujbnT4RvU/maxresdefault.jpg"
+                src="https://img.youtube.com/vi/zXujbnT4RvU/hqdefault.jpg"
                 alt="Infraestructura Colegio José Arrieta"
                 className="h-72 w-full object-cover lg:h-96"
+                onError={(e) => { e.currentTarget.style.display = "none"; }}
               />
             </motion.div>
 
@@ -289,6 +290,7 @@ function PorQueElegirnos() {
                   src="https://colegiojosearrieta.cl/wp-content/uploads/2025/09/DSC_0325-Grande.jpg"
                   alt="Ceremonia Colegio José Arrieta"
                   className="h-64 w-full object-cover sm:h-80 lg:h-[400px]"
+                  onError={(e) => { e.currentTarget.style.display = "none"; }}
                 />
               </motion.div>
               <div className="mt-4 grid grid-cols-2 gap-3">
@@ -300,6 +302,7 @@ function PorQueElegirnos() {
                   src="https://colegiojosearrieta.cl/wp-content/uploads/2025/09/DSC_1388-Grande.jpg"
                   alt="Actividad escolar"
                   className="h-32 w-full rounded-2xl object-cover shadow-soft"
+                  onError={(e) => { e.currentTarget.style.display = "none"; }}
                 />
                 <motion.img
                   initial={{ opacity: 0, y: 10 }}
@@ -309,6 +312,7 @@ function PorQueElegirnos() {
                   src="https://colegiojosearrieta.cl/wp-content/uploads/2025/09/DSC_1386-Grande.jpg"
                   alt="Comunidad escolar"
                   className="h-32 w-full rounded-2xl object-cover shadow-soft"
+                  onError={(e) => { e.currentTarget.style.display = "none"; }}
                 />
               </div>
             </div>

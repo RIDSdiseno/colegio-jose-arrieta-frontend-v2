@@ -22,6 +22,7 @@ export default function PageHeroCarousel({ slides, height = "52vh", autoplayMs =
     return () => clearInterval(t);
   }, [next, paused, autoplayMs, slides.length]);
 
+  if (!slides || slides.length === 0) return null;
   const slide = slides[current];
 
   return (
@@ -42,6 +43,7 @@ export default function PageHeroCarousel({ slides, height = "52vh", autoplayMs =
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8 }}
           className="absolute inset-0 h-full w-full object-cover object-center"
+          onError={(e) => { e.currentTarget.style.display = "none"; }}
         />
       </AnimatePresence>
 

@@ -54,6 +54,7 @@ function DivisionesSection() {
                   alt={d.nivel}
                   loading="lazy"
                   className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                  onError={(e) => { e.currentTarget.style.display = "none"; }}
                 />
                 <div className={`absolute inset-0 bg-gradient-to-b ${d.accent}`} />
 

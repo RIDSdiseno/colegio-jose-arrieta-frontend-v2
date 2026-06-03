@@ -7,10 +7,14 @@ import { getYoutubeId } from "../../lib/youtube";
 
 function VideoSection() {
   const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [activeId, setActiveId] = useState(null); // ID de YouTube del video abierto en modal
 
   useEffect(() => {
-    getVideos().then(setVideos).catch(() => {});
+    getVideos()
+      .then(setVideos)
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
   // Cerrar modal con tecla Escape
@@ -21,7 +25,8 @@ function VideoSection() {
     return () => window.removeEventListener("keydown", handler);
   }, [activeId]);
 
-  if (videos.length === 0) return null;
+  // Mientras carga o si no hay videos, no renderizar nada (sin layout shift)
+  if (loading || videos.length === 0) return null;
 
   return (
     <section className="bg-white py-16">

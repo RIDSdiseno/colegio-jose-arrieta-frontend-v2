@@ -69,6 +69,8 @@ function AdminNoticias() {
   const limpiarFiltros = () => {
     setFiltroCategoria("");
     setFiltroAnio("");
+    setInputBusqueda("");
+    setBusqueda("");
     setPage(1);
   };
 

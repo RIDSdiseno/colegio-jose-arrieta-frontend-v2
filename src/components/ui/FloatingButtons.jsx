@@ -20,7 +20,7 @@ const buttons = [
   },
   {
     label: "Biblioteca",
-    href: "http://colegioarrieta.ddns.net:83/",
+    href: "http://colegioarrieta.ddns.net:83/", // TODO: migrar a HTTPS cuando el servidor tenga SSL
     icon: BookOpen,
     bg: "bg-primary",
     text: "text-white",

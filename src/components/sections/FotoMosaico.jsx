@@ -64,6 +64,7 @@ export default function FotoMosaico() {
         </div>
 
         {/* Mosaico */}
+        {fotos.length > 0 && (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 lg:grid-rows-2">
           {/* Foto grande izquierda */}
           <motion.div
@@ -77,6 +78,7 @@ export default function FotoMosaico() {
               src={fotos[0].url}
               alt={fotos[0].caption || "Foto del colegio"}
               className="h-full min-h-[200px] w-full object-cover transition duration-500 hover:scale-105 sm:min-h-[280px]"
+              onError={(e) => { e.currentTarget.style.display = "none"; }}
             />
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
               <p className="text-sm font-semibold text-white">{fotos[0].caption}</p>
@@ -97,6 +99,7 @@ export default function FotoMosaico() {
                 src={foto.url}
                 alt={foto.caption || "Foto del colegio"}
                 className="h-40 w-full object-cover transition duration-500 hover:scale-105 lg:h-full"
+                onError={(e) => { e.currentTarget.style.display = "none"; }}
               />
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/55 to-transparent p-3">
                 <p className="text-xs font-semibold text-white">{foto.caption}</p>
@@ -104,6 +107,7 @@ export default function FotoMosaico() {
             </motion.div>
           ))}
         </div>
+        )}
 
         <div className="mt-6 text-center">
           <Link

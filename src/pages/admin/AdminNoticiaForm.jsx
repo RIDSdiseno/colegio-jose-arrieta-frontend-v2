@@ -98,9 +98,12 @@ function AdminNoticiaForm() {
   const savedImagenesRef = useRef([]);
 
   useEffect(() => {
+    slugEditedRef.current = false; // reset al cambiar de noticia
     if (!isEditing) return;
+    let cancelled = false;
     getNoticiaById(id)
       .then((data) => {
+        if (cancelled) return;
         const { texto, imagenes, fotosUbicacion } = parseContenido(data.contenido || "");
         setForm({
           titulo: data.titulo || "",
@@ -118,14 +121,16 @@ function AdminNoticiaForm() {
         savedImagenRef.current = data.imagen || "";
         savedImagenesRef.current = imagenes;
       })
-      .catch(() => setError("No se encontró la noticia."))
-      .finally(() => setLoading(false));
+      .catch(() => { if (!cancelled) setError("No se encontró la noticia."); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
   }, [id, isEditing]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // Si el admin sobreescribe la portada manualmente (campo de texto), limpiar el upload previo
-    if (name === "imagen") {
+    // Limpiar portada de Storage solo cuando el campo queda vacío (admin borra el contenido completo)
+    // No borrar en cada tecla — podría destruir un upload reciente mientras el admin escribe una URL
+    if (name === "imagen" && value === "") {
       const prev = form.imagen;
       if (prev && prev !== savedImagenRef.current) {
         eliminarArchivoStorage(prev, "noticias").catch(() => {});

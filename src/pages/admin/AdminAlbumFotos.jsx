@@ -75,6 +75,7 @@ function AdminAlbumFotos() {
       setError(err.message);
       // Limpiar el archivo ya subido si no se pudo registrar en BD
       eliminarArchivoStorage(newUrl, "galeria").catch(() => {});
+      setNewUrl(""); // evitar que el input muestre una URL ya eliminada
     } finally {
       setAdding(false);
     }
@@ -104,10 +105,8 @@ function AdminAlbumFotos() {
       else if (failed > 0) setError(`${files.length - failed} foto(s) subidas correctamente. ${failed} fallaron.`);
     } finally {
       if (multiFileRef.current) multiFileRef.current.value = "";
-      // Esperar a que el grid se refresque antes de re-habilitar el botón
-      // Usar try/catch para garantizar que setUploadingImg siempre se ejecuta
+      setUploadingImg(false); // re-habilitar botón antes del reload del grid
       try { await cargar(); } catch { /* error ya mostrado arriba */ }
-      setUploadingImg(false);
     }
   };
 
@@ -130,10 +129,11 @@ function AdminAlbumFotos() {
   };
 
   if (loading) return <AdminLoadingSpinner />;
+  if (!album) return null; // carga terminó pero album es null — error ya mostrado en ErrorBanner
 
   return (
     <div className="mx-auto max-w-4xl">
-      <AdminPageHeader title={album?.titulo} subtitle={`${album?.fotos?.length ?? 0} fotos`} backTo="/admin/albums" />
+      <AdminPageHeader title={album.titulo} subtitle={`${album.fotos?.length ?? 0} fotos`} backTo="/admin/albums" />
 
       <ErrorBanner message={error} />
 

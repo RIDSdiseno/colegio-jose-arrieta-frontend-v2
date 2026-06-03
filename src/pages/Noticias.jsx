@@ -274,6 +274,7 @@ function Noticias() {
                       src={item.imagen || newsPlaceholder}
                       alt={item.titulo}
                       loading="lazy"
+                      onError={(e) => { e.currentTarget.src = newsPlaceholder; }}
                       className="h-48 w-full object-contain bg-white"
                     />
                     <div className="p-5">

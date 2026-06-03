@@ -48,9 +48,10 @@ function TestimonialsSection() {
   const prev = () => setActive((c) => (c - 1 + total) % total);
   const next = () => setActive((c) => (c + 1) % total);
 
-  const t = testimonials[Math.min(active, testimonials.length - 1)];
+  if (total === 0) return null;
 
-  if (!t) return null;
+  const safeActive = Math.min(active, total - 1);
+  const t = testimonials[safeActive];
 
   return (
     <section className="overflow-hidden bg-white py-24">

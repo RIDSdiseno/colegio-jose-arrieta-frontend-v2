@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { CalendarDays, ChevronLeft, ChevronRight, Copy, Check } from "lucide-react";
 import DOMPurify from "dompurify";
 import { getNoticiaPorSlug, getNoticiasAdyacentes, getNoticias } from "../api/noticias";
+import newsPlaceholder from "../assets/news-placeholder.svg";
 import { formatDate } from "../lib/utils";
 import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
@@ -51,6 +52,7 @@ function NoticiaDetalle() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    let cancelled = false;
     setNoticia(null);
     setAdyacentes({ anterior: null, siguiente: null });
     setRelacionadas([]);
@@ -62,6 +64,7 @@ function NoticiaDetalle() {
       getNoticiaPorSlug(slug),
       getNoticiasAdyacentes(slug),
     ]).then(([noticiaResult, adyacentesResult]) => {
+      if (cancelled) return;
       if (noticiaResult.status === "rejected") {
         setError(noticiaResult.reason?.message || "No pudimos cargar la noticia.");
       } else {
@@ -71,6 +74,7 @@ function NoticiaDetalle() {
         if (n?.categoria) {
           getNoticias({ limit: 4, categoria: n.categoria })
             .then((res) => {
+              if (cancelled) return; // evitar setear relacionadas de un slug anterior
               const otras = (res?.data || []).filter((r) => r.slug !== slug).slice(0, 3);
               setRelacionadas(otras);
             })
@@ -80,7 +84,9 @@ function NoticiaDetalle() {
       if (adyacentesResult.status === "fulfilled") {
         setAdyacentes(adyacentesResult.value);
       }
-    }).finally(() => setLoading(false));
+    }).finally(() => { if (!cancelled) setLoading(false); });
+
+    return () => { cancelled = true; };
   }, [slug]);
 
   if (loading) {
@@ -210,14 +216,13 @@ function NoticiaDetalle() {
                       className="absolute inset-0 z-10"
                       aria-label={r.titulo}
                     />
-                    {r.imagen && (
-                      <img
-                        src={r.imagen}
-                        alt={r.titulo}
-                        loading="lazy"
-                        className="h-36 w-full object-cover"
-                      />
-                    )}
+                    <img
+                      src={r.imagen || newsPlaceholder}
+                      alt={r.titulo}
+                      loading="lazy"
+                      className="h-36 w-full object-cover"
+                      onError={(e) => { e.currentTarget.src = newsPlaceholder; }}
+                    />
                     <div className="p-4">
                       <p className="text-xs text-slate-400">{formatDate(r.fecha)}</p>
                       <p className="mt-1 line-clamp-2 text-sm font-semibold text-slate-800 group-hover:text-primary">

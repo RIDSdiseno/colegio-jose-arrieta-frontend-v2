@@ -26,8 +26,10 @@ function AdminAlbumForm() {
 
   useEffect(() => {
     if (!isEditing) return;
+    let cancelled = false;
     getAlbumById(id)
       .then((album) => {
+        if (cancelled) return;
         setForm({
           titulo: album.titulo || "",
           descripcion: album.descripcion || "",
@@ -37,14 +39,16 @@ function AdminAlbumForm() {
         });
         savedPortadaRef.current = album.portada || "";
       })
-      .catch(() => setError("No se encontró el álbum."))
-      .finally(() => setLoading(false));
+      .catch(() => { if (!cancelled) setError("No se encontró el álbum."); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
   }, [id, isEditing]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    // Si el admin sobreescribe la portada manualmente, limpiar el upload previo no guardado
-    if (name === "portada") {
+    // Limpiar portada de Storage solo cuando el campo queda vacío
+    // No borrar en cada tecla — igual que AdminNoticiaForm
+    if (name === "portada" && value === "") {
       const prev = form.portada;
       if (prev && prev !== savedPortadaRef.current) {
         eliminarArchivoStorage(prev, "galeria").catch(() => {});

@@ -54,7 +54,7 @@ function MapContactSection() {
               <div className="relative z-10">
                 <ul className="space-y-4">
                   {contactInfo.map(({ icon: Icon, text, href, links }, i) => (
-                    <li key={i} className="flex items-start gap-3 text-sm text-white/75">
+                    <li key={text ?? links?.[0]?.href ?? i} className="flex items-start gap-3 text-sm text-white/75">
                       <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10">
                         <Icon className="h-3.5 w-3.5 text-secondary" />
                       </span>
@@ -103,6 +103,7 @@ function MapContactSection() {
                 className="absolute inset-0 h-full w-full"
                 style={{ border: 0 }}
                 loading="lazy"
+                allow="fullscreen"
                 referrerPolicy="no-referrer-when-downgrade"
               />
               {/* Botón "Abrir en Maps" — el iframe absorbe los clicks en móvil */}

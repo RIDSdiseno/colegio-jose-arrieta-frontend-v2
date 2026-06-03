@@ -25,6 +25,9 @@ function PageHero({ imgs, img, eyebrow, title, highlight, subtitle, badge, inter
     return () => clearInterval(timer);
   }, [images.length, interval]);
 
+  // Guard DESPUÉS de los hooks — evita <img src={undefined}> sin violar Rules of Hooks
+  if (images.length === 0) return null;
+
   return (
     <section className="relative overflow-hidden" style={{ minHeight: "52vh" }}>
 
@@ -38,6 +41,7 @@ function PageHero({ imgs, img, eyebrow, title, highlight, subtitle, badge, inter
           loading="eager"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
+          onError={(e) => { e.currentTarget.style.display = "none"; }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1.2 }}
           className="absolute inset-0 h-full w-full object-cover"

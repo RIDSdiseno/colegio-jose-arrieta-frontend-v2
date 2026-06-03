@@ -21,23 +21,29 @@ function AdminVideoForm() {
   const isEditing = Boolean(id) && id !== "nuevo";
   const navigate = useNavigate();
 
-  const [form, setForm] = useState(EMPTY);
+  // Inicializar con función para obtener el año en el momento del render, no al importar el módulo
+  const [form, setForm] = useState(() => ({ ...EMPTY, anio: new Date().getFullYear() }));
   const [loading, setLoading] = useState(isEditing);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
     if (!isEditing) return;
+    let cancelled = false;
     getVideoById(id)
-      .then((data) => setForm({
-        titulo: data.titulo || "",
-        url: data.url || "",
-        anio: data.anio ?? new Date().getFullYear(),
-        orden: data.orden ?? 0,
-        activo: data.activo ?? true,
-      }))
-      .catch(() => setError("No se encontró el video."))
-      .finally(() => setLoading(false));
+      .then((data) => {
+        if (cancelled) return;
+        setForm({
+          titulo: data.titulo || "",
+          url: data.url || "",
+          anio: data.anio ?? new Date().getFullYear(),
+          orden: data.orden ?? 0,
+          activo: data.activo ?? true,
+        });
+      })
+      .catch(() => { if (!cancelled) setError("No se encontró el video."); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
   }, [id, isEditing]);
 
   const handleChange = (e) => {

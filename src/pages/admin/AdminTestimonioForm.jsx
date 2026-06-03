@@ -33,8 +33,10 @@ function AdminTestimonioForm() {
 
   useEffect(() => {
     if (!isEditing) return;
+    let cancelled = false;
     getTestimonioById(id)
       .then((t) => {
+        if (cancelled) return;
         setForm({
           nombre: t.nombre || "",
           cargo: t.cargo || "",
@@ -44,8 +46,9 @@ function AdminTestimonioForm() {
           activo: t.activo ?? true,
         });
       })
-      .catch(() => setError("No se encontró el testimonio."))
-      .finally(() => setLoading(false));
+      .catch(() => { if (!cancelled) setError("No se encontró el testimonio."); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
   }, [id, isEditing]);
 
   const handleChange = (e) => {

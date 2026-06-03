@@ -1,8 +1,11 @@
 const FORMSPREE_ENDPOINT = import.meta.env.VITE_FORMSPREE_ENDPOINT;
 
+// Sentinel exportado para que el consumidor detecte el error sin acoplamiento de strings
+export const CONFIG_ERROR_MSG = "FORMSPREE_NOT_CONFIGURED";
+
 export async function postFormularioContacto(payload) {
   if (!FORMSPREE_ENDPOINT || FORMSPREE_ENDPOINT.includes("REEMPLAZAR")) {
-    throw new Error("El formulario no está configurado aún. Contacta al administrador.");
+    throw new Error(CONFIG_ERROR_MSG);
   }
 
   const response = await fetch(FORMSPREE_ENDPOINT, {

@@ -42,7 +42,7 @@ function AdminLogin() {
         setCooldown(COOLDOWN_SECONDS);
         setError(`Demasiados intentos fallidos. Espera ${COOLDOWN_SECONDS} segundos.`);
       } else {
-        setError(`Credenciales incorrectas. Intento ${newAttempts} de ${MAX_ATTEMPTS}.`);
+        setError(`Credenciales incorrectas. Intento ${Math.min(newAttempts, MAX_ATTEMPTS)} de ${MAX_ATTEMPTS}.`);
       }
     } else {
       sessionStorage.removeItem("loginAttempts");

@@ -8,11 +8,13 @@ import { Link } from "react-router-dom";
  *   title     : primera línea del heading
  *   highlight : palabra/frase en color secondary (segunda línea)
  *   subtitle  : párrafo descriptivo
+ *   badge     : texto del badge superior (default: "Admisión 2026 abierta")
  */
 function CTASection({
   title = "¿Listo para ser parte",
   highlight = "de nuestra comunidad?",
   subtitle = "Agenda una visita al colegio, conoce nuestros espacios y resuelve todas tus dudas sin compromiso.",
+  badge = "Admisión 2026 abierta",
 }) {
   return (
     <section className="relative overflow-hidden bg-primary py-24">
@@ -29,7 +31,7 @@ function CTASection({
         >
           <span className="inline-flex items-center gap-2 rounded-full bg-secondary/20 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-secondary">
             <span className="h-2 w-2 animate-ping rounded-full bg-secondary" />
-            Admisión 2026 abierta
+            {badge}
           </span>
 
           <h2 className="mt-4 font-heading text-4xl font-black text-white sm:text-5xl">
