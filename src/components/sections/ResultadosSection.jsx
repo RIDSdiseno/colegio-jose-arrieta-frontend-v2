@@ -18,7 +18,7 @@ function ResultadosSection() {
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {logros.map((logro, i) => {
-            const Icon = logro.icon;
+            const Icon = logro.icon ?? null;
             return (
               <motion.div
                 key={logro.label}

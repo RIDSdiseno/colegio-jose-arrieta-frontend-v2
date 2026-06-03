@@ -21,8 +21,8 @@ const SIDEBAR_LINKS = [
     internal: true,
   },
   {
-    label: "Reglamentos",
-    href: "/proyecto-educativo",
+    label: "Documentos",
+    href: "/documentos",
     bg: null,
     bgClass: "bg-gradient-to-br from-emerald-600 to-teal-800",
     icon: BookOpen,
@@ -85,14 +85,19 @@ function NewsSection() {
 
     // Cargar el primer video activo desde la API (orden 1)
     getVideos({ limit: 1 })
-      .then((videos) => {
-        const primero = videos?.[0];
+      .then((res) => {
+        // Tolera respuesta como array directo o como { data: [] }
+        const list = Array.isArray(res) ? res : res?.data ?? [];
+        const primero = list[0];
         if (primero?.url) {
           const id = getYoutubeId(primero.url);
           if (id) setYtEmbed(`https://www.youtube.com/embed/${id}?rel=0&modestbranding=1`);
         }
       })
-      .catch(() => {}); // Si falla, usa el fallback hardcodeado
+      .catch((err) => {
+        if (import.meta.env.DEV) console.warn("[NewsSection] videos fetch failed:", err);
+        // Si falla, usa el fallback hardcodeado
+      });
   }, []);
 
   return (

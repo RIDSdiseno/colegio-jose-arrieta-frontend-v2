@@ -23,7 +23,7 @@ function TestimonialsSection() {
         if (data && data.length > 0) {
           setTestimonials(
             data.map((r) => ({
-              initials: r.nombre.split(" ").slice(0, 2).map((w) => w[0]?.toUpperCase() || "").join(""),
+              initials: (r.nombre || "").split(" ").slice(0, 2).map((w) => w[0]?.toUpperCase() || "").join("") || "?",
               color: r.color || "#1e3a5f",
               nombre: r.nombre,
               cargo: r.cargo || "",

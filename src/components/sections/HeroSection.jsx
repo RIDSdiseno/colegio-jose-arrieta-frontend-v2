@@ -95,7 +95,7 @@ function HeroSection() {
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
           <Link
-            to="/admision"
+            to="/contacto"
             className="inline-flex items-center gap-2 rounded-full border-2 border-white/25 bg-white/10 px-8 py-4 text-sm font-bold text-white backdrop-blur-sm transition hover:border-white/50 hover:bg-white/20"
           >
             Agenda una visita

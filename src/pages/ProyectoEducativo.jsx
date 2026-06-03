@@ -227,6 +227,7 @@ function ProyectoEducativo() {
                     alt={taller.nombre}
                     loading="lazy"
                     className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                    onError={(e) => { e.currentTarget.style.display = "none"; }}
                   />
                   {/* Overlay degradado */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" />

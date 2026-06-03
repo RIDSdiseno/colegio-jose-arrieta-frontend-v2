@@ -21,6 +21,7 @@ function BeneficioCard({ item, index }) {
           alt={item.titulo}
           loading="lazy"
           className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+          onError={(e) => { e.currentTarget.style.display = "none"; }}
         />
 
         {/* Degradado base */}

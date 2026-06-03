@@ -81,7 +81,7 @@ function ValoresSection() {
                   <Icon className="h-6 w-6 text-secondary" />
                 </div>
                 <span className="mb-2 text-[10px] font-bold uppercase tracking-widest text-white/25">
-                  0{pilar.id}
+                  {String(pilar.id).padStart(2, "0")}
                 </span>
                 <h3 className="font-heading text-base font-bold text-white">
                   {pilar.titulo}
