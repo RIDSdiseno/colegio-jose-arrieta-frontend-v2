@@ -9,11 +9,17 @@ export function formatDate(isoDate, options = { year: "numeric", month: "long", 
   // Fechas "YYYY-MM-DD" sin hora se parsean como UTC medianoche, mostrando
   // el día anterior en Chile (UTC-3/UTC-4). Añadir mediodía local evita el desfase.
   const s = String(isoDate);
-  // Normaliza tanto "YYYY-MM-DD" como "YYYY-MM-DDT00:00:00.000Z" (UTC medianoche)
-  // para evitar que en Chile (UTC-3/UTC-4) se muestre el día anterior
-  const normalized = /^\d{4}-\d{2}-\d{2}$/.test(s) || s.includes("T00:00:00")
-    ? `${s.slice(0, 10)}T12:00:00`
-    : s;
+  // Normaliza:
+  // "YYYY-MM-DD"              → fecha sin hora
+  // "YYYY-MM-DDT00:00:00..."  → ISO UTC medianoche (Prisma ORM)
+  // "YYYY-MM-DD 00:00:00"     → PostgreSQL text cast (raw SQL)
+  // En los tres casos añade mediodía UTC para evitar desfase en Chile (UTC-3/UTC-4)
+  const normalized =
+    /^\d{4}-\d{2}-\d{2}$/.test(s) ||
+    s.includes("T00:00:00") ||
+    /^\d{4}-\d{2}-\d{2} /.test(s)
+      ? `${s.slice(0, 10)}T12:00:00`
+      : s;
   return new Date(normalized).toLocaleDateString("es-CL", options);
 }
 

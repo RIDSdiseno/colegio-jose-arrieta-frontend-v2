@@ -28,9 +28,11 @@ function ResultadosSection() {
                 transition={{ delay: i * 0.1 }}
                 className="group rounded-2xl border border-slate-100 bg-bgsoft p-6 transition hover:border-primary/20 hover:shadow-soft"
               >
-                <div className="mb-4 inline-flex rounded-xl bg-primary/10 p-2.5">
-                  <Icon className="h-5 w-5 text-primary" />
-                </div>
+                {Icon && (
+                  <div className="mb-4 inline-flex rounded-xl bg-primary/10 p-2.5">
+                    <Icon className="h-5 w-5 text-primary" />
+                  </div>
+                )}
                 <p className="font-heading text-4xl font-black text-secondary">{logro.valor}</p>
                 <p className="mt-1 font-heading text-sm font-bold text-slate-800">{logro.label}</p>
                 <p className="mt-2 text-xs leading-relaxed text-slate-500">{logro.desc}</p>
