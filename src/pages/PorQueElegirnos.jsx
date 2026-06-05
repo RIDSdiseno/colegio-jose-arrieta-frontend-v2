@@ -25,7 +25,7 @@ const pilares = [
     icon: Heart,
     titulo: "Vida Saludable",
     texto: "Fomentamos la actividad física, la alimentación sana y los buenos hábitos en nuestra comunidad.",
-    img: "/images/vida-escolar.jpg",
+    img: "/images/Habitos-de-alimentacion-saludable-Mejora-tu-salud-en-2026.jpeg",
   },
 ];
 

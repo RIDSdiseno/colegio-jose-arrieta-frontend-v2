@@ -128,14 +128,8 @@ function AdminNoticiaForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // Limpiar portada de Storage solo cuando el campo queda vacío (admin borra el contenido completo)
-    // No borrar en cada tecla — podría destruir un upload reciente mientras el admin escribe una URL
-    if (name === "imagen" && value === "") {
-      const prev = form.imagen;
-      if (prev && prev !== savedImagenRef.current) {
-        eliminarArchivoStorage(prev, "noticias").catch(() => {});
-      }
-    }
+    // Nota: NO se borra Storage aquí — el admin puede estar reescribiendo la URL.
+    // La limpieza ocurre en: handleImageUpload (reemplazo), botón "Quitar" y handleCancel.
     setForm((prev) => {
       const next = { ...prev, [name]: value };
       if (name === "slug") slugEditedRef.current = true;

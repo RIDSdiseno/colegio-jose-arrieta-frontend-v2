@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X, MapPin, Search, Youtube, Instagram, Facebook, ExternalLink } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import useScrollNavbar from "../../hooks/useScrollNavbar";
 import Button from "../ui/Button";
+import { PAGINAS } from "../../data/paginas";
+import { normalizeSearch } from "../../lib/utils";
 
 const navItems = [
   { label: "Inicio", to: "/" },
@@ -19,14 +21,47 @@ const logo = "https://colegiojosearrieta.cl/wp-content/uploads/2018/03/logo-web0
 
 function Topbar() {
   const [query, setQuery] = useState("");
+  const [sugerencias, setSugerencias] = useState([]);
+  const [showSug, setShowSug] = useState(false);
   const navigate = useNavigate();
+  const wrapperRef = useRef(null);
+
+  // Calcular sugerencias al escribir
+  useEffect(() => {
+    const q = query.trim();
+    if (q.length < 2) { setSugerencias([]); return; }
+    const norm = normalizeSearch(q);
+    const matches = PAGINAS.filter((p) =>
+      normalizeSearch(`${p.titulo} ${p.keywords}`).includes(norm)
+    ).slice(0, 5);
+    setSugerencias(matches);
+    setShowSug(true);
+  }, [query]);
+
+  // Cerrar al hacer clic fuera
+  useEffect(() => {
+    function handleClick(e) {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
+        setShowSug(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
 
   function handleSearch(e) {
     e.preventDefault();
     if (query.trim()) {
       navigate(`/buscar?q=${encodeURIComponent(query.trim())}`);
       setQuery("");
+      setShowSug(false);
     }
+  }
+
+  function selectSugerencia(to) {
+    navigate(to);
+    setQuery("");
+    setShowSug(false);
   }
 
   return (
@@ -41,25 +76,61 @@ function Topbar() {
 
         {/* Derecha — buscador + redes + portal */}
         <div className="flex items-center gap-3 shrink-0">
-          {/* Buscador */}
-          <form onSubmit={handleSearch} className="flex items-center">
-            <div className="flex items-center rounded-full border border-white/25 bg-white/15 px-3 py-1 gap-2 w-44">
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Buscar en el sitio..."
-                className="bg-transparent text-xs text-white placeholder-white/60 outline-none w-full"
-              />
-              <button
-                type="submit"
-                className="shrink-0 text-white/70 hover:text-white transition"
-                aria-label="Buscar"
-              >
-                <Search className="h-3.5 w-3.5" />
-              </button>
-            </div>
-          </form>
+          {/* Buscador con autocomplete */}
+          <div ref={wrapperRef} className="relative">
+            <form onSubmit={handleSearch} className="flex items-center">
+              <div className="flex items-center rounded-full border border-white/25 bg-white/15 px-3 py-1 gap-2 w-44">
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onFocus={() => sugerencias.length > 0 && setShowSug(true)}
+                  placeholder="Buscar en el sitio..."
+                  className="bg-transparent text-xs text-white placeholder-white/60 outline-none w-full"
+                />
+                <button
+                  type="submit"
+                  className="shrink-0 text-white/70 hover:text-white transition"
+                  aria-label="Buscar"
+                >
+                  <Search className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            </form>
+
+            {/* Dropdown de sugerencias */}
+            <AnimatePresence>
+              {showSug && sugerencias.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-0 top-full z-50 mt-1.5 w-64 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl"
+                >
+                  {sugerencias.map((s) => (
+                    <button
+                      key={s.to}
+                      type="button"
+                      onMouseDown={() => selectSugerencia(s.to)}
+                      className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm text-slate-700 transition hover:bg-slate-50"
+                    >
+                      <Search className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+                      <span className="line-clamp-1">{s.titulo}</span>
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    onMouseDown={handleSearch}
+                    className="flex w-full items-center gap-2.5 border-t border-slate-100 px-4 py-2.5 text-left text-xs font-medium text-primary transition hover:bg-primary/5"
+                  >
+                    <Search className="h-3.5 w-3.5 shrink-0" />
+                    Buscar "{query}" en el sitio
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
           <div className="h-3.5 w-px bg-white/20" />
 

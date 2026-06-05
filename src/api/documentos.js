@@ -15,9 +15,10 @@ export async function getAnos() {
   return apiFetch("/api/documentos/anos");
 }
 
-export async function getDocumentos({ anio } = {}) {
+export async function getDocumentos({ anio, search } = {}) {
   const params = new URLSearchParams();
   if (anio) params.set("anio", anio);
+  if (search?.trim()) params.set("search", search.trim());
   return apiFetch(`/api/documentos?${params}`);
 }
 

@@ -29,7 +29,7 @@ export default function ColegioEducacionIntegral() {
         <div className="container-main">
           <p className="text-sm uppercase tracking-wide text-secondary">Educación Integral · La Reina</p>
           <h1 className="mt-2 max-w-3xl text-4xl font-bold sm:text-5xl">
-            Formación Integral en La Reina desde 1973
+            Formación Integral en La Reina — Más de 50 Años
           </h1>
           <p className="mt-4 max-w-2xl text-slate-100">
             En el Colegio José Arrieta creemos que educar es mucho más que transmitir conocimientos. Formamos personas íntegras, con valores, habilidades y preparación para el mundo.
@@ -60,10 +60,10 @@ export default function ColegioEducacionIntegral() {
           </div>
           <div className="mt-10 flex justify-center gap-4">
             <Link
-              to="/proyecto-educativo"
+              to="/contacto"
               className="inline-flex items-center gap-2 rounded-full border border-primary px-6 py-3 text-sm font-bold text-primary transition hover:bg-primary hover:text-white"
             >
-              Ver Proyecto Educativo
+              Contáctanos
             </Link>
             <Link
               to="/admision"

@@ -1,49 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { Search, FileText, Newspaper } from "lucide-react";
+import { Search, FileText, Newspaper, FolderOpen } from "lucide-react";
 import { getNoticias } from "../api/noticias";
+import { getDocumentos } from "../api/documentos";
 import { formatDate, normalizeSearch } from "../lib/utils";
+import { PAGINAS } from "../data/paginas";
 
-// Índice estático de páginas del sitio
-const PAGINAS = [
-  {
-    titulo: "Inicio",
-    to: "/",
-    descripcion: "Página principal del Colegio José Arrieta. Educación integral en La Reina desde 1973.",
-    keywords: "inicio home colegio jose arrieta la reina educación integral comunidad",
-  },
-  {
-    titulo: "¿Por qué elegirnos?",
-    to: "/por-que-elegirnos",
-    descripcion: "Descubre nuestros pilares institucionales, infraestructura, trayectoria y resultados académicos.",
-    keywords: "por que elegirnos pilares convivencia vanguardia vida saludable infraestructura simce resultados trayectoria historia",
-  },
-  {
-    titulo: "Proyecto Educativo",
-    to: "/proyecto-educativo",
-    descripcion: "Conoce nuestros ejes pedagógicos, talleres, reglamentos y protocolos del colegio.",
-    keywords: "proyecto educativo ejes talleres reglamentos protocolos pedagogico programa inglés arte deporte",
-  },
-  {
-    titulo: "Admisión 2026",
-    to: "/admision",
-    descripcion: "Postula al Colegio José Arrieta. Proceso paso a paso, mensualidad, uniforme y formulario de contacto.",
-    keywords: "admision postula 2026 matricula mensualidad proceso vacantes uniforme formulario inscripcion",
-  },
-  {
-    titulo: "Vida Escolar",
-    to: "/vida-escolar",
-    descripcion: "Actividades, deportes, cultura, eventos y la vida cotidiana de nuestra comunidad escolar.",
-    keywords: "vida escolar actividades deportes cultura eventos comunidad galeria fotos videos",
-  },
-  {
-    titulo: "Contacto",
-    to: "/contacto",
-    descripcion: "Escríbenos, llámanos o visítanos. Av. José Arrieta 6870, La Reina, Santiago.",
-    keywords: "contacto telefono email direccion horario whatsapp visita arrieta la reina santiago",
-  },
-];
 
 function searchPaginas(q) {
   const query = normalizeSearch(q);
@@ -58,6 +21,8 @@ function Buscar() {
   const [inputValue, setInputValue] = useState(queryParam);
   const [noticias, setNoticias] = useState([]);
   const [loadingNoticias, setLoadingNoticias] = useState(false);
+  const [documentos, setDocumentos] = useState([]);
+  const [loadingDocs, setLoadingDocs] = useState(false);
 
   // Resultados de páginas — instantáneo
   const paginasEncontradas = useMemo(
@@ -65,14 +30,23 @@ function Buscar() {
     [queryParam]
   );
 
-  // Resultados de noticias — desde Supabase
+  // Resultados de noticias y documentos — desde el backend
   useEffect(() => {
-    if (queryParam.trim().length < 2) { setNoticias([]); return; }
+    if (queryParam.trim().length < 2) {
+      setNoticias([]);
+      setDocumentos([]);
+      return;
+    }
     setLoadingNoticias(true);
+    setLoadingDocs(true);
     getNoticias({ search: queryParam, limit: 5 })
       .then((res) => setNoticias(res.data))
       .catch(() => setNoticias([]))
       .finally(() => setLoadingNoticias(false));
+    getDocumentos({ search: queryParam })
+      .then(setDocumentos)
+      .catch(() => setDocumentos([]))
+      .finally(() => setLoadingDocs(false));
   }, [queryParam]);
 
   function handleSearch(e) {
@@ -81,7 +55,7 @@ function Buscar() {
     if (q) setSearchParams({ q });
   }
 
-  const totalResultados = paginasEncontradas.length + noticias.length;
+  const totalResultados = paginasEncontradas.length + noticias.length + documentos.length;
 
   return (
     <>
@@ -126,7 +100,7 @@ function Buscar() {
           )}
 
           {/* Sin resultados */}
-          {queryParam.trim().length >= 2 && !loadingNoticias && totalResultados === 0 && (
+          {queryParam.trim().length >= 2 && !loadingNoticias && !loadingDocs && totalResultados === 0 && (
             <div className="flex flex-col items-center gap-3 py-16 text-center">
               <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100">
                 <Search className="h-7 w-7 text-slate-400" />
@@ -201,6 +175,41 @@ function Buscar() {
                         <p className="mt-1 text-xs text-slate-300">{formatDate(n.fecha)}</p>
                       </div>
                     </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Documentos */}
+          {(loadingDocs || documentos.length > 0) && (
+            <div className="mt-8">
+              <h2 className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-400">
+                <FolderOpen className="h-3.5 w-3.5" />
+                Documentos
+              </h2>
+              {loadingDocs ? (
+                <div className="space-y-2">
+                  {[1, 2].map((i) => (
+                    <div key={i} className="h-14 animate-pulse rounded-xl bg-slate-100" />
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {documentos.map((doc) => (
+                    <a
+                      key={doc.id}
+                      href={doc.link}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center gap-3 rounded-xl border border-slate-100 bg-white p-4 shadow-sm transition hover:border-primary/30 hover:shadow-soft"
+                    >
+                      <FileText className="h-5 w-5 shrink-0 text-primary/60" />
+                      <div className="min-w-0">
+                        <p className="font-heading text-sm font-bold text-primary line-clamp-1">{doc.titulo}</p>
+                        <p className="mt-0.5 text-xs text-slate-400">{doc.categoria} · {doc.anio}</p>
+                      </div>
+                    </a>
                   ))}
                 </div>
               )}

@@ -87,7 +87,7 @@ function ProyectoEducativo() {
 
       <PageHero
         imgs={[
-          "/images/cs4f_3i8b_151014.jpg",
+          "/images/istockphoto-2224235754-612x612.jpg",
           "/images/ninos-estudiando-scaled.webp",
         ]}
         badge="Formación Integral"

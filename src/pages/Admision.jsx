@@ -110,6 +110,7 @@ const razones = [
 function FormVisita() {
   const [form, setForm] = useState({ nombre: "", email: "", telefono: "", asunto: "Agenda una visita" });
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
 
@@ -124,8 +125,12 @@ function FormVisita() {
     const wa = `https://wa.me/56988936631?text=${encodeURIComponent(
       `Hola, me llamo ${nombre}. ${form.asunto}. Email: ${email}. Teléfono: ${telefono}`
     )}`;
-    window.open(wa, "_blank");
-    setSent(true);
+    const popup = window.open(wa, "_blank");
+    if (popup) {
+      setSent(true);
+    } else {
+      setError("Tu navegador bloqueó la ventana de WhatsApp. Activa los popups o escríbenos directamente al +56 9 8893 6631.");
+    }
   };
 
   if (sent) {
@@ -192,6 +197,9 @@ function FormVisita() {
         Enviar por WhatsApp
       </button>
       <p className="text-center text-xs text-slate-400">Te responderemos a la brevedad por WhatsApp</p>
+      {error && (
+        <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-center text-sm text-red-700">{error}</p>
+      )}
     </form>
   );
 }

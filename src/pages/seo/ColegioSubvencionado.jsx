@@ -89,7 +89,7 @@ export default function ColegioSubvencionado() {
               ))}
             </ol>
             <a
-              href="https://registropublicodigital.mineduc.gob.cl/rpd-app-registro-apoderado/login"
+              href="https://www.mineduc.cl/admision-escolar/"
               target="_blank"
               rel="noreferrer"
               className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-secondary py-3 text-sm font-bold text-primary transition hover:bg-secondaryHover"

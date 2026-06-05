@@ -18,7 +18,11 @@ function AdminLogin() {
   const [loading, setLoading] = useState(false);
   // Persistir intentos en sessionStorage para que un refresh no los resetee
   const [attempts, setAttempts] = useState(() => parseInt(sessionStorage.getItem("loginAttempts") || "0"));
-  const [cooldown, setCooldown] = useState(0);
+  const [cooldown, setCooldown] = useState(() => {
+    const expiry = parseInt(sessionStorage.getItem("cooldownExpiry") || "0");
+    const remaining = Math.ceil((expiry - Date.now()) / 1000);
+    return remaining > 0 ? remaining : 0;
+  });
 
   // Cuenta regresiva del cooldown
   useEffect(() => {
@@ -40,12 +44,14 @@ function AdminLogin() {
       sessionStorage.setItem("loginAttempts", String(newAttempts));
       if (newAttempts >= MAX_ATTEMPTS) {
         setCooldown(COOLDOWN_SECONDS);
+        sessionStorage.setItem("cooldownExpiry", String(Date.now() + COOLDOWN_SECONDS * 1000));
         setError(`Demasiados intentos fallidos. Espera ${COOLDOWN_SECONDS} segundos.`);
       } else {
         setError(`Credenciales incorrectas. Intento ${Math.min(newAttempts, MAX_ATTEMPTS)} de ${MAX_ATTEMPTS}.`);
       }
     } else {
       sessionStorage.removeItem("loginAttempts");
+      sessionStorage.removeItem("cooldownExpiry");
       navigate(from, { replace: true });
     }
   };
