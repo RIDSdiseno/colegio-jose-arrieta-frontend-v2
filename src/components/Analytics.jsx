@@ -43,7 +43,7 @@ function injectMetaPixel(id) {
   window.fbq.version = "2.0";
   window.fbq.queue = [];
   window.fbq("init", id);
-  window.fbq("track", "PageView");
+  // No llamar fbq("track", "PageView") aquí — el efecto de ruta lo dispara una sola vez
 
   // Cargar SDK externo con src en lugar de innerHTML
   const script = document.createElement("script");

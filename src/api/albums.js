@@ -13,8 +13,8 @@ export async function getAlbumById(id) {
   return apiFetch(`/api/albums/id/${id}`, { admin: true });
 }
 
-export async function getAlbumFotos(id) {
-  return apiFetch(`/api/albums/${id}/fotos`);
+export async function getAlbumFotos(id, { page = 1, limit = 100 } = {}) {
+  return apiFetch(`/api/albums/${id}/fotos?page=${page}&limit=${limit}`);
 }
 
 export async function crearAlbum(payload) {

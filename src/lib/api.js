@@ -19,7 +19,12 @@ async function apiFetch(path, options = {}) {
   const res = await fetch(`${BASE_URL}${path}`, { ...options, headers });
 
   let data;
-  try { data = await res.json(); } catch { data = {}; }
+  try {
+    data = await res.json();
+  } catch {
+    if (import.meta.env.DEV) console.warn("[apiFetch] Respuesta no es JSON:", res.status, res.url);
+    data = {};
+  }
 
   if (!res.ok) throw new Error(data.error || `Error ${res.status}`);
   return data;

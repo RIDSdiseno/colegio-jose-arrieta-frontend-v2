@@ -38,6 +38,7 @@ import ColegioInglesPreKinder from "./pages/seo/ColegioInglesPreKinder";
 function App() {
   return (
     <AuthProvider>
+      {/* Analytics debe estar dentro del árbol del Router (via main.jsx) para usar useLocation */}
       <Analytics />
       <Routes>
         {/* Sitio público */}
