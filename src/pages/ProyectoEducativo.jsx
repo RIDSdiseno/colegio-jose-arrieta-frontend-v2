@@ -191,7 +191,7 @@ function ProyectoEducativo() {
           <div className="mb-10 overflow-hidden rounded-3xl">
             <div className="relative h-52 sm:h-64 bg-primary">
               <img
-                src="https://colegiojosearrieta.cl/wp-content/uploads/2025/09/DSC_0369-Grande.jpg"
+                src="/images/DSC_0369-Grande.jpg"
                 alt="Talleres extraprogramáticos Colegio José Arrieta"
                 className="h-full w-full object-cover"
                 onError={(e) => { e.currentTarget.style.display = "none"; }}

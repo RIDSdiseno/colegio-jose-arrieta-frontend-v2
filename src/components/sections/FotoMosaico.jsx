@@ -3,32 +3,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { getAlbums } from "../../api/albums";
 
-const fotosEstaticas = [
-  {
-    url: "https://colegiojosearrieta.cl/wp-content/uploads/2025/09/nota23_int25b-768x431.jpg",
-    caption: "Fiestas Patrias 2025",
-  },
-  {
-    url: "https://colegiojosearrieta.cl/wp-content/uploads/2026/02/vuelta_clases26_home.jpg",
-    caption: "Inicio de clases 2026",
-  },
-  {
-    url: "https://colegiojosearrieta.cl/wp-content/uploads/2024/12/20241218_101500-768x510.jpg",
-    caption: "Graduaciones 2024",
-  },
-  {
-    url: "https://colegiojosearrieta.cl/wp-content/uploads/2025/09/DSC_0031-Grande-768x510.jpg",
-    caption: "Vida escolar",
-  },
-  {
-    url: "https://colegiojosearrieta.cl/wp-content/uploads/2026/02/17-feb-blog26home.jpg",
-    caption: "Comunidad 2026",
-  },
-  {
-    url: "https://colegiojosearrieta.cl/wp-content/uploads/2024/12/20241218_100939-768x510.jpg",
-    caption: "Graduación Kínder",
-  },
-];
+const fotosEstaticas = [];
 
 export default function FotoMosaico() {
   const [fotos, setFotos] = useState(fotosEstaticas);

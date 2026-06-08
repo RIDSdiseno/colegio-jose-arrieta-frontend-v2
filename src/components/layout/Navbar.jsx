@@ -17,7 +17,7 @@ const navItems = [
   { label: "Contacto", to: "/contacto" },
 ];
 
-const logo = "https://colegiojosearrieta.cl/wp-content/uploads/2018/03/logo-web03.png";
+const logo = "/images/favicon-colegiojosearrieta.png";
 
 function Topbar() {
   const [query, setQuery] = useState("");

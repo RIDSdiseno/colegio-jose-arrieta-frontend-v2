@@ -11,7 +11,7 @@ const pilares = [
     icon: Users,
     titulo: "Convivencia",
     texto: "Promovemos el respeto y el compañerismo entre todos los miembros de nuestra comunidad educativa.",
-    img: "https://colegiojosearrieta.cl/wp-content/uploads/2025/09/DSC_0308-Grande.jpg",
+    img: "/images/DSC_0308-Grande.jpg",
   },
   {
     id: 2,
@@ -160,10 +160,9 @@ function PorQueElegirnos() {
               className="overflow-hidden rounded-2xl shadow-soft"
             >
               <img
-                src="https://img.youtube.com/vi/zXujbnT4RvU/hqdefault.jpg"
-                alt="Infraestructura Colegio José Arrieta"
+                src="/images/valores-colegio.png"
+                alt="Perseverancia Respeto Colaboración — Colegio José Arrieta"
                 className="h-72 w-full object-cover lg:h-96"
-                onError={(e) => { e.currentTarget.style.display = "none"; }}
               />
             </motion.div>
 
@@ -287,10 +286,9 @@ function PorQueElegirnos() {
                 className="overflow-hidden rounded-2xl shadow-soft"
               >
                 <img
-                  src="https://colegiojosearrieta.cl/wp-content/uploads/2025/09/DSC_0325-Grande.jpg"
+                  src="/images/DSC_0325-Grande.jpg"
                   alt="Ceremonia Colegio José Arrieta"
                   className="h-64 w-full object-cover sm:h-80 lg:h-[400px]"
-                  onError={(e) => { e.currentTarget.style.display = "none"; }}
                 />
               </motion.div>
               <div className="mt-4 grid grid-cols-2 gap-3">
@@ -299,20 +297,18 @@ function PorQueElegirnos() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.1 }}
-                  src="https://colegiojosearrieta.cl/wp-content/uploads/2025/09/DSC_1388-Grande.jpg"
+                  src="/images/DSC_1388-Grande.jpg"
                   alt="Actividad escolar"
                   className="h-32 w-full rounded-2xl object-cover shadow-soft"
-                  onError={(e) => { e.currentTarget.style.display = "none"; }}
                 />
                 <motion.img
                   initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.2 }}
-                  src="https://colegiojosearrieta.cl/wp-content/uploads/2025/09/DSC_1386-Grande.jpg"
+                  src="/images/DSC_1386-Grande.jpg"
                   alt="Comunidad escolar"
                   className="h-32 w-full rounded-2xl object-cover shadow-soft"
-                  onError={(e) => { e.currentTarget.style.display = "none"; }}
                 />
               </div>
             </div>

@@ -16,9 +16,9 @@ import {
 
 // ── Imágenes del uniforme (coloca los archivos en /public/) ───────────────────
 const uniformeImages = [
-  { src: "https://colegiojosearrieta.cl/wp-content/uploads/2019/09/Diapositiva1-1.png", label: "Uniforme de diario" },
-  { src: "https://colegiojosearrieta.cl/wp-content/uploads/2019/08/Diapositiva3.png",   label: "Uniforme deportivo" },
-  { src: "https://colegiojosearrieta.cl/wp-content/uploads/2019/08/Diapositiva2.png",   label: "Uniforme deportivo (buzo)" },
+  { src: "/images/Diapositiva1-1.png", label: "Uniforme de diario" },
+  { src: "/images/Diapositiva3.png",   label: "Uniforme deportivo" },
+  { src: "/images/Diapositiva2.png",   label: "Uniforme deportivo (buzo)" },
 ];
 
 // ── Lightbox ──────────────────────────────────────────────────────────────────
