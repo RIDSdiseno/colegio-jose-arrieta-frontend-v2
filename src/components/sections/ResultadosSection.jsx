@@ -2,9 +2,9 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import logros from "../../data/logros";
 
-function ResultadosSection() {
+function ResultadosSection({ showLink = true }) {
   return (
-    <section className="bg-white py-20">
+    <section className="bg-bgsoft py-20">
       <div className="container-main">
         <div className="mb-12">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-secondary">Resultados académicos</span>
@@ -45,14 +45,16 @@ function ResultadosSection() {
           * Datos basados en evaluaciones SIMCE y registros internos. Se actualizan anualmente.
         </p>
 
-        <div className="mt-8 flex justify-center">
-          <Link
-            to="/por-que-elegirnos"
-            className="inline-flex items-center gap-2 rounded-xl border border-primary/20 px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white"
-          >
-            Ver más sobre nuestros resultados →
-          </Link>
-        </div>
+        {showLink && (
+          <div className="mt-8 flex justify-center">
+            <Link
+              to="/por-que-elegirnos"
+              className="inline-flex items-center gap-2 rounded-xl border border-primary/20 px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white"
+            >
+              Ver más sobre nuestros resultados →
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );

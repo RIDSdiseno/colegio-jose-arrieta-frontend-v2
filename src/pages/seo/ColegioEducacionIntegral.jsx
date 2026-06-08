@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet-async";
 import { BookOpen, Users, Heart, Monitor, Award } from "lucide-react";
 import { Link } from "react-router-dom";
-import CTABanner from "../../components/sections/CTABanner";
+import CTASection from "../../components/sections/CTASection";
 import SectionTitle from "../../components/ui/SectionTitle";
 
 const pilares = [
@@ -75,7 +75,7 @@ export default function ColegioEducacionIntegral() {
         </div>
       </section>
 
-      <CTABanner />
+      <CTASection />
     </>
   );
 }

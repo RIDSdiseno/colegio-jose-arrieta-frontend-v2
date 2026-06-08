@@ -1,5 +1,5 @@
 import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "./AuthContext";
 
 // La verificación de rol se realiza en el backend (requireAdmin middleware).
 // Aquí solo comprobamos que exista sesión activa — nunca confiar en app_metadata

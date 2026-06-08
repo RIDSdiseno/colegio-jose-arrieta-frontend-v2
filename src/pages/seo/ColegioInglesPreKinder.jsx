@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet-async";
 import { Globe, CheckCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import CTABanner from "../../components/sections/CTABanner";
+import CTASection from "../../components/sections/CTASection";
 import SectionTitle from "../../components/ui/SectionTitle";
 
 const beneficiosIngles = [
@@ -90,7 +90,7 @@ export default function ColegioInglesPreKinder() {
         </div>
       </section>
 
-      <CTABanner />
+      <CTASection />
     </>
   );
 }

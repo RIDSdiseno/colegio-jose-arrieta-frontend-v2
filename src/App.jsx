@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import AdminLayout from "./components/layout/AdminLayout";
-import ProtectedRoute from "./components/admin/ProtectedRoute";
+import ProtectedRoute from "./context/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 import Analytics from "./components/Analytics";
 
