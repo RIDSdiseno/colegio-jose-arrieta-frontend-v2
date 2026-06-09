@@ -3,10 +3,8 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { getAlbums } from "../../api/albums";
 
-const fotosEstaticas = [];
-
 export default function FotoMosaico() {
-  const [fotos, setFotos] = useState(fotosEstaticas);
+  const [fotos, setFotos] = useState([]);
 
   useEffect(() => {
     getAlbums()
@@ -22,7 +20,9 @@ export default function FotoMosaico() {
           if (fotosDeAlbumes.length > 0) setFotos(fotosDeAlbumes);
         }
       })
-      .catch(() => {});
+      .catch((err) => {
+        if (import.meta.env.DEV) console.warn("[FotoMosaico] Error cargando álbumes:", err);
+      });
   }, []);
 
   if (fotos.length === 0) return null;

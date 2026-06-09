@@ -195,6 +195,8 @@ function Navbar() {
               <img
                 src={logo}
                 alt="Colegio José Arrieta"
+                width={48}
+                height={48}
                 className="h-12 w-auto object-contain"
               />
             </Link>

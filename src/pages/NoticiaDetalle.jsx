@@ -125,7 +125,7 @@ function NoticiaDetalle() {
     <>
       <Helmet>
         <title>{noticia.titulo} — Colegio José Arrieta</title>
-        <meta name="description" content={noticia.extracto} />
+        <meta name="description" content={(noticia.extracto || "").replace(/<[^>]+>/g, "").slice(0, 160)} />
       </Helmet>
 
       <section className="py-14">

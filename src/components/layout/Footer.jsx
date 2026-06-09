@@ -47,6 +47,8 @@ function Footer() {
             <img
               src="/images/logo-web04.png"
               alt="Escudo Colegio José Arrieta"
+              width={48}
+              height={48}
               className="h-12 w-12 rounded-full bg-white p-1"
             />
             <h3 className="font-heading text-lg font-bold leading-tight">

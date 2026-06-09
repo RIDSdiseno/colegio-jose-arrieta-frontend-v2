@@ -34,13 +34,9 @@ function TestimonialsSection() {
           setActive(0);
         }
       })
-      .catch(() => {
-        setTestimonials([
-          { initials: "MP", color: "#1e3a5f", nombre: "María Pérez", cargo: "Apoderada 4° básico", texto: "El colegio ha superado todas nuestras expectativas. El nivel académico y la atención personalizada hacen la diferencia.", estrellas: 5 },
-          { initials: "CG", color: "#c8a000", nombre: "Carlos González", cargo: "Apoderado Pre-Kínder", texto: "Desde el primer día sentimos que nuestro hijo estaba en buenas manos. El inglés desde Pre-K es un gran diferenciador.", estrellas: 5 },
-          { initials: "AL", color: "#2e6b3e", nombre: "Andrea López", cargo: "Ex alumna", texto: "Me formé aquí y hoy traigo a mis hijos. Los valores y la excelencia académica son parte del ADN del colegio.", estrellas: 5 },
-        ]);
-        setActive(0);
+      .catch((err) => {
+        if (import.meta.env.DEV) console.warn("[TestimonialsSection] Error cargando testimonios:", err);
+        // En producción se oculta la sección — no mostrar testimonios inventados
       });
   }, []);
 

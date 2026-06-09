@@ -13,7 +13,7 @@ const FALLBACK_IMG = newsPlaceholder;
 
 const SIDEBAR_LINKS = [
   {
-    label: "Noticias Preescolar",
+    label: "Noticias",
     href: "/noticias",
     bg: null,
     bgClass: "bg-gradient-to-br from-sky-600 to-blue-800",

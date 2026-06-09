@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Helmet } from "react-helmet-async";
 import {
   ExternalLink, MessageCircle, Mail as MailIcon,
@@ -14,6 +14,19 @@ import {
   trackPostulacionClick, trackVisitaAdmision,
 } from "../lib/tracking";
 
+// ── Datos financieros — ACTUALIZAR CADA ENERO ────────────────────────────────
+// Fuente: resolución MINEDUC de cobros autorizado. Última actualización: 2026.
+const DATOS_FINANCIEROS = {
+  anio: "2026",
+  mensualidad: "$36.465",
+  centropadresNuevo: "$15.000",
+  centropadresAntiguo: "$10.000",
+  cuentaBanco: "Banco Chile",
+  cuentaNumero: "1510418507",
+  cuentaRut: "65.143.616-8",
+  cuentaNombre: "Corporación Educacional José Arrieta",
+};
+
 // ── Imágenes del uniforme (coloca los archivos en /public/) ───────────────────
 const uniformeImages = [
   { src: "/images/Diapositiva1-1.png", label: "Uniforme de diario" },
@@ -24,8 +37,11 @@ const uniformeImages = [
 // ── Lightbox ──────────────────────────────────────────────────────────────────
 function Lightbox({ images, startIndex, onClose }) {
   const [index, setIndex] = useState(startIndex);
+  const closeRef = useRef(null);
 
   useEffect(() => {
+    // Mover foco al botón cerrar al abrir (WCAG 2.4.3 Focus Order)
+    closeRef.current?.focus();
     const handler = (e) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
@@ -44,6 +60,7 @@ function Lightbox({ images, startIndex, onClose }) {
     >
       {/* Cerrar */}
       <button
+        ref={closeRef}
         onClick={onClose}
         aria-label="Cerrar imagen"
         className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/25 transition"
@@ -119,7 +136,16 @@ function FormVisita() {
     const nombre = form.nombre.trim();
     const telefono = form.telefono.trim();
     const email = form.email.trim();
-    if (!nombre || !telefono) return; // bloquea envíos con solo espacios
+    if (!nombre || !telefono || !email) {
+      setError("Por favor completa todos los campos requeridos.");
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Ingresa un correo electrónico válido.");
+      return;
+    }
+    setError("");
     trackFormularioVisita();
     trackWhatsAppClick("formulario_visita");
     const wa = `https://wa.me/56988936631?text=${encodeURIComponent(
@@ -212,7 +238,7 @@ function Admision() {
   return (
     <>
       <Helmet>
-        <title>Admisión 2026 — Colegio José Arrieta, La Reina | Postula Ahora</title>
+        <title>Admisión {DATOS_FINANCIEROS.anio} — Colegio José Arrieta, La Reina | Postula Ahora</title>
         <meta
           name="description"
           content="Postula al Colegio José Arrieta 2026 en La Reina. Vacantes disponibles para Pre-Kínder a 8° básico. Proceso MINEDUC, formulario de visita y WhatsApp directo. ¡Inscríbete hoy!"
@@ -222,7 +248,7 @@ function Admision() {
 
       <PageHero
         img="/images/alumnos.jpg"
-        badge="Admisión 2026 · Inscripciones abiertas"
+        badge={`Admisión ${DATOS_FINANCIEROS.anio} · Inscripciones abiertas`}
         title="Postula al Colegio"
         highlight="José Arrieta"
         subtitle="Queremos acompañarte en una decisión importante para el futuro de tu hijo/a."
@@ -346,7 +372,7 @@ function Admision() {
               <div className="inline-flex rounded-xl bg-primary/10 p-3">
                 <CreditCard className="h-5 w-5 text-primary" />
               </div>
-              <h2 className="font-heading text-2xl font-semibold text-primary">Mensualidad 2026</h2>
+              <h2 className="font-heading text-2xl font-semibold text-primary">Mensualidad {DATOS_FINANCIEROS.anio}</h2>
             </div>
             <p className="mb-4 text-sm leading-relaxed text-slate-600">
               El Colegio José Arrieta opera bajo el sistema de financiamiento compartido. Los valores son
@@ -355,15 +381,15 @@ function Admision() {
             <div className="space-y-3">
               <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-primary/5 border border-primary/10 px-4 py-3 text-sm">
                 <span className="font-medium text-slate-700">Pre-Kínder a 8° Básico</span>
-                <span className="text-lg font-extrabold text-primary">$36.465</span>
+                <span className="text-lg font-extrabold text-primary">{DATOS_FINANCIEROS.mensualidad}</span>
               </div>
               <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-slate-50 px-4 py-3 text-sm">
                 <span className="font-medium text-slate-700">Centro de Padres — alumno nuevo</span>
-                <span className="font-semibold text-slate-700">$15.000</span>
+                <span className="font-semibold text-slate-700">{DATOS_FINANCIEROS.centropadresNuevo}</span>
               </div>
               <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-slate-50 px-4 py-3 text-sm">
                 <span className="font-medium text-slate-700">Centro de Padres — alumno antiguo</span>
-                <span className="font-semibold text-slate-700">$10.000</span>
+                <span className="font-semibold text-slate-700">{DATOS_FINANCIEROS.centropadresAntiguo}</span>
               </div>
               <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-emerald-50 px-4 py-3 text-sm">
                 <span className="font-medium text-slate-700">Matrícula</span>
@@ -372,9 +398,9 @@ function Admision() {
             </div>
             <div className="mt-4 rounded-xl bg-slate-50 p-3 text-xs text-slate-500 space-y-0.5">
               <p className="font-semibold text-slate-600">Transferencia electrónica:</p>
-              <p>Corporación Educacional José Arrieta</p>
-              <p>RUT 65.143.616-8 · Banco Chile</p>
-              <p>Cta. Cte. 1510418507</p>
+              <p>{DATOS_FINANCIEROS.cuentaNombre}</p>
+              <p>RUT {DATOS_FINANCIEROS.cuentaRut} · {DATOS_FINANCIEROS.cuentaBanco}</p>
+              <p>Cta. Cte. {DATOS_FINANCIEROS.cuentaNumero}</p>
               <p className="mt-1 text-slate-400">Indicar nombre y curso del estudiante</p>
             </div>
           </motion.article>
