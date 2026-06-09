@@ -17,7 +17,7 @@ const navItems = [
   { label: "Contacto", to: "/contacto" },
 ];
 
-const logo = "/images/favicon-colegiojosearrieta.png";
+const logo = "/images/logo-web04.png";
 
 function Topbar() {
   const [query, setQuery] = useState("");

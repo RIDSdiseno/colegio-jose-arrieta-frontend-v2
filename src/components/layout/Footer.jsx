@@ -45,7 +45,7 @@ function Footer() {
         <section>
           <div className="flex items-center gap-3">
             <img
-              src="/images/favicon-colegiojosearrieta.png"
+              src="/images/logo-web04.png"
               alt="Escudo Colegio José Arrieta"
               className="h-12 w-12 rounded-full bg-white p-1"
             />

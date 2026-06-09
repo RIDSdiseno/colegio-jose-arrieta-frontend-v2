@@ -14,7 +14,7 @@ function HeroSection() {
     <section className="relative flex flex-col" style={{ minHeight: "100svh" }}>
 
       {/* ── Video ───────────────────────────────────────────────────────── */}
-      <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
+      <div className="absolute inset-0 overflow-hidden bg-primary" aria-hidden="true">
         <video
           className="absolute"
           style={{
@@ -26,7 +26,10 @@ function HeroSection() {
           }}
           src="/hero.mp4"
           autoPlay muted loop playsInline
-        />
+        >
+          {/* Track vacío requerido por WCAG 1.2.2 — video es puramente decorativo */}
+          <track kind="captions" srcLang="es" src="" default />
+        </video>
       </div>
 
       {/* ── Overlays ────────────────────────────────────────────────────── */}
