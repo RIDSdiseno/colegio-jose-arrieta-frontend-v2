@@ -25,6 +25,8 @@ export default function FotoMosaico() {
       .catch(() => {});
   }, []);
 
+  if (fotos.length === 0) return null;
+
   return (
     <section className="bg-slate-50 py-16">
       <div className="container-main">
@@ -39,7 +41,6 @@ export default function FotoMosaico() {
         </div>
 
         {/* Mosaico */}
-        {fotos.length > 0 && (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 lg:grid-rows-2">
           {/* Foto grande izquierda */}
           <motion.div
@@ -63,7 +64,7 @@ export default function FotoMosaico() {
           {/* Fotos pequeñas */}
           {fotos.slice(1).map((foto, i) => (
             <motion.div
-              key={foto.url || i}
+              key={foto.url}
               initial={{ opacity: 0, scale: 0.97 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
@@ -82,7 +83,6 @@ export default function FotoMosaico() {
             </motion.div>
           ))}
         </div>
-        )}
 
         <div className="mt-6 text-center">
           <Link
