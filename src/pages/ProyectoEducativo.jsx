@@ -1,14 +1,16 @@
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import {
   TrendingUp, BookOpen, Globe, Heart, Users, Lightbulb,
   Handshake, Brain,
   Music, Dumbbell, Bot, Palette, Languages,
-  FileText, Download, ShieldCheck, ScrollText,
+  FileText, Download, ShieldCheck,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import PageHero from "../components/ui/PageHero";
 import CTASection from "../components/sections/CTASection";
 import talleres from "../data/talleres";
+import { getDocumentos } from "../api/documentos";
 
 const tallerIcons = {
   1: Languages,
@@ -75,6 +77,14 @@ const ejes = [
 ];
 
 function ProyectoEducativo() {
+  const [docsInstitucional, setDocsInstitucional] = useState([]);
+  const [docsProtocolo, setDocsProtocolo] = useState([]);
+
+  useEffect(() => {
+    getDocumentos({ categoria: "Institucional" }).then(setDocsInstitucional).catch(() => {});
+    getDocumentos({ categoria: "Protocolo" }).then(setDocsProtocolo).catch(() => {});
+  }, []);
+
   return (
     <>
       <Helmet>
@@ -262,33 +272,28 @@ function ProyectoEducativo() {
           </div>
 
           {/* Documentos principales */}
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-10">
-            {[
-              { icon: ScrollText, label: "Reglamento Interno", href: "https://colegiojosearrieta.cl/wp-content/uploads/2025/01/Reglamento-Interno-v11.pdf" },
-              { icon: FileText,   label: "Proyecto Educativo Institucional (PEI)", href: "https://colegiojosearrieta.cl/wp-content/uploads/2024/06/PEI-2024-v5.pdf" },
-              { icon: ShieldCheck, label: "Plan de Convivencia Escolar", href: "https://colegiojosearrieta.cl/wp-content/uploads/2025/07/Plan-de-Convivencia-Escolar-2025.pdf" },
-              { icon: FileText,   label: "Normativa de Evaluaciones 2025", href: "https://colegiojosearrieta.cl/wp-content/uploads/2025/06/Normativa-de-evaluacion-2025-v6.pdf" },
-              { icon: FileText,   label: "Plan de Formación Ciudadana", href: "https://colegiojosearrieta.cl/wp-content/uploads/2025/07/Plan-anual-de-formacion-ciudadana-2025.pdf" },
-              { icon: FileText,   label: "Reglamento Pre-Básica (2020)", href: "https://colegiojosearrieta.cl/wp-content/uploads/2020/12/Reglamento-Interno-V0.1.pdf" },
-            ].map(({ icon: Icon, label, href }) => (
-              <motion.a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noreferrer"
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-soft transition hover:border-primary/30 hover:shadow-md"
-              >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 transition group-hover:bg-primary/20">
-                  <Icon className="h-5 w-5 text-primary" />
-                </div>
-                <span className="flex-1 text-sm font-medium text-slate-700 leading-snug">{label}</span>
-                <Download className="h-4 w-4 shrink-0 text-slate-300 transition group-hover:text-secondary" />
-              </motion.a>
-            ))}
-          </div>
+          {docsInstitucional.length > 0 && (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-10">
+              {docsInstitucional.map((doc) => (
+                <motion.a
+                  key={doc.id}
+                  href={doc.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-soft transition hover:border-primary/30 hover:shadow-md"
+                >
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 transition group-hover:bg-primary/20">
+                    <FileText className="h-5 w-5 text-primary" />
+                  </div>
+                  <span className="flex-1 text-sm font-medium text-slate-700 leading-snug">{doc.titulo}</span>
+                  <Download className="h-4 w-4 shrink-0 text-slate-300 transition group-hover:text-secondary" />
+                </motion.a>
+              ))}
+            </div>
+          )}
 
           {/* Protocolos — acordeón simple */}
           <div className="rounded-2xl border border-slate-200 bg-white shadow-soft overflow-hidden">
@@ -301,29 +306,19 @@ function ProyectoEducativo() {
               </div>
             </div>
             <div className="divide-y divide-slate-100">
-              {[
-                { label: "Protocolo Investigación — Ley Karín N° 21643", href: "https://colegiojosearrieta.cl/wp-content/uploads/2025/07/Protocolo-de-investigacion-y-sancion-al-acoso-laboral-y-violencia-en-el-trabajo-Ley-Karin.pdf" },
-                { label: "Protocolo Ante Suicidio", href: "https://colegiojosearrieta.cl/wp-content/uploads/2025/07/Protocolo-Suicidio-2025-v2.pdf" },
-                { label: "Protocolo de Talleres Extraprogramáticos", href: "https://colegiojosearrieta.cl/wp-content/uploads/2025/07/Protocolo-de-Talleres-Extraprogramaticos-v2-2025.pdf" },
-                { label: "Protocolo Contención y Regulación Emocional", href: "https://colegiojosearrieta.cl/wp-content/uploads/2025/07/Protocolo-de-Contencion-y-Regulacion-Emocional-2025-v2.pdf" },
-                { label: "Protocolo frente a situaciones de Discriminación", href: "https://colegiojosearrieta.cl/wp-content/uploads/2025/07/Protocolo-de-actuacion-frente-a-situaciones-de-discriminacion-2025.pdf" },
-                { label: "Protocolo Estudiantes Trans", href: "https://colegiojosearrieta.cl/wp-content/uploads/2025/07/Protocolo-Estudiantes-Trans-2025-v2.pdf" },
-                { label: "Protocolo ante agresión de estudiantes a funcionarios", href: "https://colegiojosearrieta.cl/wp-content/uploads/2025/07/Protocolo-de-accion-ante-agresion-de-estudiantes-a-funcionarios-del-colegio-2025.pdf" },
-                { label: "Protocolo ante agresión a docentes por parte de un adulto", href: "https://colegiojosearrieta.cl/wp-content/uploads/2025/07/Protocolo-de-accion-ante-agresion-a-docentes-y-asistentes-por-parte-de-docentes-2025.pdf" },
-                { label: "Protocolo de acción — maltrato escolar de adulto a estudiante", href: "https://colegiojosearrieta.cl/wp-content/uploads/2025/07/Protocolo-de-accion-en-casos-de-maltrato-escolar-de-adulto-a-estudiante-2025.pdf" },
-                { label: "Protocolo — maltrato, acoso o violencia entre miembros", href: "https://colegiojosearrieta.cl/wp-content/uploads/2025/07/Protocolo-de-accion-en-caso-de-maltrato-acoso-escolar-o-violencia-entre-miembros-de-la-comunidad-2025.pdf" },
-                { label: "Protocolo Premiación Académica", href: "https://colegiojosearrieta.cl/wp-content/uploads/2025/07/Protocolo-premiacion-academica.pdf" },
-              ].map(({ label, href }) => (
+              {docsProtocolo.length === 0 ? (
+                <p className="px-6 py-4 text-sm text-slate-400">No hay protocolos disponibles.</p>
+              ) : docsProtocolo.map((doc) => (
                 <a
-                  key={label}
-                  href={href}
+                  key={doc.id}
+                  href={doc.link}
                   target="_blank"
                   rel="noreferrer"
                   className="group flex items-center justify-between px-6 py-3.5 transition hover:bg-slate-50"
                 >
                   <div className="flex items-center gap-3">
                     <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-secondary" />
-                    <span className="text-sm text-slate-600 group-hover:text-primary transition">{label}</span>
+                    <span className="text-sm text-slate-600 group-hover:text-primary transition">{doc.titulo}</span>
                   </div>
                   <Download className="h-3.5 w-3.5 shrink-0 text-slate-300 transition group-hover:text-secondary" />
                 </a>

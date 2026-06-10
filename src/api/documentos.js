@@ -6,6 +6,8 @@ export const CATEGORIAS = [
   "Útiles Escolares",
   "Calendario Escolar",
   "Plan Lector",
+  "Institucional",
+  "Protocolo",
   "Otro",
 ];
 
@@ -15,9 +17,10 @@ export async function getAnos() {
   return apiFetch("/api/documentos/anos");
 }
 
-export async function getDocumentos({ anio, search } = {}) {
+export async function getDocumentos({ anio, search, categoria } = {}) {
   const params = new URLSearchParams();
-  if (anio) params.set("anio", anio);
+  if (categoria) params.set("categoria", categoria);
+  else if (anio) params.set("anio", anio);
   if (search?.trim()) params.set("search", search.trim());
   return apiFetch(`/api/documentos?${params}`);
 }
