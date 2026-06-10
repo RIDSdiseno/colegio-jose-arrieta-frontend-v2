@@ -17,7 +17,7 @@ const navItems = [
   { label: "Contacto", to: "/contacto" },
 ];
 
-const logo = "/images/logo-web04.png";
+const logo = "/images/logo-navbar.png";
 
 function Topbar() {
   const [query, setQuery] = useState("");
