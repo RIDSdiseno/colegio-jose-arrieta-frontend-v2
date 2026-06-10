@@ -1,20 +1,9 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Helmet } from "react-helmet-async";
-import { Mail, Phone, MessageCircle, MapPin, Clock } from "lucide-react";
-import { postFormularioContacto, CONFIG_ERROR_MSG } from "../api/contacto";
+import { Mail, Phone, MessageCircle, MapPin, Clock, Send, CheckCircle2 } from "lucide-react";
 import Button from "../components/ui/Button";
 import PageHero from "../components/ui/PageHero";
 import { trackFormularioContacto } from "../lib/tracking";
-
-const schema = z.object({
-  nombre:   z.string().min(3, "Ingresa tu nombre.").max(100, "Nombre demasiado largo.").trim(),
-  email:    z.string().email("Ingresa un email válido.").max(150, "Email demasiado largo.").trim(),
-  telefono: z.string().min(8, "Ingresa un teléfono válido.").max(20, "Teléfono demasiado largo.").regex(/^[\d\s+\-()]+$/, "Solo se permiten números y caracteres de teléfono.").trim(),
-  mensaje:  z.string().min(10, "Escribe un mensaje más detallado.").max(2000, "El mensaje no puede superar los 2000 caracteres.").trim(),
-});
 
 const contactItems = [
   {
@@ -58,32 +47,32 @@ const contactItems = [
 ];
 
 function Contacto() {
-  const [status, setStatus] = useState({ type: "", message: "" });
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    reset,
-  } = useForm({
-    resolver: zodResolver(schema),
-    defaultValues: { nombre: "", email: "", telefono: "", mensaje: "" },
-  });
+  const [form, setForm] = useState({ nombre: "", email: "", telefono: "", mensaje: "" });
+  const [error, setError] = useState("");
+  const [sent, setSent] = useState(false);
 
-  const onSubmit = async (values) => {
-    try {
-      setStatus({ type: "", message: "" });
-      const result = await postFormularioContacto(values);
-      setStatus({ type: "success", message: result?.message || "Mensaje enviado correctamente." });
-      trackFormularioContacto(); // después de confirmar el éxito en la UI
-      reset();
-    } catch (error) {
-      const isConfigError = error.message === CONFIG_ERROR_MSG;
-      setStatus({
-        type: "error",
-        message: isConfigError
-          ? "El formulario no está disponible. Escríbenos por WhatsApp al +56 9 8893 6631 o al correo colegio@colegiojosearrieta.cl"
-          : error.message || "No se pudo enviar el mensaje, intenta nuevamente.",
-      });
+  const handleChange = (e) => setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const nombre = form.nombre.trim();
+    const email = form.email.trim();
+    const telefono = form.telefono.trim();
+    const mensaje = form.mensaje.trim();
+    if (!nombre || !email || !telefono || !mensaje) {
+      setError("Por favor completa todos los campos.");
+      return;
+    }
+    setError("");
+    trackFormularioContacto();
+    const wa = `https://wa.me/56988936631?text=${encodeURIComponent(
+      `Hola, me llamo ${nombre}. Email: ${email}. Teléfono: ${telefono}. ${mensaje}`
+    )}`;
+    const popup = window.open(wa, "_blank");
+    if (popup) {
+      setSent(true);
+    } else {
+      setError("Tu navegador bloqueó la ventana. Escríbenos directamente al +56 9 8893 6631.");
     }
   };
 
@@ -166,80 +155,84 @@ function Contacto() {
           {/* ── Formulario ── */}
           <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft lg:col-span-2">
             <h2 className="font-heading text-xl font-bold text-slate-900">Envíanos un mensaje</h2>
-            <form onSubmit={handleSubmit(onSubmit)} className="mt-5 grid gap-4 sm:grid-cols-2">
-              <div>
-                <label htmlFor="nombre" className="text-sm font-medium text-slate-700">
-                  Nombre
-                </label>
-                <input
-                  id="nombre"
-                  {...register("nombre")}
-                  placeholder="Tu nombre completo"
-                  className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                />
-                {errors.nombre && <p className="mt-1 text-xs text-red-600">{errors.nombre.message}</p>}
-              </div>
 
-              <div>
-                <label htmlFor="email" className="text-sm font-medium text-slate-700">
-                  Email
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  {...register("email")}
-                  placeholder="tucorreo@ejemplo.com"
-                  className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                />
-                {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email.message}</p>}
-              </div>
-
-              <div className="sm:col-span-2">
-                <label htmlFor="telefono" className="text-sm font-medium text-slate-700">
-                  Teléfono
-                </label>
-                <input
-                  id="telefono"
-                  type="tel"
-                  {...register("telefono")}
-                  placeholder="+56 9 XXXX XXXX"
-                  className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                />
-                {errors.telefono && <p className="mt-1 text-xs text-red-600">{errors.telefono.message}</p>}
-              </div>
-
-              <div className="sm:col-span-2">
-                <label htmlFor="mensaje" className="text-sm font-medium text-slate-700">
-                  Mensaje
-                </label>
-                <textarea
-                  id="mensaje"
-                  rows={5}
-                  {...register("mensaje")}
-                  placeholder="¿En qué podemos ayudarte?"
-                  className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                />
-                {errors.mensaje && <p className="mt-1 text-xs text-red-600">{errors.mensaje.message}</p>}
-              </div>
-
-              {status.message && (
-                <div
-                  className={`sm:col-span-2 rounded-xl p-3 text-sm ${
-                    status.type === "success"
-                      ? "border border-green-200 bg-green-50 text-green-700"
-                      : "border border-red-200 bg-red-50 text-red-700"
-                  }`}
+            {sent ? (
+              <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-6 text-center text-emerald-700">
+                <CheckCircle2 className="mx-auto mb-2 h-8 w-8" />
+                <p className="font-semibold">¡Gracias! Te redirigimos a WhatsApp para continuar.</p>
+                <button
+                  type="button"
+                  onClick={() => setSent(false)}
+                  className="mt-3 text-xs text-emerald-600 underline hover:text-emerald-800 transition"
                 >
-                  {status.message}
-                </div>
-              )}
-
-              <div className="sm:col-span-2">
-                <Button type="submit" variant="primary" className="w-full" disabled={isSubmitting}>
-                  {isSubmitting ? "Enviando..." : "Enviar mensaje"}
-                </Button>
+                  Enviar otro mensaje
+                </button>
               </div>
-            </form>
+            ) : (
+              <form onSubmit={handleSubmit} className="mt-5 space-y-4">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="nombre" className="text-sm font-medium text-slate-700">Nombre</label>
+                    <input
+                      id="nombre"
+                      name="nombre"
+                      required
+                      value={form.nombre}
+                      onChange={handleChange}
+                      placeholder="Tu nombre completo"
+                      className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="email" className="text-sm font-medium text-slate-700">Email</label>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      required
+                      value={form.email}
+                      onChange={handleChange}
+                      placeholder="tucorreo@ejemplo.com"
+                      className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label htmlFor="telefono" className="text-sm font-medium text-slate-700">Teléfono</label>
+                    <input
+                      id="telefono"
+                      name="telefono"
+                      type="tel"
+                      required
+                      value={form.telefono}
+                      onChange={handleChange}
+                      placeholder="+56 9 XXXX XXXX"
+                      className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="mensaje" className="text-sm font-medium text-slate-700">Mensaje</label>
+                  <textarea
+                    id="mensaje"
+                    name="mensaje"
+                    rows={5}
+                    required
+                    value={form.mensaje}
+                    onChange={handleChange}
+                    placeholder="¿En qué podemos ayudarte?"
+                    className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  />
+                </div>
+                {error && (
+                  <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>
+                )}
+                <Button type="submit" variant="primary" className="w-full inline-flex items-center justify-center gap-2">
+                  <Send className="h-4 w-4" />
+                  Enviar por WhatsApp
+                </Button>
+                <p className="text-center text-xs text-slate-400">Te responderemos a la brevedad por WhatsApp</p>
+              </form>
+            )}
           </article>
         </div>
       </section>
