@@ -13,9 +13,7 @@ Maquetación web comercial para captación de alumnos 2026. Desarrollada en Reac
 | Framer Motion 11 | Animaciones |
 | React Router DOM 6 | Navegación SPA |
 | React Helmet Async | SEO por página |
-| React Hook Form + Zod | Formularios y validación |
-| Supabase | Panel de administración (opcional) |
-| WordPress REST API | Noticias en tiempo real |
+| Supabase JS | Autenticación y almacenamiento de archivos |
 
 ---
 
@@ -40,18 +38,21 @@ npm run dev
 Crear archivo `.env.local` en la raíz copiando `.env.example`:
 
 ```env
-# Supabase — panel de administración (opcional)
+# Backend API (Railway)
+VITE_API_URL=https://tu-backend.up.railway.app
+
+# Supabase — autenticación y storage
 VITE_SUPABASE_URL=https://xxxxxxxxxxxx.supabase.co
 VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 # Google Tag Manager — se activa al poner el ID
 VITE_GTM_ID=GTM-XXXXXXX
 
-# Meta Pixel — se activa al poner el ID
+# Meta Pixel — se activa al poner el ID (opcional)
 VITE_META_PIXEL_ID=XXXXXXXXXXXXXXXX
 ```
 
-> El sitio funciona sin ninguna de estas variables. Supabase activa el panel admin, GTM activa Analytics + Pixel.
+> `VITE_API_URL`, `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` son obligatorias. GTM y Meta Pixel son opcionales.
 
 ---
 
@@ -72,12 +73,12 @@ npm run preview    # Vista previa del build
 |---|---|
 | `/` | Home — landing comercial principal |
 | `/por-que-elegirnos` | Pilares, infraestructura e historia |
-| `/proyecto-educativo` | Ejes estratégicos, metas académicas y talleres |
+| `/proyecto-educativo` | Ejes estratégicos, metas académicas, talleres y documentos institucionales |
 | `/admision` | Funnel de admisión 2026 completo |
 | `/vida-escolar` | Galería real, videos y actividades |
-| `/noticias` | Noticias desde WordPress REST API |
+| `/noticias` | Noticias del colegio (API propia) |
 | `/noticias/:slug` | Detalle de noticia |
-| `/contacto` | Formulario de contacto |
+| `/contacto` | Formulario de contacto vía WhatsApp |
 
 ### SEO (ocultas del menú)
 | Ruta | Keyword objetivo |
@@ -87,32 +88,39 @@ npm run preview    # Vista previa del build
 | `/colegio-educacion-integral-la-reina` | Colegio educación integral La Reina |
 | `/colegio-ingles-prekinder-santiago` | Colegio inglés desde prekinder Santiago |
 
-### Admin (requiere Supabase configurado)
+### Admin (requiere autenticación Supabase)
 | Ruta | Descripción |
 |---|---|
 | `/admin/login` | Acceso al panel |
 | `/admin/noticias` | Listado de noticias |
 | `/admin/noticias/nueva` | Crear noticia |
 | `/admin/noticias/:id` | Editar noticia |
+| `/admin/albums` | Galería — álbumes y fotos |
+| `/admin/videos` | Videos del colegio |
+| `/admin/documentos` | Documentos y reglamentos |
+| `/admin/testimonios` | Testimonios de apoderados |
 
 ---
 
 ## Integraciones
 
-### WordPress REST API (noticias públicas)
-- `GET https://colegiojosearrieta.cl/wp-json/wp/v2/posts`
-- No requiere autenticación
+### Backend API (Railway)
+- API REST propia en Node.js/Express + Prisma + PostgreSQL
+- Base URL configurada en `VITE_API_URL`
+- Recursos: noticias, álbumes, videos, documentos, testimonios
+- Rutas públicas sin autenticación; rutas `/admin` requieren token JWT
 
-### Supabase (panel admin)
-- Autenticación por email/contraseña
-- CRUD de noticias con subida de imágenes a Storage
+### Supabase
+- Autenticación por email/contraseña (`supabase.auth.signInWithPassword`)
+- Storage: imágenes de noticias y PDFs de documentos en bucket `documentos`
+- El token JWT de Supabase se adjunta en cada petición admin al backend
 
 ### Tracking (GTM + Meta Pixel)
 Los eventos están implementados en `src/lib/tracking.js` y se disparan automáticamente:
 
 | Evento | Disparado en |
 |---|---|
-| `form_submit` (contacto) | Formulario de contacto |
+| `formulario_contacto` | Formulario de contacto |
 | `form_submit` (agenda_visita) | Formulario de visita en Admisión |
 | `whatsapp_click` | Botón flotante, tarjeta admisión |
 | `postulacion_click` | Botón MINEDUC, CTABanner, navbar |
@@ -125,25 +133,27 @@ Los eventos están implementados en `src/lib/tracking.js` y se disparan automát
 
 ```
 src/
-├── api/              # Llamadas a WordPress REST API y Supabase
+├── api/              # Funciones fetch por recurso (noticias, albums, documentos, videos, testimonios)
 ├── components/
-│   ├── layout/       # Navbar, Footer, AdminLayout
+│   ├── admin/        # Componentes reutilizables del panel (formularios, spinners, headers)
+│   ├── layout/       # Navbar, Footer, Layout, AdminLayout
 │   ├── sections/     # HeroSection, CTABanner, TestimonialsSection...
-│   └── ui/           # Button, Badge, SectionTitle, WhatsAppButton
-├── context/          # AuthContext (Supabase auth)
-├── data/             # beneficios.js, talleres.js, testimonials.js
-├── hooks/            # useScrollNavbar, useFetch
-├── lib/              # supabase.js, tracking.js
+│   └── ui/           # Button, Badge, PageHero, FloatingButtons
+├── context/          # AuthContext, ProtectedRoute
+├── data/             # beneficios.js, talleres.js (datos estáticos)
+├── hooks/            # useScrollNavbar
+├── lib/              # api.js, storage.js, supabase.js, tracking.js, utils.js, youtube.js
 └── pages/
-    ├── admin/        # AdminLogin, AdminNoticias, AdminNoticiaForm
+    ├── admin/        # AdminLogin, AdminNoticias, AdminNoticiaForm, AdminAlbums, etc.
     ├── seo/          # Landing pages SEO ocultas del menú
     └── *.jsx         # Páginas públicas principales
 ```
 
 ---
 
-## Pendiente (requiere cliente)
+## Pendiente (configuración en Netlify)
 
+- [ ] `VITE_API_URL` — URL del backend en Railway
+- [ ] `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` — credenciales Supabase
 - [ ] `VITE_GTM_ID` — ID de Google Tag Manager
-- [ ] `VITE_META_PIXEL_ID` — ID de Meta Pixel (Facebook/Instagram)
-- [ ] `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` — credenciales Supabase para panel admin
+- [ ] `VITE_META_PIXEL_ID` — ID de Meta Pixel (opcional, solo si usa Meta Ads)
