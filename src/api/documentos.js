@@ -20,7 +20,7 @@ export async function getAnos() {
 export async function getDocumentos({ anio, search, categoria } = {}) {
   const params = new URLSearchParams();
   if (categoria) params.set("categoria", categoria);
-  else if (anio) params.set("anio", anio);
+  if (anio) params.set("anio", anio);
   if (search?.trim()) params.set("search", search.trim());
   return apiFetch(`/api/documentos?${params}`);
 }

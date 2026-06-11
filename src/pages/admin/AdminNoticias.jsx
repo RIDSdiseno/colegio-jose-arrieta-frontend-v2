@@ -13,7 +13,7 @@ const PAGE_SIZE = 20;
 /** Extrae todas las URLs de imágenes del contenido HTML de una noticia */
 function extractImagenesContenido(html = "") {
   const urls = [];
-  const regex = /<img[^>]+src="([^"]+)"/gi;
+  const regex = /<img[^>]+src=["']([^"']+)["']/gi;
   let m;
   while ((m = regex.exec(html)) !== null) urls.push(m[1]);
   return urls;

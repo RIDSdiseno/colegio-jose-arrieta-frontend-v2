@@ -39,7 +39,7 @@ function AdminAlbums() {
     setDeleting(true);
     try {
       await eliminarAlbum(confirmId);
-      cargar();
+      setAlbums((prev) => prev.filter((a) => a.id !== confirmId));
     } catch (err) {
       setError(err.message);
     } finally {
