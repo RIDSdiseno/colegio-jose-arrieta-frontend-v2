@@ -50,6 +50,7 @@ function parseContenido(html = "") {
       return "";
     })
     .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<[^>]+>/g, "")
     .trim();
   // Detectar si las fotos estaban antes o después del texto
   const posGallery = html.search(/<div class="wp-gallery"/i);
@@ -70,7 +71,7 @@ function buildContenido(texto, imagenes, fotosUbicacion = "antes") {
     .replace(/\r\n/g, "\n")
     .replace(/\n/g, "<br>");
   const htmlImgs = imagenes.length > 0
-    ? `<div class="wp-gallery">${imagenes.map((u) => `<img src="${u}" alt="">`).join("")}</div>`
+    ? `<div class="wp-gallery">${imagenes.map((u) => `<img src="${u.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}" alt="">`).join("")}</div>`
     : "";
   const partes = fotosUbicacion === "antes"
     ? [htmlImgs, htmlTexto]
