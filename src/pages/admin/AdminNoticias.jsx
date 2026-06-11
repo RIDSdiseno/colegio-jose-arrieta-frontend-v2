@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Plus, Pencil, Trash2, CalendarDays, AlertTriangle, ChevronLeft, ChevronRight, Search, X } from "lucide-react";
+import { Plus, CalendarDays, ChevronLeft, ChevronRight, Search, X } from "lucide-react";
+import ConfirmDeleteModal from "../../components/admin/ConfirmDeleteModal";
+import AdminTableSkeleton from "../../components/admin/AdminTableSkeleton";
+import AdminRowActions from "../../components/admin/AdminRowActions";
 import { getNoticiasAdmin, getNoticiaById, eliminarNoticia, getAnosNoticias, CATEGORIAS_NOTICIAS } from "../../api/noticias";
 import { eliminarArchivoStorage } from "../../lib/storage";
 import { formatDate } from "../../lib/utils";
@@ -74,12 +77,6 @@ function AdminNoticias() {
     setPage(1);
   };
 
-  useEffect(() => {
-    if (!confirmTarget) return;
-    const handler = (e) => { if (e.key === "Escape" && !deleting) setConfirmTarget(null); };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [confirmTarget, deleting]);
 
   const handleEliminar = async () => {
     if (!confirmTarget) return;
@@ -184,11 +181,7 @@ function AdminNoticias() {
       ) : null}
 
       {loading ? (
-        <div className="space-y-3">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="h-16 animate-pulse rounded-2xl bg-white" />
-          ))}
-        </div>
+        <AdminTableSkeleton rows={5} />
       ) : items.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-slate-300 bg-white py-16 text-center text-slate-500">
           No hay noticias publicadas.{" "}
@@ -236,21 +229,7 @@ function AdminNoticias() {
                     </span>
                   </td>
                   <td className="px-5 py-4 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <Link
-                        to={`/admin/noticias/${noticia.id}`}
-                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition hover:border-primary hover:text-primary"
-                      >
-                        <Pencil className="h-3.5 w-3.5" />
-                      </Link>
-                      <button
-                        type="button"
-                        onClick={() => setConfirmTarget({ id: noticia.id })}
-                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition hover:border-red-400 hover:text-red-500"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
+                    <AdminRowActions editTo={`/admin/noticias/${noticia.id}`} onDelete={() => setConfirmTarget({ id: noticia.id })} />
                   </td>
                 </tr>
               ))}
@@ -286,39 +265,14 @@ function AdminNoticias() {
         </div>
       )}
 
-      {confirmTarget ? (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
-          onClick={() => { if (!deleting) setConfirmTarget(null); }}
-        >
-          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center gap-3 text-amber-600">
-              <AlertTriangle className="h-5 w-5" />
-              <h2 className="font-heading text-lg font-semibold">¿Eliminar noticia?</h2>
-            </div>
-            <p className="mt-2 text-sm text-slate-600">
-              Esta acción no se puede deshacer. La noticia se eliminará permanentemente.
-            </p>
-            <div className="mt-5 flex gap-3">
-              <button
-                type="button"
-                onClick={() => setConfirmTarget(null)}
-                className="flex-1 rounded-xl border border-slate-200 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-              >
-                Cancelar
-              </button>
-              <button
-                type="button"
-                onClick={handleEliminar}
-                disabled={deleting}
-                className="flex-1 rounded-xl bg-red-500 py-2 text-sm font-semibold text-white transition hover:bg-red-600 disabled:opacity-60"
-              >
-                {deleting ? "Eliminando..." : "Eliminar"}
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
+      <ConfirmDeleteModal
+        open={!!confirmTarget}
+        entityLabel="noticia"
+        message="Esta acción no se puede deshacer. La noticia se eliminará permanentemente."
+        onConfirm={handleEliminar}
+        onClose={() => setConfirmTarget(null)}
+        deleting={deleting}
+      />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Pencil, Trash2, Loader2, Images, Eye, EyeOff } from "lucide-react";
+import ConfirmDeleteModal from "../../components/admin/ConfirmDeleteModal";
 import { getAlbumsAdmin, eliminarAlbum } from "../../api/albums";
 
 function AdminAlbums() {
@@ -32,12 +33,6 @@ function AdminAlbums() {
 
   useEffect(() => { cargar(); }, [cargar]);
 
-  useEffect(() => {
-    if (!confirmId) return;
-    const handler = (e) => { if (e.key === "Escape" && !deleting) setConfirmId(null); };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [confirmId, deleting]);
 
   const handleDelete = async () => {
     if (!confirmId) return;
@@ -155,36 +150,14 @@ function AdminAlbums() {
         </div>
       )}
 
-      {/* Modal confirmar eliminación */}
-      {confirmId ? (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
-          onClick={() => { if (!deleting) setConfirmId(null); }}
-        >
-          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
-            <h3 className="font-heading text-lg font-bold text-slate-800">¿Eliminar álbum?</h3>
-            <p className="mt-1 text-sm text-slate-500">Se eliminarán también todas las fotos del álbum. Esta acción no se puede deshacer.</p>
-            <div className="mt-5 flex gap-3">
-              <button
-                type="button"
-                onClick={() => setConfirmId(null)}
-                className="flex-1 rounded-xl border border-slate-200 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-              >
-                Cancelar
-              </button>
-              <button
-                type="button"
-                onClick={handleDelete}
-                disabled={deleting}
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-red-500 py-2 text-sm font-semibold text-white transition hover:bg-red-600 disabled:opacity-60"
-              >
-                {deleting ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                {deleting ? "Eliminando..." : "Eliminar"}
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
+      <ConfirmDeleteModal
+        open={!!confirmId}
+        entityLabel="álbum"
+        message="Se eliminarán también todas las fotos del álbum. Esta acción no se puede deshacer."
+        onConfirm={handleDelete}
+        onClose={() => setConfirmId(null)}
+        deleting={deleting}
+      />
     </div>
   );
 }
