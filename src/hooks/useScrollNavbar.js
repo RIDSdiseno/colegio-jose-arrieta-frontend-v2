@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from "react";
 // Returns { scrolled, visible }
 // scrolled: true when past threshold (used for solid bg)
 // visible: false when scrolling down, true when scrolling up or at top
-export function useScrollNavbar(threshold = 50) {
+function useScrollNavbar(threshold = 50) {
   const [scrolled, setScrolled] = useState(
     () => typeof window !== "undefined" && window.scrollY > threshold
   );
