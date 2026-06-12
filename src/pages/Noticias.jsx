@@ -63,7 +63,7 @@ function Noticias() {
     getNoticias({ page: 1, limit: 6, search: queryParam, categoria: catParam, anio: anioParam })
       .then((response) => {
         if (cancelled) return;
-        setItems(response.data);
+        setItems(response.data ?? []);
         setTotal(response.total || 0);
         setPage(response.page);
         setTotalPages(response.totalPages);
@@ -87,7 +87,7 @@ function Noticias() {
       setError("");
       const response = await getNoticias({ page: page + 1, limit: 6, search: currentQuery, categoria: currentCat, anio: currentAnio });
       if (currentQuery !== activeQueryRef.current || currentCat !== activeCatRef.current || currentAnio !== activeAnioRef.current) return;
-      setItems((prev) => [...prev, ...response.data]);
+      setItems((prev) => [...prev, ...(response.data ?? [])]);
       setTotal(response.total || 0);
       setPage(response.page);
       setTotalPages(response.totalPages);

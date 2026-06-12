@@ -70,7 +70,7 @@ function AdminAlbumFotos() {
       await agregarFoto(id, { url: newUrl, caption: newCaption });
       setNewUrl("");
       setNewCaption("");
-      cargar();
+      await cargar();
     } catch (err) {
       setError(err.message);
       // Limpiar el archivo ya subido si no se pudo registrar en BD

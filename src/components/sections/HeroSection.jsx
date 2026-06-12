@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const STATS = [
@@ -123,21 +123,6 @@ function HeroSection() {
         </div>
       </motion.div>
 
-      {/* ── Scroll indicator ────────────────────────────────────────────── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2 }}
-        className="absolute bottom-24 right-8 z-10 hidden lg:flex flex-col items-center gap-2"
-      >
-        <span className="text-[10px] uppercase tracking-widest text-white/40 [writing-mode:vertical-rl]">Scroll</span>
-        <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ repeat: Infinity, duration: 1.5 }}
-        >
-          <ChevronDown className="h-4 w-4 text-white/40" />
-        </motion.div>
-      </motion.div>
 
     </section>
   );

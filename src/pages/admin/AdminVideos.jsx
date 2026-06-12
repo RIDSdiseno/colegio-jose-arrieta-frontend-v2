@@ -27,7 +27,8 @@ function AdminVideos() {
     setLoading(true);
     setError("");
     try {
-      setItems(await getVideosAdmin());
+      const data = await getVideosAdmin();
+      setItems(Array.isArray(data) ? data : data?.data ?? []);
     } catch (err) {
       setError(err.message);
     } finally {

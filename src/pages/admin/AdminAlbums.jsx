@@ -23,7 +23,7 @@ function AdminAlbums() {
     setError("");
     try {
       const data = await getAlbumsAdmin();
-      setAlbums(data);
+      setAlbums(Array.isArray(data) ? data : data?.data ?? []);
     } catch {
       setError("No se pudieron cargar los álbumes.");
     } finally {

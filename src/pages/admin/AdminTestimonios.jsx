@@ -24,7 +24,7 @@ function AdminTestimonios() {
     setError("");
     try {
       const data = await getTestimoniosAdmin();
-      setItems(data || []);
+      setItems(Array.isArray(data) ? data : data?.data ?? []);
     } catch (err) {
       setError(err.message);
     } finally {

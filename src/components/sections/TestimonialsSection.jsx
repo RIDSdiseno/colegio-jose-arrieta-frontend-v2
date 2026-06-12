@@ -19,8 +19,9 @@ function TestimonialsSection() {
 
   useEffect(() => {
     getTestimonios()
-      .then((data) => {
-        if (data && data.length > 0) {
+      .then((raw) => {
+        const data = Array.isArray(raw) ? raw : raw?.data ?? [];
+        if (data.length > 0) {
           setTestimonials(
             data.map((r) => ({
               initials: (r.nombre || "").split(" ").slice(0, 2).map((w) => w[0]?.toUpperCase() || "").join("") || "?",
