@@ -1,52 +1,20 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Plus, Star } from "lucide-react";
 import ConfirmDeleteModal from "../../components/admin/ConfirmDeleteModal";
 import AdminTableSkeleton from "../../components/admin/AdminTableSkeleton";
 import AdminRowActions from "../../components/admin/AdminRowActions";
 import { getTestimoniosAdmin, eliminarTestimonio } from "../../api/testimonios";
+import { useAdminList } from "../../hooks/useAdminList";
 
 function AdminTestimonios() {
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [confirmId, setConfirmId] = useState(null);
-  const [deleting, setDeleting] = useState(false);
+  const { items, loading, error, confirmId, setConfirmId, deleting, eliminar } = useAdminList(getTestimoniosAdmin);
   const [filtroEstado, setFiltroEstado] = useState("");
 
   const itemsFiltrados = useMemo(() =>
     filtroEstado === "" ? items
     : items.filter((t) => t.activo === (filtroEstado === "activo")),
   [items, filtroEstado]);
-
-  const cargar = useCallback(async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const data = await getTestimoniosAdmin();
-      setItems(Array.isArray(data) ? data : data?.data ?? []);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => { cargar(); }, [cargar]);
-
-
-  const handleEliminar = async (id) => {
-    setDeleting(true);
-    try {
-      await eliminarTestimonio(id);
-      setItems((prev) => prev.filter((t) => t.id !== id));
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setDeleting(false);
-      setConfirmId(null);
-    }
-  };
 
   return (
     <div>
@@ -144,7 +112,7 @@ function AdminTestimonios() {
       <ConfirmDeleteModal
         open={!!confirmId}
         entityLabel="testimonio"
-        onConfirm={() => handleEliminar(confirmId)}
+        onConfirm={() => eliminar(confirmId, eliminarTestimonio)}
         onClose={() => setConfirmId(null)}
         deleting={deleting}
       />

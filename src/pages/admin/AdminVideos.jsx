@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Plus, Youtube } from "lucide-react";
 import ConfirmDeleteModal from "../../components/admin/ConfirmDeleteModal";
@@ -6,13 +6,10 @@ import AdminTableSkeleton from "../../components/admin/AdminTableSkeleton";
 import AdminRowActions from "../../components/admin/AdminRowActions";
 import { getVideosAdmin, eliminarVideo } from "../../api/videos";
 import { getYoutubeId } from "../../lib/youtube";
+import { useAdminList } from "../../hooks/useAdminList";
 
 function AdminVideos() {
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [confirmId, setConfirmId] = useState(null);
-  const [deleting, setDeleting] = useState(false);
+  const { items, loading, error, confirmId, setConfirmId, deleting, eliminar } = useAdminList(getVideosAdmin);
   const [filtroAnio, setFiltroAnio] = useState("");
 
   const anosDisponibles = useMemo(() =>
@@ -22,35 +19,6 @@ function AdminVideos() {
   const itemsFiltrados = useMemo(() =>
     filtroAnio ? items.filter((v) => v.anio === parseInt(filtroAnio)) : items,
   [items, filtroAnio]);
-
-  const cargar = useCallback(async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const data = await getVideosAdmin();
-      setItems(Array.isArray(data) ? data : data?.data ?? []);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => { cargar(); }, [cargar]);
-
-
-  const handleEliminar = async (id) => {
-    setDeleting(true);
-    try {
-      await eliminarVideo(id);
-      setItems((prev) => prev.filter((v) => v.id !== id));
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setDeleting(false);
-      setConfirmId(null);
-    }
-  };
 
   return (
     <div>
@@ -70,7 +38,6 @@ function AdminVideos() {
         </Link>
       </div>
 
-      {/* Filtro por año */}
       {!loading && items.length > 0 && (
         <div className="mb-4 flex gap-3">
           <select
@@ -174,7 +141,7 @@ function AdminVideos() {
       <ConfirmDeleteModal
         open={!!confirmId}
         entityLabel="video"
-        onConfirm={() => handleEliminar(confirmId)}
+        onConfirm={() => eliminar(confirmId, eliminarVideo)}
         onClose={() => setConfirmId(null)}
         deleting={deleting}
       />

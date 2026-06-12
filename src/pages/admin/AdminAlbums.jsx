@@ -1,52 +1,19 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Pencil, Trash2, Loader2, Images, Eye, EyeOff } from "lucide-react";
 import ConfirmDeleteModal from "../../components/admin/ConfirmDeleteModal";
 import { getAlbumsAdmin, eliminarAlbum } from "../../api/albums";
+import { useAdminList } from "../../hooks/useAdminList";
 
 function AdminAlbums() {
   const navigate = useNavigate();
-  const [albums, setAlbums] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [confirmId, setConfirmId] = useState(null);
-  const [deleting, setDeleting] = useState(false);
+  const { items: albums, loading, error, confirmId, setConfirmId, deleting, eliminar } = useAdminList(getAlbumsAdmin);
   const [filtroEstado, setFiltroEstado] = useState("");
 
   const albumsFiltrados = useMemo(() =>
     filtroEstado === "" ? albums
     : albums.filter((a) => a.activo === (filtroEstado === "activo")),
   [albums, filtroEstado]);
-
-  const cargar = useCallback(async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const data = await getAlbumsAdmin();
-      setAlbums(Array.isArray(data) ? data : data?.data ?? []);
-    } catch {
-      setError("No se pudieron cargar los álbumes.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => { cargar(); }, [cargar]);
-
-
-  const handleDelete = async () => {
-    if (!confirmId) return;
-    setDeleting(true);
-    try {
-      await eliminarAlbum(confirmId);
-      setAlbums((prev) => prev.filter((a) => a.id !== confirmId));
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setDeleting(false);
-      setConfirmId(null);
-    }
-  };
 
   return (
     <div>
@@ -99,7 +66,6 @@ function AdminAlbums() {
               key={album.id}
               className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-soft transition hover:shadow-md"
             >
-              {/* Portada */}
               <div className="relative h-40 bg-slate-100">
                 {album.portada ? (
                   <img src={album.portada} alt={album.titulo} className="h-full w-full object-cover" />
@@ -108,7 +74,6 @@ function AdminAlbums() {
                     <Images className="h-10 w-10" />
                   </div>
                 )}
-                {/* Badge activo */}
                 <span className={`absolute left-2 top-2 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${album.activo ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-500"}`}>
                   {album.activo ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
                   {album.activo ? "Visible" : "Oculto"}
@@ -154,7 +119,7 @@ function AdminAlbums() {
         open={!!confirmId}
         entityLabel="álbum"
         message="Se eliminarán también todas las fotos del álbum. Esta acción no se puede deshacer."
-        onConfirm={handleDelete}
+        onConfirm={() => eliminar(confirmId, eliminarAlbum)}
         onClose={() => setConfirmId(null)}
         deleting={deleting}
       />

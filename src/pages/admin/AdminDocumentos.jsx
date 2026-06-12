@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Plus, FileText } from "lucide-react";
 import ConfirmDeleteModal from "../../components/admin/ConfirmDeleteModal";
@@ -6,57 +6,28 @@ import AdminTableSkeleton from "../../components/admin/AdminTableSkeleton";
 import AdminRowActions from "../../components/admin/AdminRowActions";
 import { getDocumentosAdmin, eliminarDocumento, CATEGORIAS } from "../../api/documentos";
 import { eliminarArchivoStorage } from "../../lib/storage";
+import { useAdminList } from "../../hooks/useAdminList";
 
 function AdminDocumentos() {
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [confirmId, setConfirmId] = useState(null);
-  const [deleting, setDeleting] = useState(false);
+  const { items, loading, error, confirmId, setConfirmId, deleting, eliminar } = useAdminList(getDocumentosAdmin);
   const [filtroAnio, setFiltroAnio] = useState("");
   const [filtroCategoria, setFiltroCategoria] = useState("");
 
-  // Años disponibles dinámicamente según los documentos cargados
   const anosDisponibles = useMemo(() =>
     [...new Set(items.map((d) => d.anio))].sort((a, b) => b - a),
   [items]);
 
-  // Filtrado client-side
   const itemsFiltrados = useMemo(() => items.filter((d) => {
     if (filtroAnio && d.anio !== parseInt(filtroAnio)) return false;
     if (filtroCategoria && d.categoria !== filtroCategoria) return false;
     return true;
   }), [items, filtroAnio, filtroCategoria]);
 
-  const cargar = useCallback(async () => {
-    setLoading(true);
-    setError("");
-    try {
-      setItems(await getDocumentosAdmin());
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => { cargar(); }, [cargar]);
-
-
-  const handleEliminar = async (id) => {
-    setDeleting(true);
-    try {
-      const doc = items.find((d) => d.id === id);
-      await eliminarDocumento(id);
-      setItems((prev) => prev.filter((d) => d.id !== id));
-      // Limpiar el PDF de Supabase Storage en segundo plano (fire-and-forget)
+  const handleEliminar = (id) => {
+    const doc = items.find((d) => d.id === id);
+    eliminar(id, eliminarDocumento, () => {
       if (doc?.link) eliminarArchivoStorage(doc.link, "documentos").catch(() => {});
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setDeleting(false);
-      setConfirmId(null);
-    }
+    });
   };
 
   return (
@@ -79,7 +50,6 @@ function AdminDocumentos() {
         </Link>
       </div>
 
-      {/* Filtros */}
       {!loading && items.length > 0 && (
         <div className="mb-4 flex flex-wrap gap-3">
           <select
