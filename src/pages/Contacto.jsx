@@ -63,6 +63,11 @@ function Contacto() {
       setError("Por favor completa todos los campos.");
       return;
     }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Por favor ingresa un email válido.");
+      return;
+    }
     setError("");
     trackFormularioContacto();
     const wa = `https://wa.me/56988936631?text=${encodeURIComponent(

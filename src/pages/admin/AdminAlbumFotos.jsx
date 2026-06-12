@@ -194,7 +194,12 @@ function AdminAlbumFotos() {
           </button>
         </div>
         {newUrl && newUrl.startsWith("https://") ? (
-          <img src={newUrl} alt="Preview" className="mt-3 h-24 rounded-xl object-cover" />
+          <img
+            src={newUrl}
+            alt="Preview"
+            className="mt-3 h-24 rounded-xl object-cover"
+            onError={(e) => { e.currentTarget.style.display = "none"; }}
+          />
         ) : null}
       </form>
 

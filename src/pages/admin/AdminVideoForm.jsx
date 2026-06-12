@@ -30,6 +30,8 @@ function AdminVideoForm() {
   useEffect(() => {
     if (!isEditing) return;
     let cancelled = false;
+    setLoading(true);
+    setForm({ ...EMPTY, anio: new Date().getFullYear() });
     getVideoById(id)
       .then((data) => {
         if (cancelled) return;

@@ -29,6 +29,11 @@ export function normalizeSearch(str = "") {
     .replace(/\p{Mn}/gu, "");
 }
 
+/** Normaliza una respuesta de API que puede ser array directo o { data: [] } */
+export function toArray(res) {
+  return Array.isArray(res) ? res : res?.data ?? [];
+}
+
 /** Convierte un string a slug URL-friendly */
 export function slugify(str = "") {
   return str

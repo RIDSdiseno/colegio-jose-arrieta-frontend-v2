@@ -310,7 +310,9 @@ function VidaEscolar() {
   const [videos, setVideos] = useState([]);
 
   useEffect(() => {
-    getVideos().then(setVideos).catch(() => {});
+    getVideos()
+      .then((res) => setVideos(toArray(res)))
+      .catch(() => {});
   }, []);
 
   return (

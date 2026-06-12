@@ -3,6 +3,7 @@ import { ArrowRight, CalendarDays, Newspaper, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { getNoticias } from "../../api/noticias";
+import { toArray } from "../../lib/utils";
 import { getVideos } from "../../api/videos";
 import { getYoutubeId } from "../../lib/youtube";
 import { formatDate } from "../../lib/utils";
@@ -88,7 +89,7 @@ function NewsSection() {
     getVideos({ limit: 1 })
       .then((res) => {
         // Tolera respuesta como array directo o como { data: [] }
-        const list = Array.isArray(res) ? res : res?.data ?? [];
+        const list = toArray(res);
         const primero = list[0];
         if (primero?.url) {
           const id = getYoutubeId(primero.url);

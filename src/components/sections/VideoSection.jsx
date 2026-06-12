@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Play, X } from "lucide-react";
 import SectionTitle from "../ui/SectionTitle";
 import { getVideos } from "../../api/videos";
+import { toArray } from "../../lib/utils";
 import { getYoutubeId } from "../../lib/youtube";
 
 function VideoSection() {
@@ -12,7 +13,7 @@ function VideoSection() {
 
   useEffect(() => {
     getVideos()
-      .then(setVideos)
+      .then((res) => setVideos(toArray(res)))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);

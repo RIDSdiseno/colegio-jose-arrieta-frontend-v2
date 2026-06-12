@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { Search, FileText, Newspaper, FolderOpen } from "lucide-react";
 import { getNoticias } from "../api/noticias";
 import { getDocumentos } from "../api/documentos";
-import { formatDate, normalizeSearch } from "../lib/utils";
+import { formatDate, normalizeSearch, toArray } from "../lib/utils";
 import { PAGINAS } from "../data/paginas";
 
 
@@ -37,16 +37,18 @@ function Buscar() {
       setDocumentos([]);
       return;
     }
+    let cancelled = false;
     setLoadingNoticias(true);
     setLoadingDocs(true);
     getNoticias({ search: queryParam, limit: 5 })
-      .then((res) => setNoticias(res.data))
-      .catch(() => setNoticias([]))
-      .finally(() => setLoadingNoticias(false));
+      .then((res) => { if (!cancelled) setNoticias(toArray(res)); })
+      .catch(() => { if (!cancelled) setNoticias([]); })
+      .finally(() => { if (!cancelled) setLoadingNoticias(false); });
     getDocumentos({ search: queryParam })
-      .then(setDocumentos)
-      .catch(() => setDocumentos([]))
-      .finally(() => setLoadingDocs(false));
+      .then((res) => { if (!cancelled) setDocumentos(toArray(res)); })
+      .catch(() => { if (!cancelled) setDocumentos([]); })
+      .finally(() => { if (!cancelled) setLoadingDocs(false); });
+    return () => { cancelled = true; };
   }, [queryParam]);
 
   function handleSearch(e) {

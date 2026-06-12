@@ -52,7 +52,7 @@ function Documentos() {
     if (!anosReady) return; // esperar a que los años estén resueltos
     setLoading(true);
     getDocumentos({ anio })
-      .then(setDocumentos)
+      .then((data) => setDocumentos(data.filter((d) => d.categoria !== "Institucional" && d.categoria !== "Protocolo")))
       .catch(() => setDocumentos([]))
       .finally(() => setLoading(false));
   }, [anio, anosReady]);
