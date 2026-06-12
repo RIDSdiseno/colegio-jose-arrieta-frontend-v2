@@ -3,10 +3,9 @@ import { ArrowRight, CalendarDays, Newspaper, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { getNoticias } from "../../api/noticias";
-import { toArray } from "../../lib/utils";
+import { toArray, formatDate } from "../../lib/utils";
 import { getVideos } from "../../api/videos";
 import { getYoutubeId } from "../../lib/youtube";
-import { formatDate } from "../../lib/utils";
 import SectionTitle from "../ui/SectionTitle";
 import newsPlaceholder from "../../assets/news-placeholder.svg";
 

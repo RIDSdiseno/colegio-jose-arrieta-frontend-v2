@@ -6,6 +6,7 @@ import PageHero from "../components/ui/PageHero";
 import { getAlbums, getAlbumFotos } from "../api/albums";
 import { getVideos } from "../api/videos";
 import { getYoutubeId } from "../lib/youtube";
+import { toArray } from "../lib/utils";
 
 const experiencias = [
   {
