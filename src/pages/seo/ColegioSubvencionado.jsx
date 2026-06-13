@@ -3,6 +3,7 @@ import { CheckCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import CTASection from "../../components/sections/CTASection";
 import SectionTitle from "../../components/ui/SectionTitle";
+import PageHero from "../../components/ui/PageHero";
 
 const beneficios = [
   "Financiamiento compartido: acceso a educación de calidad a bajo costo.",
@@ -25,17 +26,13 @@ export default function ColegioSubvencionado() {
         <link rel="canonical" href="https://colegiojosearrieta.cl/colegio-subvencionado-la-reina" />
       </Helmet>
 
-      <section className="page-hero">
-        <div className="container-main">
-          <p className="text-sm uppercase tracking-wide text-secondary">Colegio Subvencionado · La Reina</p>
-          <h1 className="mt-2 max-w-3xl text-4xl font-bold sm:text-5xl">
-            Educación de Calidad con Financiamiento Compartido
-          </h1>
-          <p className="mt-4 max-w-2xl text-slate-100">
-            El Colegio José Arrieta ofrece educación integral de alto nivel como colegio subvencionado en La Reina. Admisión 2026 abierta vía MINEDUC.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        imgs={["/images/depositphotos_17140201-stock-photo-group-of-pupils.jpg", "/images/Educacion-1.jpg"]}
+        eyebrow="Colegio Subvencionado · La Reina"
+        title="Educación de Calidad con"
+        highlight="Financiamiento Compartido"
+        subtitle="El Colegio José Arrieta ofrece educación integral de alto nivel como colegio subvencionado en La Reina. Admisión 2026 abierta vía MINEDUC."
+      />
 
       <section className="py-16">
         <div className="container-main grid gap-10 lg:grid-cols-2">

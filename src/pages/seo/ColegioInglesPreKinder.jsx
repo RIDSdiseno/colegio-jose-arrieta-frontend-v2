@@ -3,6 +3,7 @@ import { Globe, CheckCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import CTASection from "../../components/sections/CTASection";
 import SectionTitle from "../../components/ui/SectionTitle";
+import PageHero from "../../components/ui/PageHero";
 
 const beneficiosIngles = [
   "Inglés desde Pre-Kínder con metodología lúdica y progresiva.",
@@ -25,17 +26,13 @@ export default function ColegioInglesPreKinder() {
         <link rel="canonical" href="https://colegiojosearrieta.cl/colegio-ingles-prekinder-santiago" />
       </Helmet>
 
-      <section className="page-hero">
-        <div className="container-main">
-          <p className="text-sm uppercase tracking-wide text-secondary">Inglés desde Pre-Kínder · La Reina</p>
-          <h1 className="mt-2 max-w-3xl text-4xl font-bold sm:text-5xl">
-            Inglés desde Pre-Kínder en Santiago
-          </h1>
-          <p className="mt-4 max-w-2xl text-slate-100">
-            En el Colegio José Arrieta el inglés comienza desde los primeros años con metodología lúdica y el programa Richmond certificado para básica.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        img="/images/Ingles.webp"
+        eyebrow="Inglés desde Pre-Kínder · La Reina"
+        title="Inglés desde Pre-Kínder"
+        highlight="en Santiago"
+        subtitle="En el Colegio José Arrieta el inglés comienza desde los primeros años con metodología lúdica y el programa Richmond certificado para básica."
+      />
 
       <section className="py-16">
         <div className="container-main grid gap-10 lg:grid-cols-2">

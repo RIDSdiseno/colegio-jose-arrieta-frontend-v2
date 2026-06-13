@@ -35,23 +35,6 @@ h6 {
   @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
 }
 
-.page-hero {
-  @apply relative overflow-hidden bg-primary py-20 text-white sm:py-24;
-}
-
-.page-hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(120deg, rgba(245, 166, 35, 0.33), rgba(75, 75, 204, 0.88));
-  z-index: 0;
-}
-
-.page-hero > * {
-  position: relative;
-  z-index: 1;
-}
-
 /* ── Contenido HTML de WordPress (NoticiaDetalle) ── */
 .wp-content {
   color: #334155;

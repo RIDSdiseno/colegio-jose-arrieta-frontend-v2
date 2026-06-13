@@ -3,6 +3,7 @@ import { CheckCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import CTASection from "../../components/sections/CTASection";
 import SectionTitle from "../../components/ui/SectionTitle";
+import PageHero from "../../components/ui/PageHero";
 
 const razones = [
   "Más de 50 años de trayectoria educativa en La Reina, Santiago.",
@@ -25,17 +26,13 @@ export default function ColegioLaReina() {
         <link rel="canonical" href="https://colegiojosearrieta.cl/colegio-la-reina" />
       </Helmet>
 
-      <section className="page-hero">
-        <div className="container-main">
-          <p className="text-sm uppercase tracking-wide text-secondary">La Reina, Santiago</p>
-          <h1 className="mt-2 max-w-3xl text-4xl font-bold sm:text-5xl">
-            Colegio José Arrieta — La Reina
-          </h1>
-          <p className="mt-4 max-w-2xl text-slate-100">
-            Más de 50 años siendo parte de la comunidad educativa de La Reina. Formamos alumnos felices, seguros y preparados para el futuro.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        imgs={["/images/alumnos.jpg", "/images/DSC_0308-Grande.jpg"]}
+        eyebrow="La Reina, Santiago"
+        title="Colegio José Arrieta —"
+        highlight="La Reina"
+        subtitle="Más de 50 años siendo parte de la comunidad educativa de La Reina. Formamos alumnos felices, seguros y preparados para el futuro."
+      />
 
       <section className="py-16">
         <div className="container-main grid gap-10 lg:grid-cols-2">

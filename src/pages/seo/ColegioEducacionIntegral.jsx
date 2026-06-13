@@ -3,6 +3,7 @@ import { BookOpen, Users, Heart, Monitor, Award } from "lucide-react";
 import { Link } from "react-router-dom";
 import CTASection from "../../components/sections/CTASection";
 import SectionTitle from "../../components/ui/SectionTitle";
+import PageHero from "../../components/ui/PageHero";
 
 const pilares = [
   { icon: BookOpen, titulo: "Excelencia Académica", texto: "Metodologías activas, método Singapur en matemáticas y programa Richmond de inglés." },
@@ -25,17 +26,13 @@ export default function ColegioEducacionIntegral() {
         <link rel="canonical" href="https://colegiojosearrieta.cl/colegio-educacion-integral-la-reina" />
       </Helmet>
 
-      <section className="page-hero">
-        <div className="container-main">
-          <p className="text-sm uppercase tracking-wide text-secondary">Educación Integral · La Reina</p>
-          <h1 className="mt-2 max-w-3xl text-4xl font-bold sm:text-5xl">
-            Formación Integral en La Reina — Más de 50 Años
-          </h1>
-          <p className="mt-4 max-w-2xl text-slate-100">
-            En el Colegio José Arrieta creemos que educar es mucho más que transmitir conocimientos. Formamos personas íntegras, con valores, habilidades y preparación para el mundo.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        imgs={["/images/ninos-estudiando-scaled.webp", "/images/istockphoto-1768516789-612x612.jpg"]}
+        eyebrow="Educación Integral · La Reina"
+        title="Formación Integral en La Reina —"
+        highlight="Más de 50 Años"
+        subtitle="En el Colegio José Arrieta creemos que educar es mucho más que transmitir conocimientos. Formamos personas íntegras, con valores, habilidades y preparación para el mundo."
+      />
 
       <section className="py-16">
         <div className="container-main">
