@@ -1,11 +1,14 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toArray } from "../lib/utils";
 
 /**
  * Manages shared state for admin list pages: items, loading, error, and delete confirm.
- * @param {() => Promise<any>} fetchFn - module-level function that fetches the list
+ * @param {() => Promise<any>} fetchFn - fetch function (module-level or stable ref)
  */
 export function useAdminList(fetchFn) {
+  const fetchRef = useRef(fetchFn);
+  useEffect(() => { fetchRef.current = fetchFn; });
+
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -16,13 +19,13 @@ export function useAdminList(fetchFn) {
     setLoading(true);
     setError("");
     try {
-      setItems(toArray(await fetchFn()));
+      setItems(toArray(await fetchRef.current()));
     } catch (err) {
       setError(err.message ?? "Error al cargar.");
     } finally {
       setLoading(false);
     }
-  }, [fetchFn]);
+  }, []);
 
   useEffect(() => { cargar(); }, [cargar]);
 
@@ -37,11 +40,11 @@ export function useAdminList(fetchFn) {
       await deleteFn(id);
       setItems((prev) => prev.filter((item) => item.id !== id));
       afterDelete?.();
+      setConfirmId(null);
     } catch (err) {
       setError(err.message ?? "Error al eliminar.");
     } finally {
       setDeleting(false);
-      setConfirmId(null);
     }
   }, []);
 
