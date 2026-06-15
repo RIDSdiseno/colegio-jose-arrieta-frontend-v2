@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import CTASection from "../../components/sections/CTASection";
 import SectionTitle from "../../components/ui/SectionTitle";
 import PageHero from "../../components/ui/PageHero";
+import { schoolSchema } from "../../data/schoolSchema";
 
 const pilares = [
   { icon: BookOpen, titulo: "Excelencia Académica", texto: "Metodologías activas, método Singapur en matemáticas y programa Richmond de inglés." },
@@ -24,6 +25,9 @@ export default function ColegioEducacionIntegral() {
         />
         <meta name="keywords" content="colegio educación integral La Reina, colegio formación integral Santiago, colegio valores La Reina, educación integral prekinder básica La Reina" />
         <link rel="canonical" href="https://colegiojosearrieta.cl/colegio-educacion-integral-la-reina" />
+        <script type="application/ld+json">
+          {JSON.stringify({ ...schoolSchema, "@id": "https://colegiojosearrieta.cl/colegio-educacion-integral-la-reina" })}
+        </script>
       </Helmet>
 
       <PageHero

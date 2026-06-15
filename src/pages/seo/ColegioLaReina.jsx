@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import CTASection from "../../components/sections/CTASection";
 import SectionTitle from "../../components/ui/SectionTitle";
 import PageHero from "../../components/ui/PageHero";
+import { schoolSchema } from "../../data/schoolSchema";
 
 const razones = [
   "Más de 50 años de trayectoria educativa en La Reina, Santiago.",
@@ -24,6 +25,9 @@ export default function ColegioLaReina() {
         />
         <meta name="keywords" content="mejores colegios La Reina, colegios La Reina Santiago, colegio La Reina admisión 2026, colegio básica La Reina" />
         <link rel="canonical" href="https://colegiojosearrieta.cl/colegio-la-reina" />
+        <script type="application/ld+json">
+          {JSON.stringify({ ...schoolSchema, "@id": "https://colegiojosearrieta.cl/colegio-la-reina" })}
+        </script>
       </Helmet>
 
       <PageHero

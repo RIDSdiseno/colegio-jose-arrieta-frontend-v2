@@ -3,6 +3,12 @@
   publish = "dist"
 
 [[redirects]]
+  from = "/biblioteca"
+  to = "http://colegioarrieta.ddns.net:83/"
+  status = 302
+  force = true
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200

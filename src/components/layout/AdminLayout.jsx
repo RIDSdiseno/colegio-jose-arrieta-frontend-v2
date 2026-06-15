@@ -1,4 +1,5 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { LogOut, Newspaper, LayoutDashboard, Star, Images, Youtube, FolderOpen } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
@@ -20,6 +21,10 @@ function AdminLayout() {
   };
 
   return (
+    <>
+    <Helmet>
+      <meta name="robots" content="noindex, nofollow" />
+    </Helmet>
     <div className="min-h-screen bg-slate-100">
       {/* Sidebar fijo — nunca scrollea */}
       <aside className="fixed inset-y-0 left-0 z-20 flex w-60 flex-col bg-primary text-white">
@@ -67,6 +72,7 @@ function AdminLayout() {
         <Outlet />
       </main>
     </div>
+    </>
   );
 }
 

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import CTASection from "../../components/sections/CTASection";
 import SectionTitle from "../../components/ui/SectionTitle";
 import PageHero from "../../components/ui/PageHero";
+import { schoolSchema } from "../../data/schoolSchema";
 
 const beneficios = [
   "Financiamiento compartido: acceso a educación de calidad a bajo costo.",
@@ -24,6 +25,9 @@ export default function ColegioSubvencionado() {
         />
         <meta name="keywords" content="colegios subvencionados La Reina, colegio subvencionado Santiago, colegio particular subvencionado La Reina, admisión MINEDUC La Reina" />
         <link rel="canonical" href="https://colegiojosearrieta.cl/colegio-subvencionado-la-reina" />
+        <script type="application/ld+json">
+          {JSON.stringify({ ...schoolSchema, "@id": "https://colegiojosearrieta.cl/colegio-subvencionado-la-reina" })}
+        </script>
       </Helmet>
 
       <PageHero

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
+import { useNavigate, useLocation, Navigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { LogIn } from "lucide-react";
 
@@ -7,7 +8,7 @@ const MAX_ATTEMPTS = 3;
 const COOLDOWN_SECONDS = 20;
 
 function AdminLogin() {
-  const { login } = useAuth();
+  const { login, session, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const rawFrom = location.state?.from ?? "/admin/noticias";
@@ -56,7 +57,14 @@ function AdminLogin() {
     }
   };
 
+  if (!authLoading && session) return <Navigate to={from} replace />;
+
   return (
+    <>
+    <Helmet>
+      <title>Acceso Administradores — Colegio José Arrieta</title>
+      <meta name="robots" content="noindex, nofollow" />
+    </Helmet>
     <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
       <div className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-8 shadow-soft">
         <div className="mb-6 text-center">
@@ -114,6 +122,7 @@ function AdminLogin() {
         </form>
       </div>
     </div>
+    </>
   );
 }
 

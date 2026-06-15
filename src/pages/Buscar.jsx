@@ -153,7 +153,7 @@ function Buscar() {
               {loadingNoticias ? (
                 <div className="space-y-2">
                   {[1, 2].map((i) => (
-                    <div key={i} className="h-16 animate-pulse rounded-xl bg-slate-100" />
+                    <div key={i} aria-hidden="true" className="h-16 animate-pulse rounded-xl bg-slate-100" />
                   ))}
                 </div>
               ) : (
@@ -168,7 +168,9 @@ function Buscar() {
                         <img
                           src={n.imagen}
                           alt={n.titulo}
+                          loading="lazy"
                           className="h-12 w-16 shrink-0 rounded-lg object-cover"
+                          onError={(e) => { e.currentTarget.style.display = "none"; }}
                         />
                       )}
                       <div className="min-w-0">
@@ -193,7 +195,7 @@ function Buscar() {
               {loadingDocs ? (
                 <div className="space-y-2">
                   {[1, 2].map((i) => (
-                    <div key={i} className="h-14 animate-pulse rounded-xl bg-slate-100" />
+                    <div key={i} aria-hidden="true" className="h-14 animate-pulse rounded-xl bg-slate-100" />
                   ))}
                 </div>
               ) : (

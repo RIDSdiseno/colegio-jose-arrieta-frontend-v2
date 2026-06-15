@@ -74,6 +74,7 @@ function Documentos() {
           name="description"
           content={`Descarga los documentos del año académico ${anio} del Colegio José Arrieta: lista de útiles escolares, calendario escolar, plan lector e información de cursos.`}
         />
+        <link rel="canonical" href="https://colegiojosearrieta.cl/documentos" />
       </Helmet>
 
       <PageHero
@@ -107,7 +108,7 @@ function Documentos() {
         {loading ? (
           <div className="space-y-8">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="space-y-3">
+              <div key={i} aria-hidden="true" className="space-y-3">
                 <div className="h-6 w-48 animate-pulse rounded-lg bg-slate-200" />
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                   {Array.from({ length: 3 }).map((_, j) => (

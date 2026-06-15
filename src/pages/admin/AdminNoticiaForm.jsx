@@ -16,6 +16,7 @@ import AdminFormActions from "../../components/admin/AdminFormActions";
 import AdminLoadingSpinner from "../../components/admin/AdminLoadingSpinner";
 
 const CATEGORIAS = CATEGORIAS_NOTICIAS;
+const SAFE_URL = /^https?:\/\//i;
 
 const EMPTY = {
   titulo: "",
@@ -71,7 +72,7 @@ function buildContenido(texto, imagenes, fotosUbicacion = "antes") {
     .replace(/\r\n/g, "\n")
     .replace(/\n/g, "<br>");
   const htmlImgs = imagenes.length > 0
-    ? `<div class="wp-gallery">${imagenes.map((u) => `<img src="${u.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}" alt="">`).join("")}</div>`
+    ? `<div class="wp-gallery">${imagenes.map((u) => `<img src="${u.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;")}" alt="">`).join("")}</div>`
     : "";
   const partes = fotosUbicacion === "antes"
     ? [htmlImgs, htmlTexto]
@@ -205,13 +206,14 @@ function AdminNoticiaForm() {
     setSaving(true);
     try {
       const contenido = buildContenido(form.texto, form.imagenes, form.fotosUbicacion);
+      const imagenSegura = SAFE_URL.test(form.imagen) ? form.imagen : null;
       const payload = {
         titulo: form.titulo,
         slug: form.slug,
         extracto: form.extracto,
         contenido,
         categoria: form.categoria,
-        imagen: form.imagen || null,
+        imagen: imagenSegura,
         fecha: form.fecha,
       };
       if (isEditing) {
@@ -226,6 +228,8 @@ function AdminNoticiaForm() {
       setSaving(false);
     }
   };
+
+  const safePortadaUrl = SAFE_URL.test(form.imagen) ? form.imagen : null;
 
   if (loading) return <AdminLoadingSpinner />;
 
@@ -364,7 +368,7 @@ function AdminNoticiaForm() {
           {form.imagenes.length > 0 ? (
             <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
               {form.imagenes.map((url, idx) => (
-                <div key={idx} className="group relative overflow-hidden rounded-xl border border-slate-200">
+                <div key={url} className="group relative overflow-hidden rounded-xl border border-slate-200">
                   <img
                     src={url}
                     alt=""
@@ -413,10 +417,10 @@ function AdminNoticiaForm() {
             Imagen destacada (portada)
           </label>
 
-          {form.imagen ? (
+          {safePortadaUrl ? (
             <div className="relative mb-3">
               <img
-                src={form.imagen}
+                src={safePortadaUrl}
                 alt="Vista previa"
                 className="max-h-64 w-full rounded-xl object-contain"
               />

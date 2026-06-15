@@ -91,6 +91,11 @@ function NoticiaDetalle() {
 
   if (loading) {
     return (
+      <>
+      <Helmet>
+        <title>Cargando noticia… — Colegio José Arrieta</title>
+        <meta name="robots" content="noindex" />
+      </Helmet>
       <section className="container-main py-20">
         <div className="mx-auto max-w-4xl animate-pulse space-y-4">
           <div className="h-10 w-2/3 rounded bg-slate-200" />
@@ -103,6 +108,7 @@ function NoticiaDetalle() {
           </div>
         </div>
       </section>
+      </>
     );
   }
 
@@ -125,7 +131,8 @@ function NoticiaDetalle() {
     <>
       <Helmet>
         <title>{noticia.titulo} — Colegio José Arrieta</title>
-        <meta name="description" content={(noticia.extracto || "").replace(/<[^>]+>/g, "").slice(0, 160)} />
+        <meta name="description" content={(noticia.extracto || "").replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").slice(0, 160).trim()} />
+        <link rel="canonical" href={`https://colegiojosearrieta.cl/noticias/${noticia.slug}`} />
       </Helmet>
 
       <section className="py-14">

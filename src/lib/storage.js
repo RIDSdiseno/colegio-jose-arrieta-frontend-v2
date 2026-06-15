@@ -23,7 +23,7 @@ export async function subirArchivo(file, bucket, prefix = "", allowedMime = ALLO
   }
 
   const ext = file.name.split(".").pop().toLowerCase();
-  const uid = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const uid = crypto.randomUUID();
   const nombre = prefix ? `${prefix}/${uid}.${ext}` : `${uid}.${ext}`;
   const { error } = await supabase.storage.from(bucket).upload(nombre, file, { upsert: false });
   if (error) throw new Error(error.message);

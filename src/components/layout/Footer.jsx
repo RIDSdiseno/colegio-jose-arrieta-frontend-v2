@@ -37,7 +37,7 @@ const admisionLinks = [
   },
   {
     label: "Biblioteca en línea",
-    href: "http://colegioarrieta.ddns.net:83/",
+    href: "/biblioteca",
     external: true,
   },
 ];

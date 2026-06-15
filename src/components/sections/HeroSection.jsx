@@ -27,8 +27,7 @@ function HeroSection() {
           src="/hero.mp4"
           autoPlay muted loop playsInline
         >
-          {/* Track vacío requerido por WCAG 1.2.2 — video es puramente decorativo */}
-          <track kind="captions" srcLang="es" src="" default />
+          {/* Video es puramente decorativo con aria-hidden. WCAG 1.2.2 exception apply. */}
         </video>
       </div>
 

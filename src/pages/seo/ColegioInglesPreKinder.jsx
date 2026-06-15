@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import CTASection from "../../components/sections/CTASection";
 import SectionTitle from "../../components/ui/SectionTitle";
 import PageHero from "../../components/ui/PageHero";
+import { schoolSchema } from "../../data/schoolSchema";
 
 const beneficiosIngles = [
   "Inglés desde Pre-Kínder con metodología lúdica y progresiva.",
@@ -24,10 +25,13 @@ export default function ColegioInglesPreKinder() {
         />
         <meta name="keywords" content="colegio inglés desde prekinder Santiago, colegio inglés La Reina, inglés prekinder La Reina, colegio bilingüe La Reina Santiago, programa Richmond colegio" />
         <link rel="canonical" href="https://colegiojosearrieta.cl/colegio-ingles-prekinder-santiago" />
+        <script type="application/ld+json">
+          {JSON.stringify({ ...schoolSchema, "@id": "https://colegiojosearrieta.cl/colegio-ingles-prekinder-santiago" })}
+        </script>
       </Helmet>
 
       <PageHero
-        img="/images/Ingles.webp"
+        imgs={["/images/Ingles.webp", "/images/alumnos.jpg"]}
         eyebrow="Inglés desde Pre-Kínder · La Reina"
         title="Inglés desde Pre-Kínder"
         highlight="en Santiago"

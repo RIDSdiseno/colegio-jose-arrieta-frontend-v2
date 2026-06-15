@@ -90,6 +90,7 @@ function Contacto() {
           name="description"
           content="Contáctanos para resolver dudas sobre admisión, visitas y proyecto educativo del Colegio José Arrieta."
         />
+        <link rel="canonical" href="https://colegiojosearrieta.cl/contacto" />
       </Helmet>
 
       <PageHero

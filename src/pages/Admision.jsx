@@ -93,12 +93,14 @@ function Lightbox({ images, startIndex, onClose }) {
         <>
           <button
             onClick={(e) => { e.stopPropagation(); prev(); }}
+            aria-label="Imagen anterior"
             className="absolute left-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/25 transition"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); next(); }}
+            aria-label="Imagen siguiente"
             className="absolute right-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/25 transition"
           >
             <ChevronRight className="h-5 w-5" />
@@ -179,34 +181,34 @@ function FormVisita() {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className="mb-1 block text-sm font-medium text-slate-700">Nombre completo</label>
+          <label htmlFor="visita-nombre" className="mb-1 block text-sm font-medium text-slate-700">Nombre completo</label>
           <input
-            name="nombre" required value={form.nombre} onChange={handleChange}
+            id="visita-nombre" name="nombre" required value={form.nombre} onChange={handleChange}
             placeholder="Ej: María González"
             className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-slate-700">Teléfono</label>
+          <label htmlFor="visita-telefono" className="mb-1 block text-sm font-medium text-slate-700">Teléfono</label>
           <input
-            name="telefono" required value={form.telefono} onChange={handleChange}
+            id="visita-telefono" name="telefono" required value={form.telefono} onChange={handleChange}
             placeholder="+56 9 XXXX XXXX"
             className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
       </div>
       <div>
-        <label className="mb-1 block text-sm font-medium text-slate-700">Email</label>
+        <label htmlFor="visita-email" className="mb-1 block text-sm font-medium text-slate-700">Email</label>
         <input
-          name="email" type="email" required value={form.email} onChange={handleChange}
+          id="visita-email" name="email" type="email" required value={form.email} onChange={handleChange}
           placeholder="correo@ejemplo.com"
           className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
         />
       </div>
       <div>
-        <label className="mb-1 block text-sm font-medium text-slate-700">¿En qué podemos ayudarte?</label>
+        <label htmlFor="visita-asunto" className="mb-1 block text-sm font-medium text-slate-700">¿En qué podemos ayudarte?</label>
         <select
-          name="asunto" value={form.asunto} onChange={handleChange}
+          id="visita-asunto" name="asunto" value={form.asunto} onChange={handleChange}
           className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
         >
           <option>Agenda una visita</option>
@@ -244,6 +246,7 @@ function Admision() {
           content="Postula al Colegio José Arrieta 2026 en La Reina. Vacantes disponibles para Pre-Kínder a 8° básico. Proceso MINEDUC, formulario de visita y WhatsApp directo. ¡Inscríbete hoy!"
         />
         <meta name="keywords" content="admisión 2026 La Reina, postular colegio La Reina, vacantes colegio subvencionado Santiago, inscripción MINEDUC 2026" />
+        <link rel="canonical" href="https://colegiojosearrieta.cl/admision" />
       </Helmet>
 
       <PageHero
@@ -425,7 +428,7 @@ function Admision() {
             <div className="mb-5 grid grid-cols-2 gap-2 sm:grid-cols-3">
               {uniformeImages.map((img, i) => (
                 <button
-                  key={i}
+                  key={img.src}
                   onClick={() => setLightbox(i)}
                   aria-label={`Ver ${img.label}`}
                   className="group relative overflow-hidden rounded-xl border border-slate-200 bg-slate-50"

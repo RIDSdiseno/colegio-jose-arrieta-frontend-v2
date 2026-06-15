@@ -93,6 +93,7 @@ function ProyectoEducativo() {
           name="description"
           content="Conoce el proyecto educativo del Colegio José Arrieta: ejes estratégicos, metas académicas SIMCE, inglés desde prekinder, método Singapur y talleres extraprogramáticos en La Reina."
         />
+        <link rel="canonical" href="https://colegiojosearrieta.cl/proyecto-educativo" />
       </Helmet>
 
       <PageHero

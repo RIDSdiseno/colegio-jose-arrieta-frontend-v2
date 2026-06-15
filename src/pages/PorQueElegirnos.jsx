@@ -63,6 +63,7 @@ function PorQueElegirnos() {
           content="Descubre por qué el Colegio José Arrieta es una de las mejores opciones en La Reina: educación integral, comunidad cercana, infraestructura moderna e inglés desde prekinder en Santiago."
         />
         <meta name="keywords" content="colegio educación integral La Reina, colegio con inglés prekinder Santiago, colegio valores La Reina, colegio subvencionado recomendado Santiago" />
+        <link rel="canonical" href="https://colegiojosearrieta.cl/por-que-elegirnos" />
       </Helmet>
 
       <PageHero

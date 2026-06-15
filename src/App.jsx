@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import AdminLayout from "./components/layout/AdminLayout";
@@ -5,41 +6,48 @@ import ProtectedRoute from "./context/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 import Analytics from "./components/Analytics";
 
-import Home from "./pages/Home";
-import PorQueElegirnos from "./pages/PorQueElegirnos";
-import ProyectoEducativo from "./pages/ProyectoEducativo";
-import Admision from "./pages/Admision";
-import VidaEscolar from "./pages/VidaEscolar";
-import Noticias from "./pages/Noticias";
-import NoticiaDetalle from "./pages/NoticiaDetalle";
-import Contacto from "./pages/Contacto";
-import Buscar from "./pages/Buscar";
-import Documentos from "./pages/Documentos";
+const Home = lazy(() => import("./pages/Home"));
+const PorQueElegirnos = lazy(() => import("./pages/PorQueElegirnos"));
+const ProyectoEducativo = lazy(() => import("./pages/ProyectoEducativo"));
+const Admision = lazy(() => import("./pages/Admision"));
+const VidaEscolar = lazy(() => import("./pages/VidaEscolar"));
+const Noticias = lazy(() => import("./pages/Noticias"));
+const NoticiaDetalle = lazy(() => import("./pages/NoticiaDetalle"));
+const Contacto = lazy(() => import("./pages/Contacto"));
+const Buscar = lazy(() => import("./pages/Buscar"));
+const Documentos = lazy(() => import("./pages/Documentos"));
 
-import AdminLogin from "./pages/admin/AdminLogin";
-import AdminNoticias from "./pages/admin/AdminNoticias";
-import AdminNoticiaForm from "./pages/admin/AdminNoticiaForm";
-import AdminTestimonios from "./pages/admin/AdminTestimonios";
-import AdminTestimonioForm from "./pages/admin/AdminTestimonioForm";
-import AdminAlbums from "./pages/admin/AdminAlbums";
-import AdminAlbumForm from "./pages/admin/AdminAlbumForm";
-import AdminAlbumFotos from "./pages/admin/AdminAlbumFotos";
-import AdminVideos from "./pages/admin/AdminVideos";
-import AdminVideoForm from "./pages/admin/AdminVideoForm";
-import AdminDocumentos from "./pages/admin/AdminDocumentos";
-import AdminDocumentoForm from "./pages/admin/AdminDocumentoForm";
+const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
+const AdminNoticias = lazy(() => import("./pages/admin/AdminNoticias"));
+const AdminNoticiaForm = lazy(() => import("./pages/admin/AdminNoticiaForm"));
+const AdminTestimonios = lazy(() => import("./pages/admin/AdminTestimonios"));
+const AdminTestimonioForm = lazy(() => import("./pages/admin/AdminTestimonioForm"));
+const AdminAlbums = lazy(() => import("./pages/admin/AdminAlbums"));
+const AdminAlbumForm = lazy(() => import("./pages/admin/AdminAlbumForm"));
+const AdminAlbumFotos = lazy(() => import("./pages/admin/AdminAlbumFotos"));
+const AdminVideos = lazy(() => import("./pages/admin/AdminVideos"));
+const AdminVideoForm = lazy(() => import("./pages/admin/AdminVideoForm"));
+const AdminDocumentos = lazy(() => import("./pages/admin/AdminDocumentos"));
+const AdminDocumentoForm = lazy(() => import("./pages/admin/AdminDocumentoForm"));
 
-import NotFound from "./pages/NotFound";
-import ColegioLaReina from "./pages/seo/ColegioLaReina";
-import ColegioSubvencionado from "./pages/seo/ColegioSubvencionado";
-import ColegioEducacionIntegral from "./pages/seo/ColegioEducacionIntegral";
-import ColegioInglesPreKinder from "./pages/seo/ColegioInglesPreKinder";
+const NotFound = lazy(() => import("./pages/NotFound"));
+const ColegioLaReina = lazy(() => import("./pages/seo/ColegioLaReina"));
+const ColegioSubvencionado = lazy(() => import("./pages/seo/ColegioSubvencionado"));
+const ColegioEducacionIntegral = lazy(() => import("./pages/seo/ColegioEducacionIntegral"));
+const ColegioInglesPreKinder = lazy(() => import("./pages/seo/ColegioInglesPreKinder"));
+
+const PageSpinner = () => (
+  <div className="flex min-h-screen items-center justify-center">
+    <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+  </div>
+);
 
 function App() {
   return (
     <AuthProvider>
       {/* Analytics debe estar dentro del árbol del Router (via main.jsx) para usar useLocation */}
       <Analytics />
+      <Suspense fallback={<PageSpinner />}>
       <Routes>
         {/* Sitio público */}
         <Route element={<Layout />}>
@@ -91,6 +99,7 @@ function App() {
 
         <Route path="*" element={<NotFound />} />
       </Routes>
+      </Suspense>
     </AuthProvider>
   );
 }

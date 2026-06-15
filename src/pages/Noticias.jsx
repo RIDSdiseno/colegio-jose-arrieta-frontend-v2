@@ -134,6 +134,7 @@ function Noticias() {
         <title>Noticias — Colegio José Arrieta, La Reina</title>
         <meta name="keywords" content="noticias colegio La Reina, actividades colegio José Arrieta, comunidad escolar La Reina Santiago" />
         <meta name="description" content="Revisa noticias, actividades y novedades del Colegio José Arrieta en La Reina." />
+        <link rel="canonical" href="https://colegiojosearrieta.cl/noticias" />
       </Helmet>
 
       <PageHero
@@ -258,7 +259,7 @@ function Noticias() {
 
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {loading
-              ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
+              ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} aria-hidden="true" />)
               : items.map((item) => (
                   <article
                     key={item.id}

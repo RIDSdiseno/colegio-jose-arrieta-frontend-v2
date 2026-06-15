@@ -110,7 +110,7 @@ function Galeria() {
     return (
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="h-64 animate-pulse rounded-2xl bg-slate-200" />
+          <div key={i} aria-hidden="true" className="h-64 animate-pulse rounded-2xl bg-slate-200" />
         ))}
       </div>
     );
@@ -256,6 +256,7 @@ function VideoCard({ video }) {
           <img
             src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`}
             alt={video.titulo}
+            loading="lazy"
             className="h-44 w-full object-cover transition duration-300 group-hover:scale-105"
             onError={(e) => { e.currentTarget.style.display = "none"; }}
           />
@@ -324,6 +325,7 @@ function VidaEscolar() {
           name="description"
           content="Descubre la vida escolar del Colegio José Arrieta: actividades artísticas, deportes, talleres, galería de fotos y videos."
         />
+        <link rel="canonical" href="https://colegiojosearrieta.cl/vida-escolar" />
       </Helmet>
 
       <PageHero

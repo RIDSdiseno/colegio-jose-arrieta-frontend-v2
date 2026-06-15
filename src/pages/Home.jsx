@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet-async";
+import { schoolSchema } from "../data/schoolSchema";
 import HeroSection from "../components/sections/HeroSection";
 import ValoresSection from "../components/sections/ValoresSection";
 import StatsSection from "../components/sections/StatsSection";
@@ -20,6 +21,10 @@ function Home() {
           content="Colegio José Arrieta: uno de los mejores colegios subvencionados en La Reina, Santiago. Más de 50 años formando alumnos con educación integral, inglés desde Pre-Kínder y valores. Admisión 2026 abierta."
         />
         <meta name="keywords" content="colegio La Reina, mejores colegios La Reina, colegio subvencionado La Reina, educación integral Santiago, admisión 2026 La Reina" />
+        <link rel="canonical" href="https://colegiojosearrieta.cl" />
+        <script type="application/ld+json">
+          {JSON.stringify({ ...schoolSchema, "@id": "https://colegiojosearrieta.cl" })}
+        </script>
       </Helmet>
 
       <HeroSection />
