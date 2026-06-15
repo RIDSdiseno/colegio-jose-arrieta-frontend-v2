@@ -1,6 +1,13 @@
 import { Facebook, Instagram, Youtube, MapPin, Phone, Mail, Clock, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 
+const infoLinks = [
+  { label: "Colegios en La Reina", to: "/colegio-la-reina" },
+  { label: "Colegio Subvencionado", to: "/colegio-subvencionado-la-reina" },
+  { label: "Inglés desde Pre-Kínder", to: "/colegio-ingles-prekinder-santiago" },
+  { label: "Educación Integral", to: "/colegio-educacion-integral-la-reina" },
+];
+
 const navLinks = [
   { label: "Inicio", to: "/" },
   { label: "¿Por qué elegirnos?", to: "/por-que-elegirnos" },
@@ -73,13 +80,25 @@ function Footer() {
           </div>
         </section>
 
-        {/* Col 2 — Navegación */}
+        {/* Col 2 — Navegación + Información SEO */}
         <section>
           <h3 className="mb-4 font-heading text-sm font-bold uppercase tracking-wider text-white/50">
             El Colegio
           </h3>
           <ul className="space-y-2.5 text-sm">
             {navLinks.map((item) => (
+              <li key={item.to}>
+                <Link to={item.to} className="text-white/75 transition hover:text-secondary">
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <h3 className="mb-3 mt-6 font-heading text-sm font-bold uppercase tracking-wider text-white/50">
+            Información
+          </h3>
+          <ul className="space-y-2.5 text-sm">
+            {infoLinks.map((item) => (
               <li key={item.to}>
                 <Link to={item.to} className="text-white/75 transition hover:text-secondary">
                   {item.label}
