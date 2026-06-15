@@ -13,6 +13,7 @@ import {
   trackFormularioVisita, trackWhatsAppClick,
   trackPostulacionClick, trackVisitaAdmision,
 } from "../lib/tracking";
+import { WA_NUMBER, WA_ADMISION_URL } from "../data/contactInfo";
 
 // ── Datos financieros — ACTUALIZAR CADA ENERO ────────────────────────────────
 // Fuente: resolución MINEDUC de cobros autorizado. Última actualización: 2026.
@@ -150,7 +151,7 @@ function FormVisita() {
     setError("");
     trackFormularioVisita();
     trackWhatsAppClick("formulario_visita");
-    const wa = `https://wa.me/56988936631?text=${encodeURIComponent(
+    const wa = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(
       `Hola, me llamo ${nombre}. ${form.asunto}. Email: ${email}. Teléfono: ${telefono}`
     )}`;
     const popup = window.open(wa, "_blank");
@@ -302,7 +303,7 @@ function Admision() {
               <p className="flex items-center gap-2 text-sm text-slate-700">
                 <MessageCircle className="h-4 w-4 text-[#25D366]" />
                 <a
-                  href="https://wa.me/56988936631?text=Hola%2C%20me%20interesa%20información%20sobre%20la%20admisión%202026"
+                  href={WA_ADMISION_URL}
                   target="_blank"
                   rel="noreferrer"
                   className="font-semibold text-[#25D366] hover:underline"

@@ -97,7 +97,7 @@ function NoticiaDetalle() {
         <meta name="robots" content="noindex" />
       </Helmet>
       <section className="container-main py-20">
-        <div className="mx-auto max-w-4xl animate-pulse space-y-4">
+        <div aria-hidden="true" className="mx-auto max-w-4xl animate-pulse space-y-4">
           <div className="h-10 w-2/3 rounded bg-slate-200" />
           <div className="h-4 w-1/3 rounded bg-slate-200" />
           <div className="h-64 rounded-2xl bg-slate-200" />

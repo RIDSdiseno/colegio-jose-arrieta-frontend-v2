@@ -4,6 +4,7 @@ import { Mail, Phone, MessageCircle, MapPin, Clock, Send, CheckCircle2 } from "l
 import Button from "../components/ui/Button";
 import PageHero from "../components/ui/PageHero";
 import { trackFormularioContacto } from "../lib/tracking";
+import { WA_NUMBER, WA_INFO_URL } from "../data/contactInfo";
 
 const contactItems = [
   {
@@ -24,7 +25,7 @@ const contactItems = [
     icon: MessageCircle,
     label: "WhatsApp",
     value: "+56 9 8893 6631",
-    href: "https://wa.me/56988936631?text=Hola%2C%20quisiera%20más%20información",
+    href: WA_INFO_URL,
   },
   {
     icon: MapPin,
@@ -70,7 +71,7 @@ function Contacto() {
     }
     setError("");
     trackFormularioContacto();
-    const wa = `https://wa.me/56988936631?text=${encodeURIComponent(
+    const wa = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(
       `Hola, me llamo ${nombre}. Email: ${email}. Teléfono: ${telefono}. ${mensaje}`
     )}`;
     const popup = window.open(wa, "_blank");
@@ -148,7 +149,7 @@ function Contacto() {
 
             {/* WhatsApp CTA */}
             <a
-              href="https://wa.me/56988936631?text=Hola%2C%20quisiera%20más%20información"
+              href={WA_INFO_URL}
               target="_blank"
               rel="noreferrer"
               className="flex items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-5 py-4 text-sm font-bold text-white shadow-soft transition hover:bg-[#1ebe5d]"

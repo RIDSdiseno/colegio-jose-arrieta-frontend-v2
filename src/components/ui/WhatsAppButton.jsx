@@ -1,10 +1,11 @@
 import { MessageCircle } from "lucide-react";
 import { trackWhatsAppClick } from "../../lib/tracking";
+import { WA_ADMISION_URL } from "../../data/contactInfo";
 
 function WhatsAppButton() {
   return (
     <a
-      href="https://wa.me/56988936631?text=Hola%2C%20me%20interesa%20información%20sobre%20la%20admisión%202026"
+      href={WA_ADMISION_URL}
       target="_blank"
       rel="noreferrer"
       aria-label="Escríbenos por WhatsApp sobre admisión 2026"

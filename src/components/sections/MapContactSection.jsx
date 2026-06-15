@@ -2,6 +2,7 @@ import { MapPin, Phone, Mail, Clock, MessageCircle, ArrowRight, ExternalLink } f
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { trackWhatsAppClick } from "../../lib/tracking";
+import { WA_ADMISION_URL } from "../../data/contactInfo";
 
 const contactInfo = [
   { icon: MapPin, text: "Av. José Arrieta 6870, La Reina" },
@@ -75,7 +76,7 @@ function MapContactSection() {
 
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <a
-                    href="https://wa.me/56988936631?text=Hola%2C%20me%20interesa%20información%20sobre%20la%20admisión%202026"
+                    href={WA_ADMISION_URL}
                     target="_blank"
                     rel="noreferrer"
                     onClick={() => trackWhatsAppClick("map_contact")}

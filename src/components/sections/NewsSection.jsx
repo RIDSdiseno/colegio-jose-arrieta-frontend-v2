@@ -33,7 +33,7 @@ const SIDEBAR_LINKS = [
 const YT_EMBED_FALLBACK = "https://www.youtube.com/embed/diIKhu_OQTY?rel=0&modestbranding=1";
 
 function NewsSkeleton() {
-  return <div className="animate-pulse overflow-hidden rounded-2xl bg-slate-200 h-64" />;
+  return <div aria-hidden="true" className="animate-pulse overflow-hidden rounded-2xl bg-slate-200 h-64" />;
 }
 
 function NewsCard({ item }) {

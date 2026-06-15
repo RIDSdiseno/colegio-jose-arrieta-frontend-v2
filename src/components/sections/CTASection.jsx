@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import { WA_ADMISION_URL } from "../../data/contactInfo";
 
 /**
  * CTASection — banda CTA full-width de fondo primario para páginas internas.
@@ -50,7 +51,7 @@ function CTASection({
               <ArrowRight className="h-4 w-4" />
             </Link>
             <a
-              href="https://wa.me/56988936631?text=Hola%2C%20me%20interesa%20información%20sobre%20la%20admisión%202026"
+              href={WA_ADMISION_URL}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-2 rounded-full border-2 border-white/30 bg-white/10 px-8 py-4 text-sm font-bold text-white transition hover:border-white/60 hover:bg-white/20"
