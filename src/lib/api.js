@@ -1,6 +1,8 @@
 import { supabase } from "./supabase";
 
-// Eliminar /api del final si alguien lo pone por error en la variable de entorno
+if (!import.meta.env.VITE_API_URL && !import.meta.env.DEV) {
+  throw new Error("VITE_API_URL no está configurada en el entorno de producción.");
+}
 const BASE_URL = (import.meta.env.VITE_API_URL || "http://localhost:4000").replace(/\/api\/?$/, "");
 
 async function apiFetch(path, options = {}) {

@@ -1,3 +1,5 @@
+import { PHONE_MAIN, EMAIL } from "./contactInfo";
+
 export const schoolSchema = {
   "@context": "https://schema.org",
   "@type": ["LocalBusiness", "EducationalOrganization"],
@@ -6,8 +8,8 @@ export const schoolSchema = {
   url: "https://colegiojosearrieta.cl",
   logo: "https://colegiojosearrieta.cl/images/logo-web04.png",
   image: "https://colegiojosearrieta.cl/images/alumnos.jpg",
-  email: "colegio@colegiojosearrieta.cl",
-  telephone: "+56222791863",
+  email: EMAIL,
+  telephone: PHONE_MAIN,
   foundingDate: "1973",
   educationalLevel: "Educación Pre-Escolar y Básica",
   numberOfStudents: 800,
